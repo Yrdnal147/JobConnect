@@ -52,6 +52,7 @@ export const mastra = new Mastra({
     name: 'Mastra',
     level: 'info',
   }),
+  /*
   observability: new Observability({
     configs: {
       default: {
@@ -66,4 +67,5 @@ export const mastra = new Mastra({
       },
     },
   }),
+  */
 });
