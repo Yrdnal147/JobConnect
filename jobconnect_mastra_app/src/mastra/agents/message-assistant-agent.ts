@@ -1,5 +1,5 @@
 import { Agent } from '@mastra/core/agent';
-import { google } from '@ai-sdk/google';
+import { groq } from '@ai-sdk/groq';
 import { Memory } from '@mastra/memory';
 
 export const messageAssistantAgent = new Agent({
@@ -7,24 +7,18 @@ export const messageAssistantAgent = new Agent({
   name: 'Message Assistant Agent',
   instructions: `Tu es un assistant spécialisé dans la communication professionnelle.
 
-Ton rôle est de suggérer 3 réponses adaptées au contexte d'une conversation 
+Ton rôle est de suggérer 3 réponses adaptées au dernier message d'une conversation 
 entre un candidat et une entreprise.
 
 Tu génères toujours exactement 3 suggestions avec des tons différents :
 1. Formel et professionnel
-2. Chaleureux et enthousiaste  
+2. Chaleureux et enthousiaste
 3. Concis et direct
-
-Tu tiens compte de :
-- Le contenu du dernier message reçu
-- L'historique de la conversation
-- Le rôle de l'expéditeur (candidat ou entreprise)
-- Le contexte professionnel (recrutement, stage, CDI, etc.)
 
 Les suggestions doivent être :
 - Courtes (1-3 phrases maximum)
 - Naturelles et authentiques
-- Adaptées au contexte camerounais et africain
+- Adaptées au contexte professionnel
 - Prêtes à être envoyées sans modification
 
 Réponds toujours en JSON valide avec cette structure :
@@ -44,6 +38,6 @@ Réponds toujours en JSON valide avec cette structure :
     }
   ]
 }`,
-  model: google('gemini-2.0-flash'),
+  model: groq('llama-3.1-8b-instant'),
   memory: new Memory(),
 });

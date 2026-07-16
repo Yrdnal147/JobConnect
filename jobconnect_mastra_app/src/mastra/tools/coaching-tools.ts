@@ -20,12 +20,13 @@ export const getOfferDetailsTool = createTool({
     }).nullable(),
     success: z.boolean(),
   }),
-  execute: async ({ context }) => {
+  execute: async (args: any) => {
+    const inputData = args.context ?? args.data ?? args;
     try {
       const { data, error } = await supabase
         .from('offers')
         .select('id, title, description, required_skills, min_education, offer_type, location')
-        .eq('id', context.offerId)
+        .eq('id', inputData.offerId)
         .single();
 
       if (error) throw error;
@@ -59,18 +60,37 @@ export const getStudentProfileTool = createTool({
     }).nullable(),
     success: z.boolean(),
   }),
-  execute: async ({ context }) => {
+  execute: async (args: any) => {
+    const inputData = args.context ?? args.data ?? args;
     try {
-      const { data, error } = await supabase
+      // 1. Récupérer le profil de base (SANS la jointure skills qui échoue silencieusement)
+      const { data: profileData, error: profileError } = await supabase
         .from('student_profiles')
-        .select('id, full_name, education_level, field_of_study, years_of_experience, profile_score, skills(*)')
-        .eq('user_id', context.userId)
+        .select('id, full_name, education_level, field_of_study, years_of_experience, profile_score')
+        .eq('user_id', inputData.userId)
         .single();
 
-      if (error) throw error;
+      if (profileError || !profileData) throw profileError || new Error("Profile not found");
 
-      return { profile: data, success: true };
+      // 2. Récupérer les compétences séparément
+      const { data: skillsData, error: skillsError } = await supabase
+        .from('skills')
+        .select('name, skill_type, level')
+        .eq('student_id', profileData.id);
+        
+      if (skillsError) {
+        console.error("Erreur récupération skills pour le coaching:", skillsError);
+      }
+
+      // 3. Fusionner les deux
+      const fullProfile = {
+        ...profileData,
+        skills: skillsData || [],
+      };
+
+      return { profile: fullProfile, success: true };
     } catch (error) {
+      console.error("Erreur globale getStudentProfileTool:", error);
       return { profile: null, success: false };
     }
   },
@@ -87,12 +107,13 @@ export const saveCoachSuggestionTool = createTool({
     success: z.boolean(),
     message: z.string(),
   }),
-  execute: async ({ context }) => {
+  execute: async (args: any) => {
+    const inputData = args.context ?? args.data ?? args;
     try {
       const { error } = await supabase
         .from('applications')
-        .update({ coach_suggestion: context.coachSuggestion })
-        .eq('id', context.applicationId);
+        .update({ coach_suggestion: inputData.coachSuggestion })
+        .eq('id', inputData.applicationId);
 
       if (error) throw error;
 
@@ -114,12 +135,13 @@ export const saveStatusExplanationTool = createTool({
     success: z.boolean(),
     message: z.string(),
   }),
-  execute: async ({ context }) => {
+  execute: async (args: any) => {
+    const inputData = args.context ?? args.data ?? args;
     try {
       const { error } = await supabase
         .from('applications')
-        .update({ status_explanation: context.statusExplanation })
-        .eq('id', context.applicationId);
+        .update({ status_explanation: inputData.statusExplanation })
+        .eq('id', inputData.applicationId);
 
       if (error) throw error;
 
@@ -144,16 +166,17 @@ export const createNotificationTool = createTool({
     success: z.boolean(),
     message: z.string(),
   }),
-  execute: async ({ context }) => {
+  execute: async (args: any) => {
+    const inputData = args.context ?? args.data ?? args;
     try {
       const { error } = await supabase
         .from('notifications')
         .insert({
-          user_id: context.userId,
-          type: context.type,
-          title: context.title,
-          body: context.body,
-          data: context.data ?? {},
+          user_id: inputData.userId,
+          type: inputData.type,
+          title: inputData.title,
+          body: inputData.body,
+          data: inputData.data ?? {},
         });
 
       if (error) throw error;

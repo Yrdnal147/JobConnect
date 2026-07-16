@@ -1,5 +1,5 @@
 import { Agent } from '@mastra/core/agent';
-import { google } from '@ai-sdk/google';
+import { groq } from '@ai-sdk/groq';
 import { Memory } from '@mastra/memory';
 import { embedProfileTool, vectorSearchTool, saveMatchesTool } from '../tools/matching-tools';
 
@@ -36,7 +36,7 @@ Réponds toujours en JSON valide avec cette structure :
     }
   ]
 }`,
-  model: google('gemini-2.0-flash'),
+  model: groq('llama-3.1-8b-instant'),
   tools: { embedProfileTool, vectorSearchTool, saveMatchesTool },
   memory: new Memory(),
 });

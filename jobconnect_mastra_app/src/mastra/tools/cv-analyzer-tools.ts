@@ -1,5 +1,5 @@
 import { createTool } from '@mastra/core/tools';
-import { string, z } from 'zod';
+import { z } from 'zod';
 import { supabase } from '../supabase';
 
 export const saveProfileTool = createTool({
@@ -18,70 +18,96 @@ export const saveProfileTool = createTool({
     yearsOfExperience: z.number(),
     profileScore: z.number().min(0).max(100),
     completionLabel: z.string(),
+    suggestions: z.array(z.object({
+      priority: z.string(),
+      message: z.string(),
+    })).optional(),
+    projects: z.array(z.string()).optional(),
   }),
   outputSchema: z.object({
     success: z.boolean(),
     message: z.string(),
   }),
-  execute: async ({ context }) => {
+  execute: async ({ context: inputData }) => {
     try {
       // Mise à jour du profil étudiant
       const { error: profileError } = await supabase
         .from('student_profiles')
         .update({
-          education_level: context.educationLevel,
-          field_of_study: context.fieldOfStudy,
-          years_of_experience: context.yearsOfExperience,
-          profile_score: context.profileScore,
-          completion_label: context.completionLabel,
+          education_level: inputData.educationLevel,
+          field_of_study: inputData.fieldOfStudy,
+          years_of_experience: inputData.yearsOfExperience,
+          profile_score: inputData.profileScore,
+          completion_label: inputData.completionLabel,
         })
-        .eq('user_id', context.userId);
+        .eq('user_id', inputData.userId);
 
       if (profileError) throw profileError;
 
-      // Récupérer l'id du profil étudiant
-      const { data: profile, error: fetchError } = await supabase
-        .from('student_profiles')
-        .select('id')
-        .eq('user_id', context.userId)
-        .single();
+      if (inputData.suggestions && inputData.suggestions.length > 0) {
+        const suggestionsToInsert = inputData.suggestions.map((s: any) => ({
+          user_id: inputData.userId,
+          priority: s.priority,
+          message: s.message
+        }));
+        
+        await supabase
+          .from('profile_suggestions')
+          .delete()
+          .eq('user_id', inputData.userId);
 
-      if (fetchError) throw fetchError;
+        await supabase
+          .from('profile_suggestions')
+          .insert(suggestionsToInsert);
+      }
+
+      if (inputData.projects && inputData.projects.length > 0) {
+        const projectsToInsert = inputData.projects.map((title: string) => ({
+          student_id: inputData.userId,
+          title: title,
+          description: "Généré par analyse IA"
+        }));
+        
+        await supabase
+          .from('projects')
+          .delete()
+          .eq('student_id', inputData.userId);
+
+        await supabase
+          .from('projects')
+          .insert(projectsToInsert);
+      }
 
       // Supprimer les anciennes compétences
       await supabase
         .from('skills')
         .delete()
-        .eq('student_id', profile.id);
+        .eq('user_id', inputData.userId);
 
-      // Insérer les nouvelles compétences techniques
-      const technicalSkills = context.technicalSkills.map((skill: string) => ({
-        student_id: profile.id,
-        name: skill,
-        skill_type: 'technical',
-      }));
+      // Préparer les compétences
+      const skillsToInsert = [
+        ...(inputData.technicalSkills || []).map((skill: string) => ({
+          user_id: inputData.userId,
+          name: skill,
+          skill_type: 'technical'
+        })),
+        ...(inputData.softSkills || []).map((skill: string) => ({
+          user_id: inputData.userId,
+          name: skill,
+          skill_type: 'soft'
+        })),
+        ...(inputData.languages || []).map((lang: any) => ({
+          user_id: inputData.userId,
+          name: lang.name,
+          skill_type: 'language',
+          level: lang.level
+        }))
+      ];
 
-      // Insérer les soft skills
-      const softSkills = context.softSkills.map((skill: string) => ({
-        student_id: profile.id,
-        name: skill,
-        skill_type: 'soft',
-      }));
-
-      // Insérer les langues
-      const languages = context.languages.map((lang: { name: string; level: string }) => ({
-        student_id: profile.id,
-        name: lang.name,
-        skill_type: 'language',
-        level: lang.level,
-      }));
-
-      const allSkills = [...technicalSkills, ...softSkills, ...languages];
-
-      if (allSkills.length > 0) {
+      if (skillsToInsert.length > 0) {
         const { error: skillsError } = await supabase
           .from('skills')
-          .insert(allSkills);
+          .insert(skillsToInsert);
 
         if (skillsError) throw skillsError;
       }

@@ -117,3 +117,48 @@ app.*.symbols
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 !/dev/ci/**/Gemfile.lock
+
+# =====================================================================
+# Mastra Backend & Node.js / TypeScript (JobConnect App)
+# =====================================================================
+
+# Dépendances Node
+node_modules/
+/jobconnect_mastra_app/node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+bun.lockb
+
+# Fichiers de configuration et variables d'environnement sensibles
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+jobconnect/.env
+jobconnect_mastra_app/.env
+
+# Base de données locale Mastra (DuckDB)
+*.duckdb
+*.duckdb.wal
+jobconnect_mastra_app/mastra.duckdb
+jobconnect_mastra_app/mastra.duckdb.wal
+
+# Fichiers de build, logs et logs de debug Mastra
+dist/
+.next/
+.mastra/
+*.log
+jobconnect_mastra_app/debug.json
+jobconnect_mastra_app/test-embed*.ts
+jobconnect_mastra_app/test-workflow.ts
+
+# IDEs et éditeurs
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

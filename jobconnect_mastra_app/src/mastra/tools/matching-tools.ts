@@ -15,13 +15,13 @@ export const embedProfileTool = createTool({
     embedding: z.array(z.number()),
     success: z.boolean(),
   }),
-  execute: async ({ context }) => {
+  execute: async ({ context: inputData }) => {
     try {
       // Récupérer le profil et les compétences
       const { data: profile } = await supabase
         .from('student_profiles')
         .select('*, skills(*)')
-        .eq('user_id', context.userId)
+        .eq('user_id', inputData.userId)
         .single();
 
       if (!profile) throw new Error('Profil introuvable');
@@ -38,9 +38,9 @@ export const embedProfileTool = createTool({
       `;
 
       // Générer l'embedding avec Gemini
-      const model = genAI.getGenerativeModel({ model: 'text-embedding-004' });
+      const model = genAI.getGenerativeModel({ model: 'gemini-embedding-2' });
       const result = await model.embedContent(profileText);
-      const embedding = result.embedding.values;
+      const embedding = result.embedding.values.slice(0, 1536);
 
       return { embedding, success: true };
     } catch (error) {
@@ -66,17 +66,17 @@ export const vectorSearchTool = createTool({
     })),
     success: z.boolean(),
   }),
-  execute: async ({ context }) => {
+  execute: async ({ context: inputData }) => {
     try {
-      const { data, error } = await supabase
+      const { data: result, error } = await supabase
         .rpc('match_offers', {
-          query_embedding: context.embedding,
-          match_count: context.limit,
+          query_embedding: inputData.embedding,
+          match_count: inputData.limit,
         });
 
       if (error) throw error;
 
-      return { matches: data ?? [], success: true };
+      return { matches: result ?? [], success: true };
     } catch (error) {
       return { matches: [], success: false };
     }
@@ -104,12 +104,12 @@ export const saveMatchesTool = createTool({
     success: z.boolean(),
     message: z.string(),
   }),
-  execute: async ({ context }) => {
+  execute: async ({ context: inputData }) => {
     try {
       const { data: profile } = await supabase
         .from('student_profiles')
         .select('id')
-        .eq('user_id', context.userId)
+        .eq('user_id', inputData.userId)
         .single();
 
       if (!profile) throw new Error('Profil introuvable');
@@ -118,7 +118,7 @@ export const saveMatchesTool = createTool({
         .from('feed_cache')
         .upsert({
           student_id: profile.id,
-          cards: context.cards,
+          cards: inputData.cards,
           generated_at: new Date().toISOString(),
         });
 

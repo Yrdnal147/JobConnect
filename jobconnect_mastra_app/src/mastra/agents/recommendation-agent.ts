@@ -1,5 +1,5 @@
 import { Agent } from '@mastra/core/agent';
-import { google } from '@ai-sdk/google';
+import { groq } from '@ai-sdk/groq';
 import { Memory } from '@mastra/memory';
 
 export const recommendationAgent = new Agent({
@@ -37,6 +37,6 @@ Réponds toujours en JSON valide avec cette structure :
     }
   ]
 }`,
-  model: google('gemini-2.0-flash'),
+  model: groq('llama-3.1-8b-instant'),
   memory: new Memory(),
 });
