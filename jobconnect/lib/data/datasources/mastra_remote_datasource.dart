@@ -39,6 +39,10 @@ class MastraRemoteDataSource implements IMastraRemoteDataSource {
   @override
   Future<Map<String, dynamic>> startWorkflow(String endpoint, dynamic input) async {
     try {
+      print('=============================================');
+      print('🚀 TENTATIVE DE POST SUR : $endpoint');
+      print('🚀 PAYLOAD : $input');
+      print('=============================================');
       final response = await _dio.post(
         endpoint,
         data: {
@@ -52,6 +56,9 @@ class MastraRemoteDataSource implements IMastraRemoteDataSource {
         throw Exception("Erreur du Workflow Mastra: ${response.statusMessage}");
       }
     } on DioException catch (e) {
+      print('❌ ERREUR DIO SUR LE WORKFLOW: ${e.message}');
+      print('❌ TYPE: ${e.type}');
+      print('❌ ERREUR COMPLETE: $e');
       throw Exception("Échec de la communication avec le Workflow : ${e.message}");
     }
   }
