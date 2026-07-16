@@ -41,7 +41,7 @@ const fetchCompanyLocationStep = createStep({
     location: z.string(),
   }),
   execute: async ({ inputData }: { inputData: any }) => {
-    const { supabase } = await import('../supabase');
+    const { supabase } = await import('../supabase.js');
     const { data } = await supabase
       .from('offers')
       .select('location, companies(latitude, longitude, location)')
@@ -68,7 +68,7 @@ const prepareNotificationStep = createStep({
     message: z.string(),
   }),
   execute: async ({ inputData }: { inputData: any }) => {
-    const { supabase } = await import('../supabase');
+    const { supabase } = await import('../supabase.js');
 
     // Vérifie si l'étudiant a déjà postulé à cette offre
     const { data: profile } = await supabase

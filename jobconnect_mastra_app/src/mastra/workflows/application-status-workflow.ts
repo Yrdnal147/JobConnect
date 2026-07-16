@@ -54,7 +54,7 @@ const handleRefusedStep = createStep({
       return { message: '', actions: [], nextStep: '' };
     }
 
-    const { supabase } = await import('../supabase');
+    const { supabase } = await import('../supabase.js');
     const { data: offer } = await supabase
       .from('offers')
       .select('title, companies(name)')
@@ -130,7 +130,7 @@ const handlePendingStep = createStep({
       return { message: '', similarOffers: [], nextStep: '' };
     }
 
-    const { supabase } = await import('../supabase');
+    const { supabase } = await import('../supabase.js');
     const { data: offer } = await supabase
       .from('offers')
       .select('title, companies(name, user_id)')
@@ -206,7 +206,7 @@ const handleRetainedStep = createStep({
       return { message: '', nextStep: '' };
     }
 
-    const { supabase } = await import('../supabase');
+    const { supabase } = await import('../supabase.js');
     const { data: offer } = await supabase
       .from('offers')
       .select('title, companies(name)')

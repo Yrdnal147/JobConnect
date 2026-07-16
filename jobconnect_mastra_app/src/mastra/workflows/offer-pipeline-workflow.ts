@@ -1,7 +1,7 @@
 import { createStep, createWorkflow } from '@mastra/core/workflows';
 import { z } from 'zod';
-import { supabase } from '../supabase';
-import { calculateFinalScore } from '../utils/scoring';
+import { supabase } from '../supabase.js';
+import { calculateFinalScore } from '../utils/scoring.js';
 
 // ─────────────────────────────────────────────
 // 1️⃣ STEP: FETCH AND EMBED OFFER

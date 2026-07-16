@@ -13,7 +13,7 @@ const saveMessageStep = createStep({
     success: z.boolean(),
   }),
   execute: async ({ inputData }: { inputData: any }) => {
-    const { supabase } = await import('../supabase');
+    const { supabase } = await import('../supabase.js');
     const { data, error } = await supabase
       .from('messages')
       .insert({

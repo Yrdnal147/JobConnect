@@ -1,6 +1,6 @@
 import { createTool } from '@mastra/core/tools';
 import { z } from 'zod';
-import { supabase } from '../supabase';
+import { supabase } from '../supabase.js';
 
 export const getOfferDetailsTool = createTool({
   id: 'get-offer-details',

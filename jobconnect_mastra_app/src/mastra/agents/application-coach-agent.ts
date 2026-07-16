@@ -1,7 +1,7 @@
 import { Agent } from '@mastra/core/agent';
 import { groq } from '@ai-sdk/groq';
 import { Memory } from '@mastra/memory';
-import { getOfferDetailsTool, getStudentProfileTool } from '../tools/coaching-tools';
+import { getOfferDetailsTool, getStudentProfileTool } from '../tools/coaching-tools.js';
 
 export const applicationCoachAgent = new Agent({
   id: 'application-coach-agent',

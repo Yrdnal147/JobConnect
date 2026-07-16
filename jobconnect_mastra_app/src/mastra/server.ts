@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { mastra } from './index'; // Assure-toi que c'est le bon chemin
+import { mastra } from './index.js'; // Assure-toi que c'est le bon chemin
 
 const app = express();
 app.use(express.json());

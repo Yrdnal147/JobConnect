@@ -1,7 +1,7 @@
 import { Agent } from '@mastra/core/agent';
 import { groq } from '@ai-sdk/groq';
 import { Memory } from '@mastra/memory';
-import { embedProfileTool, vectorSearchTool, saveMatchesTool } from '../tools/matching-tools';
+import { embedProfileTool, vectorSearchTool, saveMatchesTool } from '../tools/matching-tools.js';
 
 export const matchingAgent = new Agent({
   id: 'matching-agent',

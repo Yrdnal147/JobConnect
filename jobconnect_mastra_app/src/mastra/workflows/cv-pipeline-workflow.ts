@@ -1,8 +1,8 @@
 import { createStep, createWorkflow } from '@mastra/core/workflows';
 import { z } from 'zod';
 import { extractText, getDocumentProxy } from 'unpdf';
-import { supabase } from '../supabase';
-import { calculateFinalScore } from '../utils/scoring';
+import { supabase } from '../supabase.js';
+import { calculateFinalScore } from '../utils/scoring.js';
 
 // ─────────────────────────────────────────────
 // 🔧 UTIL: JSON extraction robuste

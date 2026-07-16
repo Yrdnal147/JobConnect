@@ -73,7 +73,7 @@ const generateEmbeddingStep = createStep({
       const result = await model.embedContent(offerText);
       const embedding = result.embedding.values.slice(0, 1536);
 
-      const { supabase } = await import('../supabase');
+      const { supabase } = await import('../supabase.js');
       const { error } = await supabase
         .from('offers')
         .update({ embedding })
@@ -109,7 +109,7 @@ const notifyMatchingStudentsStep = createStep({
     try {
       if (!inputData.embeddingGenerated) return { notifiedCount: 0 };
 
-      const { supabase } = await import('../supabase');
+      const { supabase } = await import('../supabase.js');
 
       // Récupérer les étudiants avec un profil complet (score >= 50)
       const { data: students } = await supabase
