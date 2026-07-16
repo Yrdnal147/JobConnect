@@ -36,6 +36,7 @@ export const mastra = new Mastra({
     'offer-optimizer-agent': offerOptimizerAgent 
   },
   scorers: { toolCallAppropriatenessScorer, completenessScorer, translationScorer },
+  /*
   storage: new MastraCompositeStore({
     id: 'composite-storage',
     default: new LibSQLStore({
@@ -46,6 +47,7 @@ export const mastra = new Mastra({
       observability: await new DuckDBStore().getStore('observability'),
     }
   }),
+  */
   logger: new PinoLogger({
     name: 'Mastra',
     level: 'info',
