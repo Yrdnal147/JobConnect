@@ -353,11 +353,12 @@ const buildFeedStep = createStep({
   execute: async ({ inputData }) => {
     try {
       // Récupérer le profil pour obtenir le student_id
-      const { data: profile } = await supabase
+      const { data: profileData } = await supabase
         .from('student_profiles')
-        .select('id')
+        .select('id, years_of_experience, education_level')
         .eq('user_id', inputData.userId)
         .single();
+      const profile = profileData as any;
 
       if (!profile) {
         return { feedBuilt: false, cardsCount: 0 };

@@ -60,8 +60,8 @@ const handleRefusedStep = createStep({
       .select('title, companies(name)')
       .eq('id', inputData.offerId)
       .single();
-    const offerTitle = offer?.title ?? 'Candidature';
-    const companyName = offer?.companies?.name ?? 'l\'entreprise';
+    const offerTitle = (offer as any)?.title ?? 'Candidature';
+    const companyName = (offer as any)?.companies?.name ?? 'l\'entreprise';
 
     const cvAgent = mastra.getAgent('cv-analyzer-agent');
     const gapResult = await cvAgent.generate(
@@ -136,9 +136,9 @@ const handlePendingStep = createStep({
       .select('title, companies(name, user_id)')
       .eq('id', inputData.offerId)
       .single();
-    const offerTitle = offer?.title ?? 'Candidature';
-    const companyName = offer?.companies?.name ?? 'l\'entreprise';
-    const companyUserId = offer?.companies?.user_id;
+    const offerTitle = (offer as any)?.title ?? 'Candidature';
+    const companyName = (offer as any)?.companies?.name ?? 'l\'entreprise';
+    const companyUserId = (offer as any)?.companies?.user_id;
 
     if (companyUserId) {
       try {
@@ -212,8 +212,8 @@ const handleRetainedStep = createStep({
       .select('title, companies(name)')
       .eq('id', inputData.offerId)
       .single();
-    const offerTitle = offer?.title ?? 'Candidature';
-    const companyName = offer?.companies?.name ?? 'l\'entreprise';
+    const offerTitle = (offer as any)?.title ?? 'Candidature';
+    const companyName = (offer as any)?.companies?.name ?? 'l\'entreprise';
 
     const careerAgent = mastra.getAgent('career-status-agent');
     const result = await careerAgent.generate(
