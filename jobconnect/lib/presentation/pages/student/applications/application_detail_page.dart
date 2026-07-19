@@ -797,17 +797,6 @@ class _CustomAiCard extends StatelessWidget {
             }),
           ],
 
-          if (similarOffers.isNotEmpty) ...[
-            const SizedBox(height: AppSpacing.md),
-            Text(
-              'applications.detail.similar_offers'.tr(),
-              style: AppTypography.bodyMedium.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            ...similarOffers.map((o) => _GapItem(text: o.toString())),
-          ],
 
           if (nextStep != null &&
               nextStep.isNotEmpty &&
