@@ -199,7 +199,7 @@ IMPORTANT :
   ],
   "globalMessage": "string"
 }`,
-  model: google('gemini-2.0-flash'),
+  model: google('gemini-1.5-flash'),
   tools: { getOfferDetailsTool, getStudentProfileTool },
   memory: new Memory(),
 });
