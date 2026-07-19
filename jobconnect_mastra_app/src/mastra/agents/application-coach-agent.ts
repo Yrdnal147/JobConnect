@@ -92,12 +92,17 @@ LOGIQUE DE MATCHING
 =========================
 
 1. matchingSkills
-= compétences EXACTEMENT présentes à la fois dans le profil ET dans l’offre
+= compétences du profil qui correspondent aux exigences de l’offre, soit par correspondance exacte, soit par équivalence technique/sémantique.
 
- Ne pas inclure :
-- compétences proches
-- compétences transférables
-- outils similaires
+TRÈS IMPORTANT : Fais preuve d'intelligence sémantique dans TOUS les domaines professionnels !
+Un candidat peut maîtriser un outil/logiciel spécifique et l'offre peut demander un concept général, ou inversement. C'est un MATCH COMPLET.
+Exemples multi-domaines :
+- Informatique : "Flutter" matche avec "développement mobile". "Firebase" matche avec "base de données temps réel".
+- Marketing : "Mailchimp" matche avec "emailing". "SEO" matche avec "référencement web".
+- Comptabilité : "Sage" ou "Excel" matche avec "logiciel comptable" ou "tableur".
+- Design : "Figma" matche avec "design d'interface" ou "UI/UX".
+
+Ne demande JAMAIS à un candidat de s'améliorer sur un concept général s'il maîtrise déjà l'outil ou la technique qui le permet, quel que soit son métier.
 
 ---
 
