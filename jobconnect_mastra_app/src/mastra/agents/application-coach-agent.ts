@@ -1,5 +1,5 @@
 import { Agent } from '@mastra/core/agent';
-import { groq } from '@ai-sdk/groq';
+import { google } from '@ai-sdk/google';
 import { Memory } from '@mastra/memory';
 import { getOfferDetailsTool, getStudentProfileTool } from '../tools/coaching-tools.js';
 
@@ -199,7 +199,7 @@ IMPORTANT :
   ],
   "globalMessage": "string"
 }`,
-  model: groq('llama-3.3-70b-versatile'),
+  model: google('gemini-2.0-flash'),
   tools: { getOfferDetailsTool, getStudentProfileTool },
   memory: new Memory(),
 });
