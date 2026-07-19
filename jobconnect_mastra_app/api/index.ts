@@ -49,6 +49,26 @@ app.post('/api/agents/:agentName/generate', async (req: Request, res: Response) 
     // 3. Exécution de l'agent
     const result = await agent.generate(input);
     
+    // Nettoyage robuste pour forcer un JSON valide (évite le bug <function> de Llama 3.1 8B)
+    if (result && result.text) {
+       let cleanText = result.text;
+       
+       // Supprimer tout ce qui suit <function>
+       const funcIndex = cleanText.indexOf('<function>');
+       if (funcIndex !== -1) {
+           cleanText = cleanText.substring(0, funcIndex);
+       }
+       
+       // Extraire uniquement le contenu entre les accolades {}
+       const firstBrace = cleanText.indexOf('{');
+       const lastBrace = cleanText.lastIndexOf('}');
+       if (firstBrace !== -1 && lastBrace !== -1) {
+           cleanText = cleanText.substring(firstBrace, lastBrace + 1);
+       }
+       
+       result.text = cleanText;
+    }
+    
     // 4. Réponse réussie
     return res.status(200).json({ success: true, response: result });
 
