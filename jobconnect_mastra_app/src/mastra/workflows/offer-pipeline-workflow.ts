@@ -111,15 +111,28 @@ const updateFeedsStep = createStep({
          return { updatedCount: 0 };
       }
       
+      const matchIds = matches.map((m: any) => m.id);
+      
+      // Fetch everything in parallel
+      const [
+        { data: profiles },
+        { data: skills },
+        { data: currentCaches }
+      ] = await Promise.all([
+        supabase.from('student_profiles').select('id, education_level, years_of_experience').in('id', matchIds),
+        supabase.from('skills').select('student_id, name, skill_type').in('student_id', matchIds),
+        supabase.from('feed_cache').select('student_id, cards').in('student_id', matchIds)
+      ]);
+
+      const cacheUpdates = [];
+      const now = new Date().toISOString();
       let updated = 0;
       
-      // 3. Update feed_cache for each matched student
       for (const match of matches) {
-        // Fetch full student profile
-        const { data: profile } = await supabase.from('student_profiles').select('education_level, years_of_experience').eq('id', match.id).maybeSingle();
-        // Get student's skills
-        const { data: skills } = await supabase.from('skills').select('name, skill_type').eq('student_id', match.id);
-        const studentTechSkills = (skills || [])
+        const profile = (profiles || []).find((p: any) => p.id === match.id);
+        const studentSkills = (skills || []).filter((s: any) => s.student_id === match.id);
+        
+        const studentTechSkills = studentSkills
           .filter((s: any) => s.skill_type === 'technical')
           .map((s: any) => s.name.toLowerCase());
           
@@ -135,11 +148,9 @@ const updateFeedsStep = createStep({
           offer.min_education ?? null
         );
         
-        // Update feed_cache
-        const { data: currentCache } = await supabase.from('feed_cache').select('cards').eq('student_id', match.id).maybeSingle();
-        
+        const currentCache = (currentCaches || []).find((c: any) => c.student_id === match.id);
         let cards = currentCache?.cards || [];
-        cards = cards.filter((c: any) => c.offerId !== offer.id); // Remove if already exists
+        cards = cards.filter((c: any) => c.offerId !== offer.id); 
         
         cards.push({
           offerId: offer.id,
@@ -148,16 +159,18 @@ const updateFeedsStep = createStep({
           details
         });
         
-        // Sort cards by score DESC
         cards.sort((a: any, b: any) => b.matchScore - a.matchScore);
         
-        await supabase.from('feed_cache').upsert({
+        cacheUpdates.push({
           student_id: match.id,
           cards: cards,
-          generated_at: new Date().toISOString()
-        }, { onConflict: 'student_id' });
-        
+          generated_at: now
+        });
         updated++;
+      }
+      
+      if (cacheUpdates.length > 0) {
+        await supabase.from('feed_cache').upsert(cacheUpdates, { onConflict: 'student_id' });
       }
       
       console.log(`✅ Mise à jour du flux pour ${updated} étudiants suite à l'offre ${inputData.offerId}`);
