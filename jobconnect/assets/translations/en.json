@@ -207,7 +207,7 @@
     }
   },
   "success": {
-    "title": "Wall of Fame 🎉",
+    "title": "Wall of Fame",
     "connections_count_single": "{} connection",
     "connections_count_plural": "{} connections",
     "empty": {
@@ -219,7 +219,7 @@
       "title": "Failed to load connections"
     },
     "card": {
-      "joined": "{} joined {}",
+      "joined": "{} has been connected with {}",
       "inspire": "Inspire me"
     },
     "dialog": {

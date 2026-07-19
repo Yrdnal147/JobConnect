@@ -65,8 +65,10 @@ class _CompanyVerificationPageState extends State<CompanyVerificationPage> {
                   children: [
                     Row(
                       children: [
-                        const Icon(Icons.info_outline_rounded,
-                            color: AppColorsLight.primary),
+                        const Icon(
+                          Icons.info_outline_rounded,
+                          color: AppColorsLight.primary,
+                        ),
                         const SizedBox(width: AppSpacing.sm),
                         Text(
                           'Document requis',
@@ -108,10 +110,7 @@ class _CompanyVerificationPageState extends State<CompanyVerificationPage> {
         decoration: BoxDecoration(
           color: AppColorsLight.bgCard,
           borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
-          border: Border.all(
-            color: AppColorsLight.bgSurface,
-            width: 2,
-          ),
+          border: Border.all(color: AppColorsLight.bgSurface, width: 2),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -132,7 +131,10 @@ class _CompanyVerificationPageState extends State<CompanyVerificationPage> {
             const SizedBox(height: AppSpacing.md),
             Text('Uploader le RCCM', style: AppTypography.headingSmall),
             const SizedBox(height: 4),
-            Text('format requis: PDF, JPG ou PNG', style: AppTypography.bodySmall),
+            Text(
+              'format requis: PDF, JPG ou PNG',
+              style: AppTypography.bodySmall,
+            ),
           ],
         ),
       ),
@@ -153,8 +155,10 @@ class _CompanyVerificationPageState extends State<CompanyVerificationPage> {
         children: [
           const CircularProgressIndicator(color: AppColorsLight.primary),
           const SizedBox(height: AppSpacing.md),
-          Text('L\'IA analyse votre document...',
-              style: AppTypography.bodyMedium),
+          Text(
+            'L\'IA analyse votre document...',
+            style: AppTypography.bodyMedium,
+          ),
         ],
       ),
     );
@@ -170,8 +174,11 @@ class _CompanyVerificationPageState extends State<CompanyVerificationPage> {
       ),
       child: Column(
         children: [
-          const Icon(Icons.hourglass_top_rounded,
-              color: AppColorsLight.warning, size: 48),
+          const Icon(
+            Icons.hourglass_top_rounded,
+            color: AppColorsLight.warning,
+            size: 48,
+          ),
           const SizedBox(height: AppSpacing.md),
           Text(
             'En cours de révision',
@@ -200,8 +207,11 @@ class _CompanyVerificationPageState extends State<CompanyVerificationPage> {
       ),
       child: Column(
         children: [
-          const Icon(Icons.verified_rounded,
-              color: AppColorsLight.success, size: 48),
+          const Icon(
+            Icons.verified_rounded,
+            color: AppColorsLight.success,
+            size: 48,
+          ),
           const SizedBox(height: AppSpacing.md),
           Text(
             'Entreprise vérifiée !',
@@ -230,8 +240,11 @@ class _CompanyVerificationPageState extends State<CompanyVerificationPage> {
       ),
       child: Column(
         children: [
-          const Icon(Icons.cancel_rounded,
-              color: AppColorsLight.error, size: 48),
+          const Icon(
+            Icons.cancel_rounded,
+            color: AppColorsLight.error,
+            size: 48,
+          ),
           const SizedBox(height: AppSpacing.md),
           Text(
             'Document refusé',

@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
@@ -38,7 +39,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    _cubit    = sl<StudentProfileCubit>();
+    _cubit = sl<StudentProfileCubit>();
     _authBloc = sl<AuthBloc>();
     _cubit.loadProfile();
   }
@@ -72,7 +73,7 @@ class _ProfilePageState extends State<ProfilePage> {
       allowedExtensions: ['pdf'],
     );
     if (result != null && result.files.single.path != null) {
-      final file     = File(result.files.single.path!);
+      final file = File(result.files.single.path!);
       final fileName = result.files.single.name;
       _cubit.uploadCv(file, fileName);
     }
@@ -90,8 +91,10 @@ class _ProfilePageState extends State<ProfilePage> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
           ),
-          title: Text('profile.skills.add_title'.tr(),
-              style: AppTypography.headingSmall),
+          title: Text(
+            'profile.skills.add_title'.tr(),
+            style: AppTypography.headingSmall,
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -104,22 +107,19 @@ class _ProfilePageState extends State<ProfilePage> {
                   filled: true,
                   fillColor: AppColorsLight.bgDark,
                   border: OutlineInputBorder(
-                    borderRadius:
-                        BorderRadius.circular(AppSpacing.radiusMd),
-                    borderSide:
-                        BorderSide(color: AppColorsLight.bgSurface),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                    borderSide: BorderSide(color: AppColorsLight.bgSurface),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderRadius:
-                        BorderRadius.circular(AppSpacing.radiusMd),
-                    borderSide:
-                        BorderSide(color: AppColorsLight.bgSurface),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                    borderSide: BorderSide(color: AppColorsLight.bgSurface),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius:
-                        BorderRadius.circular(AppSpacing.radiusMd),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                     borderSide: const BorderSide(
-                        color: AppColorsLight.primary, width: 1.5),
+                      color: AppColorsLight.primary,
+                      width: 1.5,
+                    ),
                   ),
                 ),
               ),
@@ -130,22 +130,22 @@ class _ProfilePageState extends State<ProfilePage> {
                   _TypeChip(
                     label: 'profile.skills.type_technical'.tr(),
                     isSelected: _selectedSkillType == 'technical',
-                    onTap: () => setDialogState(
-                        () => _selectedSkillType = 'technical'),
+                    onTap: () =>
+                        setDialogState(() => _selectedSkillType = 'technical'),
                   ),
                   const SizedBox(width: AppSpacing.sm),
                   _TypeChip(
                     label: 'profile.skills.type_soft'.tr(),
                     isSelected: _selectedSkillType == 'soft',
-                    onTap: () => setDialogState(
-                        () => _selectedSkillType = 'soft'),
+                    onTap: () =>
+                        setDialogState(() => _selectedSkillType = 'soft'),
                   ),
                   const SizedBox(width: AppSpacing.sm),
                   _TypeChip(
                     label: 'profile.skills.type_language'.tr(),
                     isSelected: _selectedSkillType == 'language',
-                    onTap: () => setDialogState(
-                        () => _selectedSkillType = 'language'),
+                    onTap: () =>
+                        setDialogState(() => _selectedSkillType = 'language'),
                   ),
                 ],
               ),
@@ -154,30 +154,30 @@ class _ProfilePageState extends State<ProfilePage> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(dialogContext),
-              child: Text('profile.actions.cancel'.tr(),
-                  style: AppTypography.labelLarge.copyWith(
-                    color: AppColorsLight.textSecondary,
-                  )),
+              child: Text(
+                'profile.actions.cancel'.tr(),
+                style: AppTypography.labelLarge.copyWith(
+                  color: AppColorsLight.textSecondary,
+                ),
+              ),
             ),
             ElevatedButton(
               onPressed: () {
                 if (_skillController.text.trim().isNotEmpty) {
-                  _cubit.addSkill(
-                      _skillController.text, _selectedSkillType);
+                  _cubit.addSkill(_skillController.text, _selectedSkillType);
                   Navigator.pop(dialogContext);
                 }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColorsLight.primary,
                 shape: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(AppSpacing.radiusMd),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                 ),
               ),
-              child: Text('profile.actions.add'.tr(),
-                  style: AppTypography.labelLarge.copyWith(
-                    color: Colors.white,
-                  )),
+              child: Text(
+                'profile.actions.add'.tr(),
+                style: AppTypography.labelLarge.copyWith(color: Colors.white),
+              ),
             ),
           ],
         ),
@@ -210,17 +210,22 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-              borderSide: const BorderSide(color: AppColorsLight.primary, width: 1.5),
+              borderSide: const BorderSide(
+                color: AppColorsLight.primary,
+                width: 1.5,
+              ),
             ),
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: Text('Annuler',
-                style: AppTypography.labelLarge.copyWith(
-                  color: AppColorsLight.textSecondary,
-                )),
+            child: Text(
+              'Annuler',
+              style: AppTypography.labelLarge.copyWith(
+                color: AppColorsLight.textSecondary,
+              ),
+            ),
           ),
           ElevatedButton(
             onPressed: () {
@@ -235,15 +240,15 @@ class _ProfilePageState extends State<ProfilePage> {
                 borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
               ),
             ),
-            child: Text('Enregistrer',
-                style: AppTypography.labelLarge.copyWith(color: Colors.white)),
+            child: Text(
+              'Enregistrer',
+              style: AppTypography.labelLarge.copyWith(color: Colors.white),
+            ),
           ),
         ],
       ),
     );
   }
-
-  void _logout() => _authBloc.add(const AuthLogoutRequested());
 
   // ─── Build ────────────────────────────────────────────────────────────────
 
@@ -261,9 +266,11 @@ class _ProfilePageState extends State<ProfilePage> {
               if (state is AuthUnauthenticated) {
                 context.go('/status-selection');
               } else if (state is AuthError) {
-                _showSnack(context,
-                    'profile.errors.logout'.tr(args: [state.message]),
-                    isError: true);
+                _showSnack(
+                  context,
+                  'profile.errors.logout'.tr(args: [state.message]),
+                  isError: true,
+                );
               }
             },
           ),
@@ -279,11 +286,11 @@ class _ProfilePageState extends State<ProfilePage> {
         ],
         child: BlocBuilder<StudentProfileCubit, StudentProfileState>(
           builder: (context, state) {
-            final profile  = _extractProfile(state);
+            final profile = _extractProfile(state);
             final isPhotoUploading = state is StudentPhotoUploading;
-            final isCvUploading    = state is StudentCvUploading;
-            final isCvAnalyzing    = state is StudentCvAnalyzing;
-            final isLoading        = state is StudentProfileLoading;
+            final isCvUploading = state is StudentCvUploading;
+            final isCvAnalyzing = state is StudentCvAnalyzing;
+            final isLoading = state is StudentProfileLoading;
             final size = MediaQuery.of(context).size;
 
             return Scaffold(
@@ -298,40 +305,63 @@ class _ProfilePageState extends State<ProfilePage> {
                     height: size.height * 0.25,
                     child: Container(
                       decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [AppColorsLight.primary, Color(0xFF4A148C)],
-                        ),
+                        color: AppColorsLight.primary,
                       ),
                       child: SafeArea(
                         bottom: false,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.lg,
+                          ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const SizedBox(height: AppSpacing.md),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    'profile.title'.tr(),
-                                    style: AppTypography.displayMedium.copyWith(color: Colors.white, fontSize: 26),
+                                  Row(
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(
+                                          Icons.menu_rounded,
+                                          color: Colors.white,
+                                        ),
+                                        onPressed: () {
+                                          final advancedDrawerController =
+                                              context.read<AdvancedDrawerController?>();
+                                          advancedDrawerController?.showDrawer();
+                                        },
+                                      ),
+                                      Text(
+                                        'profile.title'.tr(),
+                                        style: AppTypography.displayMedium.copyWith(
+                                          color: Colors.white,
+                                          fontSize: 26,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   Row(
                                     children: [
                                       IconButton(
-                                        icon: const Icon(Icons.emoji_events_rounded, color: AppColorsLight.warning),
-                                        onPressed: () => context.go('/student/success'),
-                                        tooltip: 'profile.tooltip_success'.tr(),
-                                      ),
-                                      IconButton(
-                                        icon: const Icon(Icons.settings_outlined, color: Colors.white),
-                                        onPressed: () => Navigator.of(context, rootNavigator: true).push(
-                                          MaterialPageRoute(builder: (_) => const SettingsPage()),
+                                        icon: const Icon(
+                                          Icons.settings_outlined,
+                                          color: Colors.white,
                                         ),
-                                        tooltip: 'profile.tooltip_settings'.tr(),
+                                        onPressed: () =>
+                                            Navigator.of(
+                                              context,
+                                              rootNavigator: true,
+                                            ).push(
+                                              MaterialPageRoute(
+                                                builder: (_) =>
+                                                    const SettingsPage(),
+                                              ),
+                                            ),
+                                        tooltip: 'profile.tooltip_settings'
+                                            .tr(),
                                       ),
                                     ],
                                   ),
@@ -371,7 +401,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                             child: isLoading
                                 ? const Center(
-                                    child: CircularProgressIndicator(color: AppColorsLight.primary),
+                                    child: CircularProgressIndicator(
+                                      color: AppColorsLight.primary,
+                                    ),
                                   )
                                 : SingleChildScrollView(
                                     padding: const EdgeInsets.fromLTRB(
@@ -381,14 +413,20 @@ class _ProfilePageState extends State<ProfilePage> {
                                       120, // Espace pour la bottom navigation bar
                                     ),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         // ── Header profil ─────────────────────────
                                         _buildHeader(profile, isPhotoUploading),
                                         const SizedBox(height: AppSpacing.lg),
 
                                         // ── Score CV ──────────────────────────────
-                                        _buildScoreCard(context, profile, isCvUploading, isCvAnalyzing),
+                                        _buildScoreCard(
+                                          context,
+                                          profile,
+                                          isCvUploading,
+                                          isCvAnalyzing,
+                                        ),
                                         const SizedBox(height: AppSpacing.lg),
 
                                         // ── Compétences ───────────────────────────
@@ -396,12 +434,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                         const SizedBox(height: AppSpacing.lg),
 
                                         // ── Vérification ──────────────────────────
-                                        _buildVerificationSection(context, profile),
+                                        _buildVerificationSection(
+                                          context,
+                                          profile,
+                                        ),
                                         const SizedBox(height: AppSpacing.lg),
-
-                                        // ── Déconnexion ───────────────────────────
-                                        _buildLogoutButton(),
-                                        const SizedBox(height: AppSpacing.xl),
                                       ],
                                     ),
                                   ),
@@ -421,21 +458,23 @@ class _ProfilePageState extends State<ProfilePage> {
 
   // ─── Header ──────────────────────────────────────────────────────────────
 
-  Widget _buildHeader(
-      StudentProfileData? profile, bool isPhotoUploading) {
+  Widget _buildHeader(StudentProfileData? profile, bool isPhotoUploading) {
     final score = profile?.profileScore ?? 0;
     final scoreColor = score >= 75
         ? AppColorsLight.success
         : score >= 50
-            ? AppColorsLight.warning
-            : AppColorsLight.error;
+        ? AppColorsLight.warning
+        : AppColorsLight.error;
 
     return Container(
       padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
         color: AppColorsLight.primary.withOpacity(0.05),
         borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
-        border: Border.all(color: AppColorsLight.primary.withOpacity(0.2), width: 1.5),
+        border: Border.all(
+          color: AppColorsLight.primary.withOpacity(0.2),
+          width: 1.5,
+        ),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -547,16 +586,25 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     const SizedBox(width: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: scoreColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusFull,
+                        ),
                         border: Border.all(color: scoreColor.withOpacity(0.2)),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.auto_awesome_rounded, size: 14, color: scoreColor),
+                          Icon(
+                            Icons.auto_awesome_rounded,
+                            size: 14,
+                            color: scoreColor,
+                          ),
                           const SizedBox(width: 4),
                           Text(
                             '${score}%',
@@ -573,11 +621,16 @@ class _ProfilePageState extends State<ProfilePage> {
                 const SizedBox(height: 4),
                 if (profile?.targetOpportunity.isNotEmpty == true)
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
                     margin: const EdgeInsets.only(bottom: 8),
                     decoration: BoxDecoration(
                       color: AppColorsLight.primary.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusFull,
+                      ),
                     ),
                     child: Text(
                       profile!.targetOpportunity,
@@ -587,10 +640,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                   ),
-                Text(
-                  profile?.email ?? '',
-                  style: AppTypography.bodySmall,
-                ),
+                Text(profile?.email ?? '', style: AppTypography.bodySmall),
                 const SizedBox(height: AppSpacing.sm),
                 _buildVerificationBadge(profile?.verificationStatus),
               ],
@@ -601,8 +651,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildVerificationBadge(
-      StudentVerificationStatus? status) {
+  Widget _buildVerificationBadge(StudentVerificationStatus? status) {
     Color color;
     String label;
     IconData icon;
@@ -611,31 +660,32 @@ class _ProfilePageState extends State<ProfilePage> {
       case StudentVerificationStatus.verified:
         color = AppColorsLight.success;
         label = 'profile.verification.verified'.tr();
-        icon  = Icons.verified_rounded;
+        icon = Icons.verified_rounded;
         break;
       case StudentVerificationStatus.pending:
         color = AppColorsLight.warning;
         label = 'profile.verification.pending'.tr();
-        icon  = Icons.hourglass_top_rounded;
+        icon = Icons.hourglass_top_rounded;
         break;
       case StudentVerificationStatus.rejected:
         color = AppColorsLight.error;
         label = 'profile.verification.rejected'.tr();
-        icon  = Icons.cancel_rounded;
+        icon = Icons.cancel_rounded;
         break;
       default:
         color = AppColorsLight.warning;
         label = 'profile.verification.unverified'.tr();
-        icon  = Icons.info_outline_rounded;
+        icon = Icons.info_outline_rounded;
     }
 
     return Container(
       padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.sm, vertical: 2),
+        horizontal: AppSpacing.sm,
+        vertical: 2,
+      ),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
-        borderRadius:
-            BorderRadius.circular(AppSpacing.radiusFull),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
         border: Border.all(color: color.withOpacity(0.3)),
       ),
       child: Row(
@@ -643,10 +693,7 @@ class _ProfilePageState extends State<ProfilePage> {
         children: [
           Icon(icon, size: 12, color: color),
           const SizedBox(width: 4),
-          Text(
-            label,
-            style: AppTypography.caption.copyWith(color: color),
-          ),
+          Text(label, style: AppTypography.caption.copyWith(color: color)),
         ],
       ),
     );
@@ -654,19 +701,26 @@ class _ProfilePageState extends State<ProfilePage> {
 
   // ─── Score card ───────────────────────────────────────────────────────────
 
-  Widget _buildScoreCard(BuildContext context,
-      StudentProfileData? profile, bool isCvUploading, bool isCvAnalyzing) {
-    
+  Widget _buildScoreCard(
+    BuildContext context,
+    StudentProfileData? profile,
+    bool isCvUploading,
+    bool isCvAnalyzing,
+  ) {
     final bool hasCv = profile?.cvUrl != null || profile?.cvFileName != null;
 
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
-        color: hasCv ? AppColorsLight.success.withOpacity(0.05) : AppColorsLight.primary.withOpacity(0.03),
+        color: hasCv
+            ? AppColorsLight.success.withOpacity(0.05)
+            : AppColorsLight.primary.withOpacity(0.03),
         borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
         border: Border.all(
-          color: hasCv ? AppColorsLight.success.withOpacity(0.3) : AppColorsLight.primary.withOpacity(0.2),
+          color: hasCv
+              ? AppColorsLight.success.withOpacity(0.3)
+              : AppColorsLight.primary.withOpacity(0.2),
           width: 1.5,
         ),
       ),
@@ -676,15 +730,17 @@ class _ProfilePageState extends State<ProfilePage> {
           Row(
             children: [
               Icon(
-                hasCv ? Icons.check_circle_rounded : Icons.document_scanner_rounded,
+                hasCv
+                    ? Icons.check_circle_rounded
+                    : Icons.document_scanner_rounded,
                 color: hasCv ? AppColorsLight.success : AppColorsLight.primary,
               ),
               const SizedBox(width: AppSpacing.sm),
-              Text('CV & Documents', style: AppTypography.headingSmall,),
+              Text('CV & Documents', style: AppTypography.headingSmall),
             ],
           ),
           const SizedBox(height: AppSpacing.md),
-          
+
           if (hasCv) ...[
             Container(
               padding: const EdgeInsets.all(AppSpacing.md),
@@ -707,7 +763,11 @@ class _ProfilePageState extends State<ProfilePage> {
                       color: AppColorsLight.error.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: const Icon(Icons.picture_as_pdf_rounded, color: AppColorsLight.error, size: 24),
+                    child: const Icon(
+                      Icons.picture_as_pdf_rounded,
+                      color: AppColorsLight.error,
+                      size: 24,
+                    ),
                   ),
                   const SizedBox(width: AppSpacing.md),
                   Expanded(
@@ -723,7 +783,9 @@ class _ProfilePageState extends State<ProfilePage> {
                         const SizedBox(height: 4),
                         Text(
                           'Vérifié par l\'IA',
-                          style: AppTypography.caption.copyWith(color: AppColorsLight.success),
+                          style: AppTypography.caption.copyWith(
+                            color: AppColorsLight.success,
+                          ),
                         ),
                       ],
                     ),
@@ -743,7 +805,9 @@ class _ProfilePageState extends State<ProfilePage> {
               decoration: BoxDecoration(
                 color: hasCv ? Colors.transparent : AppColorsLight.primary,
                 borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-                border: hasCv ? Border.all(color: AppColorsLight.primary) : null,
+                border: hasCv
+                    ? Border.all(color: AppColorsLight.primary)
+                    : null,
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -769,10 +833,10 @@ class _ProfilePageState extends State<ProfilePage> {
                       isCvAnalyzing
                           ? AppStrings.aiAnalyzing
                           : isCvUploading
-                              ? 'profile.cv.uploading'.tr()
-                              : hasCv
-                                  ? 'Mettre à jour le CV'
-                                  : 'Importer un CV (PDF)',
+                          ? 'profile.cv.uploading'.tr()
+                          : hasCv
+                          ? 'Mettre à jour le CV'
+                          : 'Importer un CV (PDF)',
                       style: AppTypography.labelLarge.copyWith(
                         color: hasCv ? AppColorsLight.primary : Colors.white,
                       ),
@@ -793,7 +857,9 @@ class _ProfilePageState extends State<ProfilePage> {
   // ─── Compétences ──────────────────────────────────────────────────────────
 
   Widget _buildSkillsSection(
-      BuildContext context, StudentProfileData? profile) {
+    BuildContext context,
+    StudentProfileData? profile,
+  ) {
     final skills = profile?.skills ?? [];
 
     return Column(
@@ -802,11 +868,17 @@ class _ProfilePageState extends State<ProfilePage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('profile.skills.title'.tr(), style: AppTypography.headingSmall),
+            Text(
+              'profile.skills.title'.tr(),
+              style: AppTypography.headingSmall,
+            ),
             TextButton.icon(
               onPressed: () => _showAddSkillDialog(context),
-              icon: const Icon(Icons.add_rounded,
-                  size: 16, color: AppColorsLight.primary),
+              icon: const Icon(
+                Icons.add_rounded,
+                size: 16,
+                color: AppColorsLight.primary,
+              ),
               label: Text(
                 'profile.skills.add'.tr(),
                 style: AppTypography.bodySmall.copyWith(
@@ -841,9 +913,11 @@ class _ProfilePageState extends State<ProfilePage> {
               ? Center(
                   child: Column(
                     children: [
-                      const Icon(Icons.bolt_rounded,
-                          size: 32,
-                          color: AppColorsLight.textTertiary),
+                      const Icon(
+                        Icons.bolt_rounded,
+                        size: 32,
+                        color: AppColorsLight.textTertiary,
+                      ),
                       const SizedBox(height: AppSpacing.sm),
                       Text(
                         'profile.skills.empty'.tr(),
@@ -853,8 +927,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       const SizedBox(height: AppSpacing.sm),
                       TextButton(
-                        onPressed: () =>
-                            _showAddSkillDialog(context),
+                        onPressed: () => _showAddSkillDialog(context),
                         child: Text(
                           'profile.skills.add_first'.tr(),
                           style: AppTypography.bodySmall.copyWith(
@@ -870,12 +943,13 @@ class _ProfilePageState extends State<ProfilePage> {
                   spacing: AppSpacing.sm,
                   runSpacing: AppSpacing.sm,
                   children: [
-                    ...skills.map((skill) => _SkillChip(
-                          label: skill.name,
-                          skillType: skill.skillType,
-                          onDelete: () =>
-                              _cubit.removeSkill(skill.id),
-                        )),
+                    ...skills.map(
+                      (skill) => _SkillChip(
+                        label: skill.name,
+                        skillType: skill.skillType,
+                        onDelete: () => _cubit.removeSkill(skill.id),
+                      ),
+                    ),
                     // Bouton ajouter stylisé
                     GestureDetector(
                       onTap: () => _showAddSkillDialog(context),
@@ -887,21 +961,24 @@ class _ProfilePageState extends State<ProfilePage> {
                         decoration: BoxDecoration(
                           color: AppColorsLight.primary.withOpacity(0.05),
                           borderRadius: BorderRadius.circular(
-                              AppSpacing.radiusFull),
+                            AppSpacing.radiusFull,
+                          ),
                           border: Border.all(
-                              color: AppColorsLight.primary.withOpacity(0.2)),
+                            color: AppColorsLight.primary.withOpacity(0.2),
+                          ),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Icon(Icons.add_rounded,
-                                size: 14,
-                                color: AppColorsLight.primary),
+                            const Icon(
+                              Icons.add_rounded,
+                              size: 14,
+                              color: AppColorsLight.primary,
+                            ),
                             const SizedBox(width: 4),
                             Text(
                               'profile.skills.add'.tr(),
-                              style: AppTypography.labelSmall
-                                  .copyWith(
+                              style: AppTypography.labelSmall.copyWith(
                                 color: AppColorsLight.primary,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -920,9 +997,11 @@ class _ProfilePageState extends State<ProfilePage> {
   // ─── Vérification ─────────────────────────────────────────────────────────
 
   Widget _buildVerificationSection(
-      BuildContext context, StudentProfileData? profile) {
-    final status = profile?.verificationStatus ??
-        StudentVerificationStatus.none;
+    BuildContext context,
+    StudentProfileData? profile,
+  ) {
+    final status =
+        profile?.verificationStatus ?? StudentVerificationStatus.none;
 
     if (status == StudentVerificationStatus.verified) {
       return Container(
@@ -930,13 +1009,15 @@ class _ProfilePageState extends State<ProfilePage> {
         decoration: BoxDecoration(
           color: AppColorsLight.success.withOpacity(0.05),
           borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
-          border: Border.all(
-              color: AppColorsLight.success.withOpacity(0.2)),
+          border: Border.all(color: AppColorsLight.success.withOpacity(0.2)),
         ),
         child: Row(
           children: [
-            const Icon(Icons.verified_rounded,
-                color: AppColorsLight.success, size: 28),
+            const Icon(
+              Icons.verified_rounded,
+              color: AppColorsLight.success,
+              size: 28,
+            ),
             const SizedBox(width: AppSpacing.md),
             Expanded(
               child: Column(
@@ -966,13 +1047,15 @@ class _ProfilePageState extends State<ProfilePage> {
         decoration: BoxDecoration(
           color: AppColorsLight.warning.withOpacity(0.05),
           borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
-          border: Border.all(
-              color: AppColorsLight.warning.withOpacity(0.2)),
+          border: Border.all(color: AppColorsLight.warning.withOpacity(0.2)),
         ),
         child: Row(
           children: [
-            const Icon(Icons.hourglass_top_rounded,
-                color: AppColorsLight.warning, size: 28),
+            const Icon(
+              Icons.hourglass_top_rounded,
+              color: AppColorsLight.warning,
+              size: 28,
+            ),
             const SizedBox(width: AppSpacing.md),
             Expanded(
               child: Column(
@@ -1001,16 +1084,14 @@ class _ProfilePageState extends State<ProfilePage> {
       decoration: BoxDecoration(
         color: AppColorsLight.primary.withOpacity(0.05),
         borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
-        border: Border.all(
-            color: AppColorsLight.primary.withOpacity(0.2)),
+        border: Border.all(color: AppColorsLight.primary.withOpacity(0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(Icons.verified_rounded,
-                  color: AppColorsLight.primary),
+              const Icon(Icons.verified_rounded, color: AppColorsLight.primary),
               const SizedBox(width: AppSpacing.sm),
               Text(
                 'profile.verification.get_badge'.tr(),
@@ -1042,7 +1123,8 @@ class _ProfilePageState extends State<ProfilePage> {
             onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (_) => const DocumentVerificationPage()),
+                builder: (_) => const DocumentVerificationPage(),
+              ),
             ),
             icon: const Icon(Icons.upload_rounded, size: 18),
             label: Text(
@@ -1055,8 +1137,7 @@ class _ProfilePageState extends State<ProfilePage> {
               side: const BorderSide(color: AppColorsLight.primary),
               minimumSize: const Size(double.infinity, 44),
               shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(AppSpacing.radiusMd),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
               ),
             ),
           ),
@@ -1065,53 +1146,15 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  // ─── Bouton déconnexion ───────────────────────────────────────────────────
-
-  Widget _buildLogoutButton() {
-    return BlocBuilder<AuthBloc, AuthState>(
-      builder: (context, state) {
-        final isLoading = state is AuthLoading;
-        return OutlinedButton.icon(
-          onPressed: isLoading ? null : _logout,
-          icon: isLoading
-              ? const SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(
-                    color: AppColorsLight.error,
-                    strokeWidth: 2,
-                  ),
-                )
-              : const Icon(Icons.logout_rounded,
-                  size: 18, color: AppColorsLight.error),
-          label: Text(
-            'profile.logout'.tr(),
-            style: AppTypography.labelLarge.copyWith(
-              color: AppColorsLight.error,
-            ),
-          ),
-          style: OutlinedButton.styleFrom(
-            side: const BorderSide(color: AppColorsLight.error),
-            minimumSize: const Size(double.infinity, 44),
-            shape: RoundedRectangleBorder(
-              borderRadius:
-                  BorderRadius.circular(AppSpacing.radiusMd),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   // ─── Helpers ─────────────────────────────────────────────────────────────
 
-  void _showSnack(BuildContext context, String msg,
-      {bool isError = false}) {
+  void _showSnack(BuildContext context, String msg, {bool isError = false}) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(msg),
-        backgroundColor:
-            isError ? AppColorsLight.error : AppColorsLight.success,
+        backgroundColor: isError
+            ? AppColorsLight.error
+            : AppColorsLight.success,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
@@ -1121,12 +1164,12 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   StudentProfileData? _extractProfile(StudentProfileState state) {
-    if (state is StudentProfileLoaded)   return state.profile;
-    if (state is StudentProfileSaving)   return state.profile;
-    if (state is StudentProfileSaved)    return state.profile;
-    if (state is StudentPhotoUploading)  return state.profile;
-    if (state is StudentCvUploading)     return state.profile;
-    if (state is StudentProfileError)    return state.lastKnownProfile;
+    if (state is StudentProfileLoaded) return state.profile;
+    if (state is StudentProfileSaving) return state.profile;
+    if (state is StudentProfileSaved) return state.profile;
+    if (state is StudentPhotoUploading) return state.profile;
+    if (state is StudentCvUploading) return state.profile;
+    if (state is StudentProfileError) return state.lastKnownProfile;
     return null;
   }
 }
@@ -1162,7 +1205,9 @@ class _SkillChip extends StatelessWidget {
     final color = getSkillColor();
 
     return Container(
-      constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.7),
+      constraints: BoxConstraints(
+        maxWidth: MediaQuery.of(context).size.width * 0.7,
+      ),
       padding: const EdgeInsets.only(left: 12, right: 4, top: 4, bottom: 4),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
@@ -1189,8 +1234,11 @@ class _SkillChip extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
             child: Padding(
               padding: const EdgeInsets.all(4),
-              child: Icon(Icons.close_rounded,
-                  size: 14, color: color.withOpacity(0.8)),
+              child: Icon(
+                Icons.close_rounded,
+                size: 14,
+                color: color.withOpacity(0.8),
+              ),
             ),
           ),
         ],
@@ -1216,19 +1264,17 @@ class _TypeChip extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.sm, vertical: 4),
+          horizontal: AppSpacing.sm,
+          vertical: 4,
+        ),
         decoration: BoxDecoration(
-          color: isSelected
-              ? AppColorsLight.primary
-              : AppColorsLight.bgSurface,
-          borderRadius:
-              BorderRadius.circular(AppSpacing.radiusFull),
+          color: isSelected ? AppColorsLight.primary : AppColorsLight.bgSurface,
+          borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
         ),
         child: Text(
           label,
           style: AppTypography.caption.copyWith(
-            color:
-                isSelected ? Colors.white : AppColorsLight.textSecondary,
+            color: isSelected ? Colors.white : AppColorsLight.textSecondary,
             fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
           ),
         ),

@@ -121,7 +121,16 @@ export function calculateFinalScore(
   let totalScore = totalWeightedScore / validWeights;
     
   if (hardSkills === 0 && offerRequiredSkills && offerRequiredSkills.length > 0) {
-    totalScore = Math.min(SCORING_CONFIG.hardSkillsZeroCap, totalScore);
+    if (semantic < 40) {
+      // PÉNALITÉ HORS-SUJET : 
+      // Le candidat n'a aucune compétence technique et le domaine (sémantique) est très éloigné.
+      // On écrase le bonus d'expérience/éducation en multipliant par le faible ratio sémantique.
+      totalScore = totalScore * (semantic / 100);
+    } else {
+      // Le candidat est dans le même domaine (sémantique >= 40) mais n'a pas les compétences exactes.
+      // On plafonne le score à 40%.
+      totalScore = Math.min(SCORING_CONFIG.hardSkillsZeroCap, totalScore);
+    }
   }
   
   return {

@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -69,16 +70,14 @@ class _DashboardPageState extends State<DashboardPage> {
                   height: size.height * 0.25,
                   child: Container(
                     decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [AppColorsLight.primary, Color(0xFF4A148C)],
-                      ),
+                      color: AppColorsLight.primary,
                     ),
                     child: SafeArea(
                       bottom: false,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.lg,
+                        ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -162,13 +161,22 @@ class _DashboardPageState extends State<DashboardPage> {
     final unreadMessages = state is DashboardLoaded
         ? state.metrics.unreadMessages
         : 0;
-    final companyLogo = state is DashboardLoaded
-        ? state.companyLogo
-        : null;
+    final companyLogo = state is DashboardLoaded ? state.companyLogo : null;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
+        IconButton(
+          icon: const Icon(
+            Icons.menu_rounded,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            final advancedDrawerController =
+                context.read<AdvancedDrawerController?>();
+            advancedDrawerController?.showDrawer();
+          },
+        ),
         Expanded(
           child: Row(
             children: [
@@ -263,10 +271,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   decoration: BoxDecoration(
                     color: AppColorsLight.accentRed,
                     shape: BoxShape.circle,
-                    border: Border.all(
-                      color: AppColorsLight.bgCard,
-                      width: 2,
-                    ),
+                    border: Border.all(color: AppColorsLight.bgCard, width: 2),
                   ),
                 ),
               ),
@@ -288,7 +293,10 @@ class _DashboardPageState extends State<DashboardPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('company.dashboard.overview'.tr(), style: AppTypography.headingSmall),
+        Text(
+          'company.dashboard.overview'.tr(),
+          style: AppTypography.headingSmall,
+        ),
         const SizedBox(height: AppSpacing.md),
         Row(
           children: [
@@ -344,16 +352,17 @@ class _DashboardPageState extends State<DashboardPage> {
 
   // ─── Candidatures récentes ────────────────────────────────────────────────
 
-  Widget _buildRecentApplications(
-      BuildContext context, DashboardState state) {
+  Widget _buildRecentApplications(BuildContext context, DashboardState state) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('company.dashboard.recent_applications'.tr(),
-                style: AppTypography.headingSmall),
+            Text(
+              'company.dashboard.recent_applications'.tr(),
+              style: AppTypography.headingSmall,
+            ),
             TextButton(
               // Redirige vers TOUTES les candidatures, sans filtre offerId
               onPressed: () => context.push('/company/candidates/all'),
@@ -407,7 +416,10 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Widget _buildApplicationCard(
-      BuildContext context, RecentApplication app, int index) {
+    BuildContext context,
+    RecentApplication app,
+    int index,
+  ) {
     final avatarGradients = <List<Color>>[
       [AppColorsLight.primary, AppColorsLight.secondary],
       [AppColorsLight.textPrimary, AppColorsLight.success],
@@ -446,8 +458,7 @@ class _DashboardPageState extends State<DashboardPage> {
         borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
-          onTap: () =>
-              context.push('/company/candidates/${app.applicationId}'),
+          onTap: () => context.push('/company/candidates/${app.applicationId}'),
           child: Padding(
             padding: const EdgeInsets.all(AppSpacing.md),
             child: Row(
@@ -502,7 +513,10 @@ class _DashboardPageState extends State<DashboardPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('company.dashboard.quick_actions'.tr(), style: AppTypography.headingSmall),
+        Text(
+          'company.dashboard.quick_actions'.tr(),
+          style: AppTypography.headingSmall,
+        ),
         const SizedBox(height: AppSpacing.md),
         Container(
           width: double.infinity,
@@ -512,10 +526,7 @@ class _DashboardPageState extends State<DashboardPage> {
             gradient: LinearGradient(
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
-              colors: [
-                AppColorsLight.textPrimary,
-                AppColorsLight.primary,
-              ],
+              colors: [AppColorsLight.textPrimary, AppColorsLight.primary],
             ),
             boxShadow: [
               BoxShadow(
@@ -584,8 +595,11 @@ class _DashboardPageState extends State<DashboardPage> {
       child: Center(
         child: Column(
           children: [
-            Icon(Icons.inbox_rounded,
-                size: 40, color: AppColorsLight.textTertiary),
+            Icon(
+              Icons.inbox_rounded,
+              size: 40,
+              color: AppColorsLight.textTertiary,
+            ),
             const SizedBox(height: AppSpacing.sm),
             Text(
               'company.dashboard.empty_applications'.tr(),
@@ -620,8 +634,7 @@ class _DashboardPageState extends State<DashboardPage> {
       ),
       child: Row(
         children: [
-          Icon(Icons.wifi_off_rounded,
-              color: AppColorsLight.error, size: 20),
+          Icon(Icons.wifi_off_rounded, color: AppColorsLight.error, size: 20),
           const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Text(
@@ -695,8 +708,7 @@ class _MetricCard extends StatelessWidget {
                   height: 42,
                   decoration: BoxDecoration(
                     color: color.withOpacity(0.12),
-                    borderRadius:
-                        BorderRadius.circular(AppSpacing.radiusMd),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                   ),
                   child: Icon(icon, color: color, size: 21),
                 ),

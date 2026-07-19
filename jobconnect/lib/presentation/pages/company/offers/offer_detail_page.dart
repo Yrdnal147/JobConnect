@@ -15,39 +15,43 @@ class CompanyOfferDetailPage extends StatefulWidget {
   const CompanyOfferDetailPage({super.key, required this.offerId});
 
   @override
-  State<CompanyOfferDetailPage> createState() =>
-      _CompanyOfferDetailPageState();
+  State<CompanyOfferDetailPage> createState() => _CompanyOfferDetailPageState();
 }
 
 class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
   late final OfferDetailCubit _cubit;
 
   // Controllers pour le mode édition
-  final _titleCtrl       = TextEditingController();
+  final _titleCtrl = TextEditingController();
   final _descriptionCtrl = TextEditingController();
-  final _locationCtrl    = TextEditingController();
-  final _salaryCtrl      = TextEditingController();
-  final _durationCtrl    = TextEditingController();
-  final _skillCtrl       = TextEditingController();
+  final _locationCtrl = TextEditingController();
+  final _salaryCtrl = TextEditingController();
+  final _durationCtrl = TextEditingController();
+  final _skillCtrl = TextEditingController();
 
-  String _offerType    = 'cdi';
+  String _offerType = 'cdi';
   String _minEducation = 'bac+3';
-  int    _yearsOfExp   = 0;
-  bool   _isActive     = true;
+  int _yearsOfExp = 0;
+  bool _isActive = true;
   List<String> _skills = [];
 
   bool _isEditing = false;
   bool _controllersInitialized = false;
 
   final List<Map<String, String>> _offerTypes = [
-    {'value': 'cdi',                 'label': 'CDI'},
-    {'value': 'cdd',                 'label': 'CDD'},
-    {'value': 'stage_academique',    'label': 'Stage académique'},
+    {'value': 'cdi', 'label': 'CDI'},
+    {'value': 'cdd', 'label': 'CDD'},
+    {'value': 'stage_academique', 'label': 'Stage académique'},
     {'value': 'stage_professionnel', 'label': 'Stage professionnel'},
   ];
 
   final List<String> _educationLevels = [
-    'bac', 'bac+2', 'bac+3', 'bac+4', 'bac+5', 'doctorat'
+    'bac',
+    'bac+2',
+    'bac+3',
+    'bac+4',
+    'bac+5',
+    'doctorat',
   ];
 
   @override
@@ -73,18 +77,16 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
 
   void _initControllers(OfferItem offer) {
     if (_controllersInitialized) return;
-    _titleCtrl.text       = offer.title;
+    _titleCtrl.text = offer.title;
     _descriptionCtrl.text = offer.description;
-    _locationCtrl.text    = offer.location;
-    _salaryCtrl.text      = offer.salaryRange ?? '';
-    _durationCtrl.text    = offer.durationMonths?.toString() ?? '';
-    _offerType            = offer.offerType;
-    _minEducation         = offer.minEducation.isEmpty
-        ? 'bac+3'
-        : offer.minEducation;
-    _yearsOfExp           = offer.yearsOfExperience;
-    _isActive             = offer.isActive;
-    _skills               = List.from(offer.requiredSkills);
+    _locationCtrl.text = offer.location;
+    _salaryCtrl.text = offer.salaryRange ?? '';
+    _durationCtrl.text = offer.durationMonths?.toString() ?? '';
+    _offerType = offer.offerType;
+    _minEducation = offer.minEducation.isEmpty ? 'bac+3' : offer.minEducation;
+    _yearsOfExp = offer.yearsOfExperience;
+    _isActive = offer.isActive;
+    _skills = List.from(offer.requiredSkills);
     _controllersInitialized = true;
   }
 
@@ -147,8 +149,7 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
               ),
             ),
             const SizedBox(width: AppSpacing.sm),
-            Text('Supprimer l\'offre',
-                style: AppTypography.headingSmall),
+            Text('Supprimer l\'offre', style: AppTypography.headingSmall),
           ],
         ),
         content: Column(
@@ -164,8 +165,7 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
               padding: const EdgeInsets.all(AppSpacing.sm),
               decoration: BoxDecoration(
                 color: AppColorsLight.error.withOpacity(0.05),
-                borderRadius:
-                    BorderRadius.circular(AppSpacing.radiusMd),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                 border: Border.all(
                   color: AppColorsLight.error.withOpacity(0.2),
                 ),
@@ -211,15 +211,12 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColorsLight.error,
               shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(AppSpacing.radiusMd),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
               ),
             ),
             child: Text(
               'Supprimer',
-              style: AppTypography.labelLarge.copyWith(
-                color: Colors.white,
-              ),
+              style: AppTypography.labelLarge.copyWith(color: Colors.white),
             ),
           ),
         ],
@@ -229,21 +226,31 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
 
   String _formatOfferType(String type) {
     switch (type) {
-      case 'cdi':                 return 'CDI';
-      case 'cdd':                 return 'CDD';
-      case 'stage_academique':    return 'Stage académique';
-      case 'stage_professionnel': return 'Stage professionnel';
-      default:                    return type;
+      case 'cdi':
+        return 'CDI';
+      case 'cdd':
+        return 'CDD';
+      case 'stage_academique':
+        return 'Stage académique';
+      case 'stage_professionnel':
+        return 'Stage professionnel';
+      default:
+        return type;
     }
   }
 
   IconData _iconForOfferType(String value) {
     switch (value) {
-      case 'cdi':                 return Icons.work_rounded;
-      case 'cdd':                 return Icons.event_note_rounded;
-      case 'stage_academique':    return Icons.school_rounded;
-      case 'stage_professionnel': return Icons.business_center_rounded;
-      default:                    return Icons.work_rounded;
+      case 'cdi':
+        return Icons.work_rounded;
+      case 'cdd':
+        return Icons.event_note_rounded;
+      case 'stage_academique':
+        return Icons.school_rounded;
+      case 'stage_professionnel':
+        return Icons.business_center_rounded;
+      default:
+        return Icons.work_rounded;
     }
   }
 
@@ -253,8 +260,7 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
       filled: true,
       fillColor: AppColorsLight.bgDark,
       prefixIcon: prefixIcon != null
-          ? Icon(prefixIcon, size: 20,
-              color: AppColorsLight.textTertiary)
+          ? Icon(prefixIcon, size: 20, color: AppColorsLight.textTertiary)
           : null,
       contentPadding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.md,
@@ -270,8 +276,7 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-        borderSide: const BorderSide(
-            color: AppColorsLight.primary, width: 1.5),
+        borderSide: const BorderSide(color: AppColorsLight.primary, width: 1.5),
       ),
     );
   }
@@ -279,9 +284,11 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
   Widget _sectionLabel(String text, IconData icon) {
     return Row(
       children: [
-        Icon(icon,
-            size: 16,
-            color: AppColorsLight.textPrimary.withOpacity(0.6)),
+        Icon(
+          icon,
+          size: 16,
+          color: AppColorsLight.textPrimary.withOpacity(0.6),
+        ),
         const SizedBox(width: 6),
         Text(text, style: AppTypography.labelLarge),
       ],
@@ -305,8 +312,7 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
                 backgroundColor: AppColorsLight.success,
                 behavior: SnackBarBehavior.floating,
                 shape: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(AppSpacing.radiusMd),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                 ),
               ),
             );
@@ -318,8 +324,7 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
                 backgroundColor: AppColorsLight.error,
                 behavior: SnackBarBehavior.floating,
                 shape: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(AppSpacing.radiusMd),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                 ),
               ),
             );
@@ -332,18 +337,17 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
                 backgroundColor: AppColorsLight.error,
                 behavior: SnackBarBehavior.floating,
                 shape: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(AppSpacing.radiusMd),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                 ),
               ),
             );
           }
         },
         builder: (context, state) {
-          final isLoading  = state is OfferDetailLoading;
+          final isLoading = state is OfferDetailLoading;
           final isUpdating = state is OfferDetailUpdating;
           final isDeleting = state is OfferDetailDeleting;
-          final isBusy     = isUpdating || isDeleting;
+          final isBusy = isUpdating || isDeleting;
           final offer = _extractOffer(state);
           final size = MediaQuery.of(context).size;
 
@@ -359,21 +363,23 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
                   height: size.height * 0.25,
                   child: Container(
                     decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [AppColorsLight.primary, Color(0xFF4A148C)],
-                      ),
+                      color: AppColorsLight.primary,
                     ),
                     child: SafeArea(
                       bottom: false,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.sm),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.sm,
+                          vertical: AppSpacing.sm,
+                        ),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             IconButton(
-                              icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.white),
+                              icon: const Icon(
+                                Icons.arrow_back_ios_rounded,
+                                color: Colors.white,
+                              ),
                               onPressed: () {
                                 if (Navigator.of(context).canPop()) {
                                   Navigator.of(context).pop();
@@ -390,8 +396,13 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
                                 children: [
                                   const SizedBox(height: 6),
                                   Text(
-                                    _isEditing ? 'Modifier l\'offre' : 'Détail de l\'offre',
-                                    style: AppTypography.displayMedium.copyWith(color: Colors.white, fontSize: 26),
+                                    _isEditing
+                                        ? 'Modifier l\'offre'
+                                        : 'Détail de l\'offre',
+                                    style: AppTypography.displayMedium.copyWith(
+                                      color: Colors.white,
+                                      fontSize: 26,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -411,8 +422,10 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
                               // Bouton Supprimer
                               if (!_isEditing)
                                 IconButton(
-                                  icon: const Icon(Icons.delete_outline_rounded,
-                                      color: Colors.white),
+                                  icon: const Icon(
+                                    Icons.delete_outline_rounded,
+                                    color: Colors.white,
+                                  ),
                                   onPressed: () => _showDeleteDialog(context),
                                   tooltip: 'Supprimer',
                                 ),
@@ -452,12 +465,14 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
                           child: isLoading
                               ? const Center(
                                   child: CircularProgressIndicator(
-                                      color: AppColorsLight.primary))
+                                    color: AppColorsLight.primary,
+                                  ),
+                                )
                               : offer == null
-                                  ? _buildErrorState(context)
-                                  : _isEditing
-                                      ? _buildEditMode(offer, isBusy)
-                                      : _buildViewMode(offer, isDeleting),
+                              ? _buildErrorState(context)
+                              : _isEditing
+                              ? _buildEditMode(offer, isBusy)
+                              : _buildViewMode(offer, isDeleting),
                         ),
                       ),
                     ),
@@ -501,13 +516,16 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
                     // Badge actif/inactif
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: AppSpacing.sm, vertical: 4),
+                        horizontal: AppSpacing.sm,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: offer.isActive
                             ? AppColorsLight.success.withOpacity(0.1)
                             : AppColorsLight.textTertiary.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(
-                            AppSpacing.radiusFull),
+                          AppSpacing.radiusFull,
+                        ),
                         border: Border.all(
                           color: offer.isActive
                               ? AppColorsLight.success.withOpacity(0.3)
@@ -587,18 +605,22 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
                 const SizedBox(height: AppSpacing.md),
                 Row(
                   children: [
-                    Icon(Icons.schedule_rounded,
-                        size: 13,
-                        color: AppColorsLight.textTertiary),
+                    Icon(
+                      Icons.schedule_rounded,
+                      size: 13,
+                      color: AppColorsLight.textTertiary,
+                    ),
                     const SizedBox(width: 4),
                     Text(
                       'Publié le ${offer.postedAt}',
                       style: AppTypography.caption,
                     ),
                     const SizedBox(width: AppSpacing.md),
-                    Icon(Icons.people_outline_rounded,
-                        size: 13,
-                        color: AppColorsLight.secondary),
+                    Icon(
+                      Icons.people_outline_rounded,
+                      size: 13,
+                      color: AppColorsLight.secondary,
+                    ),
                     const SizedBox(width: 4),
                     Text(
                       '${offer.applicationsCount} candidature${offer.applicationsCount > 1 ? 's' : ''}',
@@ -626,12 +648,13 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.description_outlined,
-                        size: 16,
-                        color: AppColorsLight.primary),
+                    Icon(
+                      Icons.description_outlined,
+                      size: 16,
+                      color: AppColorsLight.primary,
+                    ),
                     const SizedBox(width: 6),
-                    Text('Description',
-                        style: AppTypography.headingSmall),
+                    Text('Description', style: AppTypography.headingSmall),
                   ],
                 ),
                 const SizedBox(height: AppSpacing.md),
@@ -662,12 +685,16 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.star_outline_rounded,
-                        size: 16,
-                        color: AppColorsLight.primary),
+                    Icon(
+                      Icons.star_outline_rounded,
+                      size: 16,
+                      color: AppColorsLight.primary,
+                    ),
                     const SizedBox(width: 6),
-                    Text('Compétences requises',
-                        style: AppTypography.headingSmall),
+                    Text(
+                      'Compétences requises',
+                      style: AppTypography.headingSmall,
+                    ),
                   ],
                 ),
                 const SizedBox(height: AppSpacing.md),
@@ -688,13 +715,12 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
                               vertical: 6,
                             ),
                             decoration: BoxDecoration(
-                              color: AppColorsLight.primary
-                                  .withOpacity(0.1),
+                              color: AppColorsLight.primary.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(
-                                  AppSpacing.radiusFull),
+                                AppSpacing.radiusFull,
+                              ),
                               border: Border.all(
-                                color: AppColorsLight.primary
-                                    .withOpacity(0.25),
+                                color: AppColorsLight.primary.withOpacity(0.25),
                               ),
                             ),
                             child: Text(
@@ -718,10 +744,9 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
             height: 52,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-              gradient: LinearGradient(colors: [
-                AppColorsLight.textPrimary,
-                AppColorsLight.primary,
-              ]),
+              gradient: LinearGradient(
+                colors: [AppColorsLight.textPrimary, AppColorsLight.primary],
+              ),
               boxShadow: [
                 BoxShadow(
                   color: AppColorsLight.primary.withOpacity(0.3),
@@ -735,15 +760,15 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
               borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
               clipBehavior: Clip.antiAlias,
               child: InkWell(
-                onTap: () => 
-                context.push('/company/candidates/all?offerId=${offer.offerId}'),
-                
+                onTap: () => context.push(
+                  '/company/candidates/all?offerId=${offer.offerId}',
+                ),
+
                 child: Center(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.people_rounded,
-                          color: Colors.white),
+                      const Icon(Icons.people_rounded, color: Colors.white),
                       const SizedBox(width: AppSpacing.sm),
                       Text(
                         'Voir les candidatures (${offer.applicationsCount})',
@@ -764,8 +789,7 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
             const Center(
               child: Column(
                 children: [
-                  CircularProgressIndicator(
-                      color: AppColorsLight.error),
+                  CircularProgressIndicator(color: AppColorsLight.error),
                   SizedBox(height: AppSpacing.sm),
                   Text('Suppression en cours...'),
                 ],
@@ -778,7 +802,7 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
     );
   }
 
-  //  Mode édition 
+  //  Mode édition
 
   Widget _buildEditMode(OfferItem offer, bool isBusy) {
     return Column(
@@ -796,8 +820,10 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
                   controller: _titleCtrl,
                   style: AppTypography.bodyLarge,
                   enabled: !isBusy,
-                  decoration: _decoration('Ex: Développeur react Js',
-                      prefixIcon: Icons.work_outline_rounded),
+                  decoration: _decoration(
+                    'Ex: Développeur react Js',
+                    prefixIcon: Icons.work_outline_rounded,
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.lg),
 
@@ -812,8 +838,7 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
                     return GestureDetector(
                       onTap: isBusy
                           ? null
-                          : () => setState(
-                              () => _offerType = type['value']!),
+                          : () => setState(() => _offerType = type['value']!),
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 200),
                         padding: const EdgeInsets.symmetric(
@@ -822,16 +847,17 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
                         ),
                         decoration: BoxDecoration(
                           gradient: isSelected
-                              ? LinearGradient(colors: [
-                                  AppColorsLight.textPrimary,
-                                  AppColorsLight.primary,
-                                ])
+                              ? LinearGradient(
+                                  colors: [
+                                    AppColorsLight.textPrimary,
+                                    AppColorsLight.primary,
+                                  ],
+                                )
                               : null,
-                          color: isSelected
-                              ? null
-                              : AppColorsLight.bgCard,
+                          color: isSelected ? null : AppColorsLight.bgCard,
                           borderRadius: BorderRadius.circular(
-                              AppSpacing.radiusFull),
+                            AppSpacing.radiusFull,
+                          ),
                           border: Border.all(
                             color: isSelected
                                 ? Colors.transparent
@@ -876,13 +902,17 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
                   maxLines: 6,
                   style: AppTypography.bodyLarge,
                   enabled: !isBusy,
-                  decoration: _decoration('Décrivez le poste, les missions et les responsabilités...'),
+                  decoration: _decoration(
+                    'Décrivez le poste, les missions et les responsabilités...',
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.lg),
 
-                //  Compétences 
-                _sectionLabel('Compétences requises',
-                    Icons.star_outline_rounded),
+                //  Compétences
+                _sectionLabel(
+                  'Compétences requises',
+                  Icons.star_outline_rounded,
+                ),
                 const SizedBox(height: AppSpacing.sm),
                 Row(
                   children: [
@@ -891,8 +921,10 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
                         controller: _skillCtrl,
                         style: AppTypography.bodyLarge,
                         enabled: !isBusy,
-                        decoration: _decoration('Ex:  Maitrise de Django Rest  ',
-                            prefixIcon: Icons.bolt_rounded),
+                        decoration: _decoration(
+                          'Ex:  Maitrise de Django Rest  ',
+                          prefixIcon: Icons.bolt_rounded,
+                        ),
                         onSubmitted: (_) => _addSkill(),
                       ),
                     ),
@@ -901,17 +933,22 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
                       width: 44,
                       height: 44,
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(colors: [
-                          AppColorsLight.textPrimary,
-                          AppColorsLight.primary,
-                        ]),
+                        gradient: LinearGradient(
+                          colors: [
+                            AppColorsLight.textPrimary,
+                            AppColorsLight.primary,
+                          ],
+                        ),
                         shape: BoxShape.circle,
                       ),
                       child: IconButton(
                         padding: EdgeInsets.zero,
                         onPressed: isBusy ? null : _addSkill,
-                        icon: const Icon(Icons.add_rounded,
-                            color: Colors.white, size: 18),
+                        icon: const Icon(
+                          Icons.add_rounded,
+                          color: Colors.white,
+                          size: 18,
+                        ),
                       ),
                     ),
                   ],
@@ -921,13 +958,14 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
                     ? Container(
                         width: double.infinity,
                         padding: const EdgeInsets.symmetric(
-                            vertical: AppSpacing.md),
+                          vertical: AppSpacing.md,
+                        ),
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(
-                              AppSpacing.radiusMd),
-                          border: Border.all(
-                              color: AppColorsLight.bgSurface),
+                            AppSpacing.radiusMd,
+                          ),
+                          border: Border.all(color: AppColorsLight.bgSurface),
                         ),
                         child: Text(
                           'Aucune compétence ajoutée',
@@ -948,15 +986,16 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
-                            backgroundColor:
-                                AppColorsLight.primary.withOpacity(0.1),
+                            backgroundColor: AppColorsLight.primary.withOpacity(
+                              0.1,
+                            ),
                             side: BorderSide(
-                              color: AppColorsLight.primary
-                                  .withOpacity(0.25),
+                              color: AppColorsLight.primary.withOpacity(0.25),
                             ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(
-                                  AppSpacing.radiusFull),
+                                AppSpacing.radiusFull,
+                              ),
                             ),
                             deleteIcon: Icon(
                               Icons.close_rounded,
@@ -965,16 +1004,17 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
                             ),
                             onDeleted: isBusy
                                 ? null
-                                : () => setState(
-                                    () => _skills.remove(skill)),
+                                : () => setState(() => _skills.remove(skill)),
                           );
                         }).toList(),
                       ),
                 const SizedBox(height: AppSpacing.lg),
 
-                //  Niveau d'éducation 
-                _sectionLabel('Niveau d\'éducation minimum',
-                    Icons.school_outlined),
+                //  Niveau d'éducation
+                _sectionLabel(
+                  'Niveau d\'éducation minimum',
+                  Icons.school_outlined,
+                ),
                 const SizedBox(height: AppSpacing.sm),
                 DropdownButtonFormField<String>(
                   value: _minEducation,
@@ -997,18 +1037,15 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
                 ),
                 const SizedBox(height: AppSpacing.lg),
 
-                //  Années d'expérience 
-                _sectionLabel('Années d\'expérience',
-                    Icons.timeline_rounded),
+                //  Années d'expérience
+                _sectionLabel('Années d\'expérience', Icons.timeline_rounded),
                 const SizedBox(height: AppSpacing.sm),
                 Container(
                   padding: const EdgeInsets.all(AppSpacing.md),
                   decoration: BoxDecoration(
                     color: AppColorsLight.bgCard,
-                    borderRadius:
-                        BorderRadius.circular(AppSpacing.radiusMd),
-                    border:
-                        Border.all(color: AppColorsLight.bgSurface),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                    border: Border.all(color: AppColorsLight.bgSurface),
                   ),
                   child: Row(
                     children: [
@@ -1038,22 +1075,22 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
                               height: 32,
                               decoration: BoxDecoration(
                                 color: _yearsOfExp > 0
-                                    ? AppColorsLight.primary
-                                        .withOpacity(0.1)
+                                    ? AppColorsLight.primary.withOpacity(0.1)
                                     : AppColorsLight.bgSurface,
                                 shape: BoxShape.circle,
                                 border: Border.all(
                                   color: _yearsOfExp > 0
-                                      ? AppColorsLight.primary
-                                          .withOpacity(0.3)
+                                      ? AppColorsLight.primary.withOpacity(0.3)
                                       : AppColorsLight.bgSurface,
                                 ),
                               ),
-                              child: Icon(Icons.remove_rounded,
-                                  size: 16,
-                                  color: _yearsOfExp > 0
-                                      ? AppColorsLight.primary
-                                      : AppColorsLight.textTertiary),
+                              child: Icon(
+                                Icons.remove_rounded,
+                                size: 16,
+                                color: _yearsOfExp > 0
+                                    ? AppColorsLight.primary
+                                    : AppColorsLight.textTertiary,
+                              ),
                             ),
                           ),
                           const SizedBox(width: 8),
@@ -1076,14 +1113,19 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
                               width: 32,
                               height: 32,
                               decoration: BoxDecoration(
-                                gradient: LinearGradient(colors: [
-                                  AppColorsLight.textPrimary,
-                                  AppColorsLight.primary,
-                                ]),
+                                gradient: LinearGradient(
+                                  colors: [
+                                    AppColorsLight.textPrimary,
+                                    AppColorsLight.primary,
+                                  ],
+                                ),
                                 shape: BoxShape.circle,
                               ),
-                              child: const Icon(Icons.add_rounded,
-                                  size: 16, color: Colors.white),
+                              child: const Icon(
+                                Icons.add_rounded,
+                                size: 16,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ],
@@ -1100,38 +1142,45 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
                   controller: _locationCtrl,
                   style: AppTypography.bodyLarge,
                   enabled: !isBusy,
-                  decoration: _decoration('Ex: Douala',
-                      prefixIcon: Icons.location_on_outlined),
+                  decoration: _decoration(
+                    'Ex: Douala',
+                    prefixIcon: Icons.location_on_outlined,
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.lg),
 
                 // ── Durée si stage ─────────────────────────────────────
                 if (_offerType == 'stage_academique' ||
                     _offerType == 'stage_professionnel') ...[
-                  _sectionLabel(
-                      'Durée (mois)', Icons.calendar_month_rounded),
+                  _sectionLabel('Durée (mois)', Icons.calendar_month_rounded),
                   const SizedBox(height: AppSpacing.sm),
                   TextField(
                     controller: _durationCtrl,
                     style: AppTypography.bodyLarge,
                     enabled: !isBusy,
                     keyboardType: TextInputType.number,
-                    decoration: _decoration('Ex: 3',
-                        prefixIcon: Icons.calendar_month_rounded),
+                    decoration: _decoration(
+                      'Ex: 3',
+                      prefixIcon: Icons.calendar_month_rounded,
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.lg),
                 ],
 
                 // ── Rémunération ───────────────────────────────────────
-                _sectionLabel('Rémunération (optionnel)',
-                    Icons.payments_outlined),
+                _sectionLabel(
+                  'Rémunération (optionnel)',
+                  Icons.payments_outlined,
+                ),
                 const SizedBox(height: AppSpacing.sm),
                 TextField(
                   controller: _salaryCtrl,
                   style: AppTypography.bodyLarge,
                   enabled: !isBusy,
-                  decoration: _decoration('Ex: 100 000 FCFA / mois',
-                      prefixIcon: Icons.payments_outlined),
+                  decoration: _decoration(
+                    'Ex: 100 000 FCFA / mois',
+                    prefixIcon: Icons.payments_outlined,
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.lg),
 
@@ -1140,10 +1189,8 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
                   padding: const EdgeInsets.all(AppSpacing.md),
                   decoration: BoxDecoration(
                     color: AppColorsLight.bgCard,
-                    borderRadius:
-                        BorderRadius.circular(AppSpacing.radiusMd),
-                    border:
-                        Border.all(color: AppColorsLight.bgSurface),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                    border: Border.all(color: AppColorsLight.bgSurface),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1151,8 +1198,7 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Offre active',
-                              style: AppTypography.labelLarge),
+                          Text('Offre active', style: AppTypography.labelLarge),
                           Text(
                             _isActive
                                 ? 'Visible par les candidats'
@@ -1200,14 +1246,18 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
               gradient: isBusy
-                  ? LinearGradient(colors: [
-                      AppColorsLight.textPrimary.withOpacity(0.5),
-                      AppColorsLight.primary.withOpacity(0.5),
-                    ])
-                  : LinearGradient(colors: [
-                      AppColorsLight.textPrimary,
-                      AppColorsLight.primary,
-                    ]),
+                  ? LinearGradient(
+                      colors: [
+                        AppColorsLight.textPrimary.withOpacity(0.5),
+                        AppColorsLight.primary.withOpacity(0.5),
+                      ],
+                    )
+                  : LinearGradient(
+                      colors: [
+                        AppColorsLight.textPrimary,
+                        AppColorsLight.primary,
+                      ],
+                    ),
               boxShadow: isBusy
                   ? []
                   : [
@@ -1259,12 +1309,17 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.error_outline_rounded,
-                color: AppColorsLight.textTertiary, size: 48),
+            const Icon(
+              Icons.error_outline_rounded,
+              color: AppColorsLight.textTertiary,
+              size: 48,
+            ),
             const SizedBox(height: AppSpacing.md),
-            Text('Offre introuvable',
-                style: AppTypography.headingSmall,
-                textAlign: TextAlign.center),
+            Text(
+              'Offre introuvable',
+              style: AppTypography.headingSmall,
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: AppSpacing.lg),
             ElevatedButton.icon(
               onPressed: () => _cubit.loadOffer(widget.offerId),
@@ -1281,11 +1336,11 @@ class _CompanyOfferDetailPageState extends State<CompanyOfferDetailPage> {
   }
 
   OfferItem? _extractOffer(OfferDetailState state) {
-    if (state is OfferDetailLoaded)   return state.offer;
+    if (state is OfferDetailLoaded) return state.offer;
     if (state is OfferDetailUpdating) return state.offer;
-    if (state is OfferDetailUpdated)  return state.offer;
+    if (state is OfferDetailUpdated) return state.offer;
     if (state is OfferDetailDeleting) return state.offer;
-    if (state is OfferDetailError)    return state.lastKnownOffer;
+    if (state is OfferDetailError) return state.lastKnownOffer;
     return null;
   }
 }
@@ -1307,7 +1362,9 @@ class _InfoChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.sm, vertical: 5),
+        horizontal: AppSpacing.sm,
+        vertical: 5,
+      ),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
         borderRadius: BorderRadius.circular(AppSpacing.radiusFull),

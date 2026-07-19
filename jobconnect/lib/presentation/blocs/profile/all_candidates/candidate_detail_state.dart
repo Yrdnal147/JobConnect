@@ -57,10 +57,22 @@ class CandidateDetailData extends Equatable {
 
   @override
   List<Object?> get props => [
-        applicationId, studentId, studentName, offerTitle, offerId,
-        status, matchScore, photoUrl, educationLevel, fieldOfStudy,
-        cvUrl, cvFileName, skills, matchExplanation, companyId,
-      ];
+    applicationId,
+    studentId,
+    studentName,
+    offerTitle,
+    offerId,
+    status,
+    matchScore,
+    photoUrl,
+    educationLevel,
+    fieldOfStudy,
+    cvUrl,
+    cvFileName,
+    skills,
+    matchExplanation,
+    companyId,
+  ];
 }
 
 class SkillDetail extends Equatable {
@@ -103,10 +115,7 @@ class CandidateDetailActing extends CandidateDetailState {
   final CandidateDetailData candidate;
   final String action; // 'retaining' | 'refusing'
 
-  const CandidateDetailActing({
-    required this.candidate,
-    required this.action,
-  });
+  const CandidateDetailActing({required this.candidate, required this.action});
 
   @override
   List<Object?> get props => [candidate, action];

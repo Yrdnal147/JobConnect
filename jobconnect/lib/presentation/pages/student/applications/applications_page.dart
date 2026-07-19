@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -46,21 +47,31 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
 
   String _formatOfferType(String type) {
     switch (type) {
-      case 'cdi':                 return 'home.filters.cdi'.tr();
-      case 'cdd':                 return 'home.filters.cdd'.tr();
-      case 'stage_academique':    return 'home.filters.academic_internship'.tr();
-      case 'stage_professionnel': return 'home.filters.pro_internship'.tr();
-      default:                    return type.toUpperCase();
+      case 'cdi':
+        return 'home.filters.cdi'.tr();
+      case 'cdd':
+        return 'home.filters.cdd'.tr();
+      case 'stage_academique':
+        return 'home.filters.academic_internship'.tr();
+      case 'stage_professionnel':
+        return 'home.filters.pro_internship'.tr();
+      default:
+        return type.toUpperCase();
     }
   }
 
   String _translateStatus(String status) {
     switch (status) {
-      case 'Tous': return 'applications.status.all'.tr();
-      case 'En attente': return 'applications.status.pending'.tr();
-      case 'Retenu': return 'applications.status.retained'.tr();
-      case 'Refusé': return 'applications.status.refused'.tr();
-      default: return status;
+      case 'Tous':
+        return 'applications.status.all'.tr();
+      case 'En attente':
+        return 'applications.status.pending'.tr();
+      case 'Retenu':
+        return 'applications.status.retained'.tr();
+      case 'Refusé':
+        return 'applications.status.refused'.tr();
+      default:
+        return status;
     }
   }
 
@@ -97,31 +108,39 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                   height: size.height * 0.28,
                   child: Container(
                     decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [AppColorsLight.primary, Color(0xFF4A148C)],
-                      ),
+                      color: AppColorsLight.primary,
                     ),
                     child: SafeArea(
                       bottom: false,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: AppSpacing.lg),
+                          horizontal: AppSpacing.lg,
+                        ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const SizedBox(height: AppSpacing.md),
-                            Text(
-                              'applications.title'.tr(),
-                              style: AppTypography.displayMedium
-                                  .copyWith(color: Colors.white, fontSize: 26),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+
+                                Expanded(
+                                  child: Text(
+                                    'applications.title'.tr(),
+                                    style: AppTypography.displayMedium.copyWith(
+                                      color: Colors.white,
+                                      fontSize: 26,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                             const SizedBox(height: AppSpacing.md),
                             Row(
                               children: [
                                 _HeaderStat(
-                                  label: 'applications.status.retained_plural'.tr(),
+                                  label: 'applications.status.retained_plural'
+                                      .tr(),
                                   value: '${counts['retained']}',
                                   icon: Icons.check_circle_rounded,
                                   color: Colors.greenAccent,
@@ -135,7 +154,8 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                                 ),
                                 const SizedBox(width: AppSpacing.md),
                                 _HeaderStat(
-                                  label: 'applications.status.refused_plural'.tr(),
+                                  label: 'applications.status.refused_plural'
+                                      .tr(),
                                   value: '${counts['refused']}',
                                   icon: Icons.cancel_rounded,
                                   color: Colors.white70,
@@ -179,10 +199,11 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                               // ── Filtres ──────────────────────────
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(
-                                    AppSpacing.lg,
-                                    AppSpacing.lg,
-                                    AppSpacing.lg,
-                                    AppSpacing.sm),
+                                  AppSpacing.lg,
+                                  AppSpacing.lg,
+                                  AppSpacing.lg,
+                                  AppSpacing.sm,
+                                ),
                                 child: SingleChildScrollView(
                                   scrollDirection: Axis.horizontal,
                                   child: Row(
@@ -190,70 +211,67 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                                       final isSelected = activeFilter == f;
                                       return Padding(
                                         padding: const EdgeInsets.only(
-                                            right: AppSpacing.sm),
+                                          right: AppSpacing.sm,
+                                        ),
                                         child: GestureDetector(
-                                          onTap: () =>
-                                              _cubit.filterByStatus(f),
+                                          onTap: () => _cubit.filterByStatus(f),
                                           child: AnimatedContainer(
                                             duration: const Duration(
-                                                milliseconds: 180),
-                                            padding:
-                                                const EdgeInsets.symmetric(
-                                                    horizontal:
-                                                        AppSpacing.md,
-                                                    vertical:
-                                                        AppSpacing.sm),
+                                              milliseconds: 180,
+                                            ),
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: AppSpacing.md,
+                                              vertical: AppSpacing.sm,
+                                            ),
                                             decoration: BoxDecoration(
                                               gradient: isSelected
                                                   ? LinearGradient(
                                                       colors: [
-                                                          AppColorsLight
-                                                              .textPrimary,
-                                                          AppColorsLight
-                                                              .primary,
-                                                        ])
+                                                        AppColorsLight
+                                                            .textPrimary,
+                                                        AppColorsLight.primary,
+                                                      ],
+                                                    )
                                                   : null,
                                               color: isSelected
                                                   ? null
                                                   : AppColorsLight.bgCard,
                                               borderRadius:
                                                   BorderRadius.circular(
-                                                      AppSpacing
-                                                          .radiusFull),
+                                                    AppSpacing.radiusFull,
+                                                  ),
                                               border: Border.all(
                                                 color: isSelected
                                                     ? Colors.transparent
-                                                    : AppColorsLight
-                                                        .bgSurface,
+                                                    : AppColorsLight.bgSurface,
                                               ),
                                               boxShadow: isSelected
                                                   ? [
                                                       BoxShadow(
                                                         color: AppColorsLight
                                                             .primary
-                                                            .withOpacity(
-                                                                0.22),
+                                                            .withOpacity(0.22),
                                                         blurRadius: 8,
-                                                        offset:
-                                                            const Offset(
-                                                                0, 3),
+                                                        offset: const Offset(
+                                                          0,
+                                                          3,
+                                                        ),
                                                       ),
                                                     ]
                                                   : [],
                                             ),
                                             child: Text(
                                               _translateStatus(f),
-                                              style: AppTypography
-                                                  .labelSmall
+                                              style: AppTypography.labelSmall
                                                   .copyWith(
-                                                color: isSelected
-                                                    ? Colors.white
-                                                    : AppColorsLight
-                                                        .textSecondary,
-                                                fontWeight: isSelected
-                                                    ? FontWeight.w600
-                                                    : FontWeight.w400,
-                                              ),
+                                                    color: isSelected
+                                                        ? Colors.white
+                                                        : AppColorsLight
+                                                              .textSecondary,
+                                                    fontWeight: isSelected
+                                                        ? FontWeight.w600
+                                                        : FontWeight.w400,
+                                                  ),
                                             ),
                                           ),
                                         ),
@@ -264,8 +282,7 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                               ),
 
                               // ── Liste ────────────────────────────
-                              Expanded(
-                                  child: _buildBody(context, state)),
+                              Expanded(child: _buildBody(context, state)),
                             ],
                           ),
                         ),
@@ -314,7 +331,8 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                 clipBehavior: Clip.antiAlias,
                 child: InkWell(
                   onTap: () => context.push(
-                      '/student/applications/${app.applicationId}'),
+                    '/student/applications/${app.applicationId}',
+                  ),
                   child: _AppCard(
                     application: app,
                     gradient: gradient,
@@ -361,17 +379,26 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
               color: AppColorsLight.textTertiary.withOpacity(0.08),
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.work_off_rounded,
-                size: 32, color: AppColorsLight.textTertiary),
+            child: const Icon(
+              Icons.work_off_rounded,
+              size: 32,
+              color: AppColorsLight.textTertiary,
+            ),
           ),
           const SizedBox(height: AppSpacing.md),
-          Text('applications.empty.title'.tr(),
-              style: AppTypography.bodyMedium
-                  .copyWith(fontWeight: FontWeight.w600)),
+          Text(
+            'applications.empty.title'.tr(),
+            style: AppTypography.bodyMedium.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
           const SizedBox(height: 4),
-          Text('applications.empty.subtitle'.tr(),
-              style: AppTypography.bodySmall
-                  .copyWith(color: AppColorsLight.textTertiary)),
+          Text(
+            'applications.empty.subtitle'.tr(),
+            style: AppTypography.bodySmall.copyWith(
+              color: AppColorsLight.textTertiary,
+            ),
+          ),
         ],
       ),
     );
@@ -384,23 +411,31 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.wifi_off_rounded,
-                color: AppColorsLight.textTertiary, size: 48),
+            const Icon(
+              Icons.wifi_off_rounded,
+              color: AppColorsLight.textTertiary,
+              size: 48,
+            ),
             const SizedBox(height: AppSpacing.md),
-            Text('applications.error.title'.tr(),
-                style: AppTypography.headingSmall,
-                textAlign: TextAlign.center),
+            Text(
+              'applications.error.title'.tr(),
+              style: AppTypography.headingSmall,
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: AppSpacing.sm),
-            Text(message,
-                style: AppTypography.bodySmall,
-                textAlign: TextAlign.center),
+            Text(
+              message,
+              style: AppTypography.bodySmall,
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: AppSpacing.lg),
             ElevatedButton.icon(
               onPressed: _cubit.loadApplications,
               icon: const Icon(Icons.refresh_rounded),
               label: Text('home.offers.retry'.tr()),
               style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColorsLight.primary),
+                backgroundColor: AppColorsLight.primary,
+              ),
             ),
           ],
         ),
@@ -508,25 +543,34 @@ class _AppCard extends StatelessWidget {
 
   Color get _statusColor {
     switch (application.status) {
-      case 'retained': return AppColorsLight.primary;
-      case 'refused':  return AppColorsLight.textTertiary;
-      default:         return AppColorsLight.textSecondary;
+      case 'retained':
+        return AppColorsLight.primary;
+      case 'refused':
+        return AppColorsLight.textTertiary;
+      default:
+        return AppColorsLight.textSecondary;
     }
   }
 
   String get _statusLabel {
     switch (application.status) {
-      case 'retained': return 'applications.status.retained'.tr();
-      case 'refused':  return 'applications.status.refused'.tr();
-      default:         return 'applications.status.pending'.tr();
+      case 'retained':
+        return 'applications.status.retained'.tr();
+      case 'refused':
+        return 'applications.status.refused'.tr();
+      default:
+        return 'applications.status.pending'.tr();
     }
   }
 
   IconData get _statusIcon {
     switch (application.status) {
-      case 'retained': return Icons.check_circle_rounded;
-      case 'refused':  return Icons.cancel_rounded;
-      default:         return Icons.hourglass_top_rounded;
+      case 'retained':
+        return Icons.check_circle_rounded;
+      case 'refused':
+        return Icons.cancel_rounded;
+      default:
+        return Icons.hourglass_top_rounded;
     }
   }
 
@@ -536,8 +580,8 @@ class _AppCard extends StatelessWidget {
     final scoreColor = score >= 75
         ? AppColorsLight.success
         : score >= 55
-            ? AppColorsLight.warning
-            : AppColorsLight.error;
+        ? AppColorsLight.warning
+        : AppColorsLight.error;
 
     return Container(
       decoration: BoxDecoration(
@@ -586,7 +630,9 @@ class _AppCard extends StatelessWidget {
                           padding: const EdgeInsets.all(3),
                           decoration: BoxDecoration(
                             color: AppColorsLight.bgCard,
-                            borderRadius: BorderRadius.circular(AppSpacing.radiusMd + 2),
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusMd + 2,
+                            ),
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.black.withOpacity(0.06),
@@ -619,7 +665,9 @@ class _AppCard extends StatelessWidget {
                               Text(
                                 application.companyName,
                                 style: AppTypography.bodySmall.copyWith(
-                                  color: AppColorsLight.textPrimary.withOpacity(0.6),
+                                  color: AppColorsLight.textPrimary.withOpacity(
+                                    0.6,
+                                  ),
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -628,19 +676,25 @@ class _AppCard extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: AppSpacing.sm),
-                        if (score > 0)
-                          MatchScoreBadge(score: score),
+                        if (score > 0) MatchScoreBadge(score: score),
                       ],
                     ),
                     const SizedBox(height: AppSpacing.md),
                     Row(
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 4,
+                          ),
                           decoration: BoxDecoration(
                             color: _statusColor.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
-                            border: Border.all(color: _statusColor.withOpacity(0.2)),
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusFull,
+                            ),
+                            border: Border.all(
+                              color: _statusColor.withOpacity(0.2),
+                            ),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,

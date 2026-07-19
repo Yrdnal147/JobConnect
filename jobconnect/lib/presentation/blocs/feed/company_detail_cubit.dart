@@ -6,8 +6,8 @@ class CompanyDetailCubit extends Cubit<CompanyDetailState> {
   final SupabaseClient _client;
 
   CompanyDetailCubit({SupabaseClient? client})
-      : _client = client ?? Supabase.instance.client,
-        super(const CompanyDetailInitial());
+    : _client = client ?? Supabase.instance.client,
+      super(const CompanyDetailInitial());
 
   // ─── Charge les détails de l'entreprise ──────────────────────────────────
 

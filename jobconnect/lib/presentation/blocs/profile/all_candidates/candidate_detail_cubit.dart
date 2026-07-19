@@ -8,8 +8,8 @@ class CandidateDetailCubit extends Cubit<CandidateDetailState> {
   final SupabaseClient _client;
 
   CandidateDetailCubit({SupabaseClient? client})
-      : _client = client ?? Supabase.instance.client,
-        super(const CandidateDetailInitial());
+    : _client = client ?? Supabase.instance.client,
+      super(const CandidateDetailInitial());
 
   // ─── Charge le détail d'une candidature ──────────────────────────────────
 
@@ -35,12 +35,14 @@ class CandidateDetailCubit extends Cubit<CandidateDetailState> {
       }
 
       final studentId = appRes['student_id'] as String;
-      final offerId   = appRes['offer_id'] as String;
+      final offerId = appRes['offer_id'] as String;
       final companyId = appRes['company_id'] as String;
 
       final profileRes = await _client
           .from('student_profiles')
-          .select('id, full_name, field_of_study, education_level, photo_url, cv_url')
+          .select(
+            'id, full_name, field_of_study, education_level, photo_url, cv_url',
+          )
           .eq('id', studentId)
           .maybeSingle();
 
@@ -58,10 +60,14 @@ class CandidateDetailCubit extends Cubit<CandidateDetailState> {
             .select('name, skill_type')
             .eq('student_id', studentId);
 
-        skills = (skillsRes as List).map((s) => SkillDetail(
-          name: s['name'] as String,
-          skillType: s['skill_type'] as String? ?? 'technical',
-        )).toList();
+        skills = (skillsRes as List)
+            .map(
+              (s) => SkillDetail(
+                name: s['name'] as String,
+                skillType: s['skill_type'] as String? ?? 'technical',
+              ),
+            )
+            .toList();
       } catch (_) {}
 
       // Explication du score
@@ -96,7 +102,7 @@ class CandidateDetailCubit extends Cubit<CandidateDetailState> {
       }
 
       final fullName = profileRes?['full_name'] as String? ?? 'Candidat';
-      final score    = appRes['match_score'] as int? ?? 0;
+      final score = appRes['match_score'] as int? ?? 0;
 
       final candidate = CandidateDetailData(
         applicationId: applicationId,
@@ -112,7 +118,8 @@ class CandidateDetailCubit extends Cubit<CandidateDetailState> {
         fieldOfStudy: profileRes?['field_of_study'] as String? ?? '',
         cvUrl: cvUrl,
         skills: skills,
-        matchExplanation: matchExplanation ??
+        matchExplanation:
+            matchExplanation ??
             _buildDefaultExplanation(fullName, score, profileRes),
       );
 
@@ -186,28 +193,34 @@ class CandidateDetailCubit extends Cubit<CandidateDetailState> {
       } catch (_) {}
 
       try {
-        DioClient.instance.post(
-          '/api/workflows/application-status-handler/start',
-          data: {
-            'input': {
-              'applicationId': candidate.applicationId,
-              'studentId': candidate.studentId,
-              'offerId': candidate.offerId,
-              'status': 'retained',
-            }
-          },
-        ).catchError((_) {});
+        DioClient.instance
+            .post(
+              '/api/workflows/application-status-handler/start',
+              data: {
+                'input': {
+                  'applicationId': candidate.applicationId,
+                  'studentId': candidate.studentId,
+                  'offerId': candidate.offerId,
+                  'status': 'retained',
+                },
+              },
+            )
+            .catchError((_) {});
       } catch (_) {}
 
-      emit(CandidateRetained(
-        candidate: candidate.copyWith(status: 'retained'),
-        conversationId: conversationId,
-      ));
+      emit(
+        CandidateRetained(
+          candidate: candidate.copyWith(status: 'retained'),
+          conversationId: conversationId,
+        ),
+      );
     } catch (e) {
-      emit(CandidateDetailError(
-        message: 'Erreur : ${e.toString()}',
-        lastKnown: candidate,
-      ));
+      emit(
+        CandidateDetailError(
+          message: 'Erreur : ${e.toString()}',
+          lastKnown: candidate,
+        ),
+      );
       _restoreLoaded(candidate);
     }
   }
@@ -245,27 +258,29 @@ class CandidateDetailCubit extends Cubit<CandidateDetailState> {
       } catch (_) {}
 
       try {
-        DioClient.instance.post(
-          '/api/workflows/application-status-handler/start',
-          data: {
-            'input': {
-              'applicationId': candidate.applicationId,
-              'studentId': candidate.studentId,
-              'offerId': candidate.offerId,
-              'status': 'refused',
-            }
-          },
-        ).catchError((_) {});
+        DioClient.instance
+            .post(
+              '/api/workflows/application-status-handler/start',
+              data: {
+                'input': {
+                  'applicationId': candidate.applicationId,
+                  'studentId': candidate.studentId,
+                  'offerId': candidate.offerId,
+                  'status': 'refused',
+                },
+              },
+            )
+            .catchError((_) {});
       } catch (_) {}
 
-      emit(CandidateRefused(
-        candidate: candidate.copyWith(status: 'refused'),
-      ));
+      emit(CandidateRefused(candidate: candidate.copyWith(status: 'refused')));
     } catch (e) {
-      emit(CandidateDetailError(
-        message: 'Erreur : ${e.toString()}',
-        lastKnown: candidate,
-      ));
+      emit(
+        CandidateDetailError(
+          message: 'Erreur : ${e.toString()}',
+          lastKnown: candidate,
+        ),
+      );
       _restoreLoaded(candidate);
     }
   }
@@ -273,10 +288,13 @@ class CandidateDetailCubit extends Cubit<CandidateDetailState> {
   // ─── Helpers ──────────────────────────────────────────────────────────────
 
   String _buildDefaultExplanation(
-      String name, int score, Map<String, dynamic>? profile) {
+    String name,
+    int score,
+    Map<String, dynamic>? profile,
+  ) {
     if (score == 0) return 'Aucun score de matching disponible.';
     final field = profile?['field_of_study'] as String? ?? '';
-    final edu   = profile?['education_level'] as String? ?? '';
+    final edu = profile?['education_level'] as String? ?? '';
     final parts = <String>[];
     if (field.isNotEmpty) parts.add('spécialisé(e) en $field');
     if (edu.isNotEmpty) parts.add('niveau $edu');

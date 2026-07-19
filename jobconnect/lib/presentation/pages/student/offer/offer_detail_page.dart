@@ -40,19 +40,24 @@ class _OfferDetailPageState extends State<OfferDetailPage> {
 
   String _formatOfferType(String type) {
     switch (type.toLowerCase()) {
-      case 'cdi':                 return 'home.filters.cdi'.tr();
-      case 'cdd':                 return 'home.filters.cdd'.tr();
-      case 'stage_academique':    return 'home.filters.academic_internship'.tr();
-      case 'stage_professionnel': return 'home.filters.pro_internship'.tr();
-      default:                    return type.toUpperCase();
+      case 'cdi':
+        return 'home.filters.cdi'.tr();
+      case 'cdd':
+        return 'home.filters.cdd'.tr();
+      case 'stage_academique':
+        return 'home.filters.academic_internship'.tr();
+      case 'stage_professionnel':
+        return 'home.filters.pro_internship'.tr();
+      default:
+        return type.toUpperCase();
     }
   }
 
   StudentOfferDetail? _extractOffer(OfferDetailStudentState state) {
-    if (state is OfferDetailStudentLoaded)   return state.offer;
+    if (state is OfferDetailStudentLoaded) return state.offer;
     if (state is OfferDetailStudentApplying) return state.offer;
-    if (state is OfferDetailStudentApplied)  return state.offer;
-    if (state is OfferDetailStudentError)    return state.lastKnownOffer;
+    if (state is OfferDetailStudentApplied) return state.offer;
+    if (state is OfferDetailStudentError) return state.lastKnownOffer;
     return null;
   }
 
@@ -88,10 +93,10 @@ class _OfferDetailPageState extends State<OfferDetailPage> {
           }
         },
         builder: (context, state) {
-          final isLoading   = state is OfferDetailStudentLoading;
-          final isApplying  = state is OfferDetailStudentApplying;
-          final offer       = _extractOffer(state);
-          final isSaved     = state is OfferDetailStudentLoaded
+          final isLoading = state is OfferDetailStudentLoading;
+          final isApplying = state is OfferDetailStudentApplying;
+          final offer = _extractOffer(state);
+          final isSaved = state is OfferDetailStudentLoaded
               ? state.isSaved
               : false;
 
@@ -109,21 +114,23 @@ class _OfferDetailPageState extends State<OfferDetailPage> {
                   height: size.height * 0.22,
                   child: Container(
                     decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [AppColorsLight.primary, Color(0xFF4A148C)],
-                      ),
+                      color: AppColorsLight.primary,
                     ),
                     child: SafeArea(
                       bottom: false,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.sm),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.sm,
+                          vertical: AppSpacing.sm,
+                        ),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             IconButton(
-                              icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+                              icon: const Icon(
+                                Icons.arrow_back_ios_new_rounded,
+                                color: Colors.white,
+                              ),
                               onPressed: () {
                                 if (Navigator.of(context).canPop()) {
                                   Navigator.of(context).pop();
@@ -138,7 +145,9 @@ class _OfferDetailPageState extends State<OfferDetailPage> {
                                 padding: const EdgeInsets.only(top: 8.0),
                                 child: Text(
                                   'offer_detail.title'.tr(),
-                                  style: AppTypography.headingMedium.copyWith(color: Colors.white),
+                                  style: AppTypography.headingMedium.copyWith(
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
                             ),
@@ -147,7 +156,9 @@ class _OfferDetailPageState extends State<OfferDetailPage> {
                               GestureDetector(
                                 onTap: _cubit.toggleSave,
                                 child: Container(
-                                  margin: const EdgeInsets.only(right: AppSpacing.sm),
+                                  margin: const EdgeInsets.only(
+                                    right: AppSpacing.sm,
+                                  ),
                                   decoration: BoxDecoration(
                                     color: isSaved
                                         ? Colors.white.withOpacity(0.2)
@@ -203,414 +214,593 @@ class _OfferDetailPageState extends State<OfferDetailPage> {
                             topRight: Radius.circular(32),
                           ),
                           child: isLoading
-                            ? const Center(
-                                child: CircularProgressIndicator(color: AppColorsLight.primary))
-                            : offer == null
-                                ? _buildErrorState(context)
-                                : SafeArea(
-                                    top: false,
-                                    child: CustomScrollView(
-                                      slivers: [
-                                        SliverToBoxAdapter(
-                              child: Column(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                children: [
-                                  // ── Hero bannière + logo ────────────
-                                  Container(
-                                    margin: const EdgeInsets.all(AppSpacing.lg),
-                                    clipBehavior: Clip.antiAlias,
-                                    decoration: BoxDecoration(
-                                      color: AppColorsLight.bgCard,
-                                      borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
-                                      border: Border.all(color: AppColorsLight.bgSurface),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: AppColorsLight.primary.withOpacity(0.08),
-                                          blurRadius: 20,
-                                          offset: const Offset(0, 8),
-                                        ),
-                                      ],
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        Stack(
-                                          clipBehavior: Clip.none,
+                              ? const Center(
+                                  child: CircularProgressIndicator(
+                                    color: AppColorsLight.primary,
+                                  ),
+                                )
+                              : offer == null
+                              ? _buildErrorState(context)
+                              : SafeArea(
+                                  top: false,
+                                  child: CustomScrollView(
+                                    slivers: [
+                                      SliverToBoxAdapter(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
-                                            // Bannière gradient
+                                            // ── Hero bannière + logo ────────────
                                             Container(
-                                              height: 90,
-                                              width: double.infinity,
+                                              margin: const EdgeInsets.all(
+                                                AppSpacing.lg,
+                                              ),
+                                              clipBehavior: Clip.antiAlias,
                                               decoration: BoxDecoration(
-                                                gradient: LinearGradient(
-                                                  begin:
-                                                      Alignment.topLeft,
-                                                  end:
-                                                      Alignment.bottomRight,
-                                                  colors: [
-                                                    AppColorsLight.textPrimary,
-                                                    AppColorsLight.primary,
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            // Logo entreprise
-                                           // Logo entreprise cliquable
-                            Positioned(
-                         left: AppSpacing.lg,
-                                  bottom: -28,
-                        child: GestureDetector(
-                                 onTap: () => context.push('/student/company/${offer.companyId}'),
-    child: Container(
-      width: 60,
-      height: 60,
-      padding: const EdgeInsets.all(3),
-      decoration: BoxDecoration(
-        color: AppColorsLight.bgCard,
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: UserAvatar(
-        imageUrl: offer.companyLogo,
-        radius: 28,
-        defaultIcon: Icons.business_rounded,
-        gradientColors: const [AppColorsLight.primary, AppColorsLight.secondary],
-        iconColor: Colors.white,
-      ),
-    ),
-  ),
-),
-                                            // Score match
-                                            if (offer.matchScore > 0)
-                                              Positioned(
-                                                right: AppSpacing.md,
-                                                top: AppSpacing.md,
-                                                child: MatchScoreBadge(
-                                                  score: offer.matchScore,
-                                                  onDarkBackground: true,
-                                                ),
-                                              ),
-                                          ],
-                                        ),
-
-                                        // Infos poste
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.fromLTRB(
-                                            AppSpacing.lg,
-                                            36,
-                                            AppSpacing.lg,
-                                            AppSpacing.lg,
-                                          ),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                offer.title,
-                                                style: AppTypography
-                                                    .headingMedium,
-                                              ),
-                                              const SizedBox(height: 6),
-                                              GestureDetector(
-  onTap: () => context.push('/student/company/${offer.companyId}'),
-  child: Row(
-    children: [
-      Text(
-        offer.companyName,
-        style: AppTypography.bodyMedium.copyWith(
-          color: AppColorsLight.primary,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-      if (offer.isCompanyVerified) ...[
-        const SizedBox(width: 4),
-        const Icon(
-          Icons.verified_rounded,
-          size: 14,
-          color: AppColorsLight.primary,
-        ),
-      ],
-      const SizedBox(width: 4),
-      Text(
-        '· ${offer.location}',
-        style: AppTypography.bodyMedium.copyWith(
-          color: AppColorsLight.textTertiary,
-        ),
-      ),
-    ],
-  ),
-),
-                                              const SizedBox(
-                                                  height: AppSpacing.md),
-                                              // Pills infos
-                                              Wrap(
-                                                spacing: AppSpacing.sm,
-                                                runSpacing: AppSpacing.sm,
-                                                children: [
-                                                  _InfoPill(
-                                                    icon: Icons.work_rounded,
-                                                    label: _formatOfferType(
-                                                        offer.offerType),
-                                                    color:
-                                                        AppColorsLight.primary,
-                                                  ),
-                                                  _InfoPill(
-                                                    icon: Icons
-                                                        .location_on_outlined,
-                                                    label: offer.location,
-                                                    color: AppColorsLight
-                                                        .secondary,
-                                                  ),
-                                                  if (offer.salaryRange !=
-                                                      null)
-                                                    _InfoPill(
-                                                      icon: Icons
-                                                          .payments_outlined,
-                                                      label:
-                                                          offer.salaryRange!,
-                                                      color: AppColorsLight
-                                                          .success,
+                                                color: AppColorsLight.bgCard,
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                      AppSpacing.radiusXl,
                                                     ),
-                                                  if (offer.durationMonths !=
-                                                      null)
-                                                    _InfoPill(
-                                                      icon: Icons
-                                                          .calendar_month_rounded,
-                                                      label:
-                                                          '${offer.durationMonths} mois',
-                                                      color: AppColorsLight
-                                                          .warning,
-                                                    ),
-                                                  _InfoPill(
-                                                    icon:
-                                                        Icons.schedule_rounded,
-                                                    label:
-                                                        'offer_detail.published'.tr(args: [offer.postedAt]),
+                                                border: Border.all(
+                                                  color:
+                                                      AppColorsLight.bgSurface,
+                                                ),
+                                                boxShadow: [
+                                                  BoxShadow(
                                                     color: AppColorsLight
-                                                        .textTertiary,
+                                                        .primary
+                                                        .withOpacity(0.08),
+                                                    blurRadius: 20,
+                                                    offset: const Offset(0, 8),
                                                   ),
                                                 ],
                                               ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: AppSpacing.lg),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        // ── Description ────────────────
-                                        _SectionCard(
-                                          title: 'offer_detail.description'.tr(),
-                                          icon: Icons.description_outlined,
-                                          child: Text(
-                                            offer.description.isEmpty
-                                                ? 'offer_detail.no_description'.tr()
-                                                : offer.description,
-                                            style: AppTypography.bodyMedium
-                                                .copyWith(
-                                              height: 1.6,
-                                              color: AppColorsLight.textPrimary
-                                                  .withOpacity(0.8),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                            height: AppSpacing.md),
-
-                                        // ── Compétences ────────────────
-                                        if (offer.requiredSkills
-                                            .isNotEmpty)
-                                          _SectionCard(
-                                            title: 'offer_detail.required_skills'.tr(),
-                                            icon: Icons.bolt_rounded,
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                if (offer.matchingSkills
-                                                        .isNotEmpty ||
-                                                    offer.missingSkills
-                                                        .isNotEmpty) ...[
-                                                  Row(
+                                              child: Column(
+                                                children: [
+                                                  Stack(
+                                                    clipBehavior: Clip.none,
                                                     children: [
-                                                      _LegendDot(
-                                                          color: AppColorsLight
-                                                              .success),
-                                                      const SizedBox(
-                                                          width: 4),
-                                                      Text(
-                                                        'offer_detail.mastered'.tr(),
-                                                        style: AppTypography
-                                                            .caption
-                                                            .copyWith(
-                                                          color: AppColorsLight
-                                                              .textTertiary,
+                                                      // Bannière gradient
+                                                      Container(
+                                                        height: 90,
+                                                        width: double.infinity,
+                                                        decoration: BoxDecoration(
+                                                          gradient: LinearGradient(
+                                                            begin: Alignment
+                                                                .topLeft,
+                                                            end: Alignment
+                                                                .bottomRight,
+                                                            colors: [
+                                                              AppColorsLight
+                                                                  .textPrimary,
+                                                              AppColorsLight
+                                                                  .primary,
+                                                            ],
+                                                          ),
                                                         ),
                                                       ),
-                                                      const SizedBox(
-                                                          width:
-                                                              AppSpacing.md),
-                                                      _LegendDot(
-                                                          color: AppColorsLight
-                                                              .error),
-                                                      const SizedBox(
-                                                          width: 4),
-                                                      Text(
-                                                        'offer_detail.to_acquire'.tr(),
-                                                        style: AppTypography
-                                                            .caption
-                                                            .copyWith(
-                                                          color: AppColorsLight
-                                                              .textTertiary,
+                                                      // Logo entreprise
+                                                      // Logo entreprise cliquable
+                                                      Positioned(
+                                                        left: AppSpacing.lg,
+                                                        bottom: -28,
+                                                        child: GestureDetector(
+                                                          onTap: () => context.push(
+                                                            '/student/company/${offer.companyId}',
+                                                          ),
+                                                          child: Container(
+                                                            width: 60,
+                                                            height: 60,
+                                                            padding:
+                                                                const EdgeInsets.all(
+                                                                  3,
+                                                                ),
+                                                            decoration: BoxDecoration(
+                                                              color:
+                                                                  AppColorsLight
+                                                                      .bgCard,
+                                                              borderRadius:
+                                                                  BorderRadius.circular(
+                                                                    14,
+                                                                  ),
+                                                              boxShadow: [
+                                                                BoxShadow(
+                                                                  color: Colors
+                                                                      .black
+                                                                      .withOpacity(
+                                                                        0.1,
+                                                                      ),
+                                                                  blurRadius: 8,
+                                                                  offset:
+                                                                      const Offset(
+                                                                        0,
+                                                                        3,
+                                                                      ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            child: UserAvatar(
+                                                              imageUrl: offer
+                                                                  .companyLogo,
+                                                              radius: 28,
+                                                              defaultIcon: Icons
+                                                                  .business_rounded,
+                                                              gradientColors: const [
+                                                                AppColorsLight
+                                                                    .primary,
+                                                                AppColorsLight
+                                                                    .secondary,
+                                                              ],
+                                                              iconColor:
+                                                                  Colors.white,
+                                                            ),
+                                                          ),
                                                         ),
                                                       ),
+                                                      // Score match
+                                                      if (offer.matchScore > 0)
+                                                        Positioned(
+                                                          right: AppSpacing.md,
+                                                          top: AppSpacing.md,
+                                                          child: MatchScoreBadge(
+                                                            score: offer
+                                                                .matchScore,
+                                                            onDarkBackground:
+                                                                true,
+                                                          ),
+                                                        ),
                                                     ],
                                                   ),
-                                                  const SizedBox(
-                                                      height: AppSpacing.sm),
+
+                                                  // Infos poste
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.fromLTRB(
+                                                          AppSpacing.lg,
+                                                          36,
+                                                          AppSpacing.lg,
+                                                          AppSpacing.lg,
+                                                        ),
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          offer.title,
+                                                          style: AppTypography
+                                                              .headingMedium,
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 6,
+                                                        ),
+                                                        GestureDetector(
+                                                          onTap: () => context.push(
+                                                            '/student/company/${offer.companyId}',
+                                                          ),
+                                                          child: Row(
+                                                            children: [
+                                                              Text(
+                                                                offer
+                                                                    .companyName,
+                                                                style: AppTypography
+                                                                    .bodyMedium
+                                                                    .copyWith(
+                                                                      color: AppColorsLight
+                                                                          .primary,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                    ),
+                                                              ),
+                                                              if (offer
+                                                                  .isCompanyVerified) ...[
+                                                                const SizedBox(
+                                                                  width: 4,
+                                                                ),
+                                                                const Icon(
+                                                                  Icons
+                                                                      .verified_rounded,
+                                                                  size: 14,
+                                                                  color: AppColorsLight
+                                                                      .primary,
+                                                                ),
+                                                              ],
+                                                              const SizedBox(
+                                                                width: 4,
+                                                              ),
+                                                              Text(
+                                                                '· ${offer.location}',
+                                                                style: AppTypography
+                                                                    .bodyMedium
+                                                                    .copyWith(
+                                                                      color: AppColorsLight
+                                                                          .textTertiary,
+                                                                    ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: AppSpacing.md,
+                                                        ),
+                                                        // Pills infos
+                                                        Wrap(
+                                                          spacing:
+                                                              AppSpacing.sm,
+                                                          runSpacing:
+                                                              AppSpacing.sm,
+                                                          children: [
+                                                            _InfoPill(
+                                                              icon: Icons
+                                                                  .work_rounded,
+                                                              label: _formatOfferType(
+                                                                offer.offerType,
+                                                              ),
+                                                              color:
+                                                                  AppColorsLight
+                                                                      .primary,
+                                                            ),
+                                                            _InfoPill(
+                                                              icon: Icons
+                                                                  .location_on_outlined,
+                                                              label: offer
+                                                                  .location,
+                                                              color:
+                                                                  AppColorsLight
+                                                                      .secondary,
+                                                            ),
+                                                            if (offer
+                                                                    .salaryRange !=
+                                                                null)
+                                                              _InfoPill(
+                                                                icon: Icons
+                                                                    .payments_outlined,
+                                                                label: offer
+                                                                    .salaryRange!,
+                                                                color:
+                                                                    AppColorsLight
+                                                                        .success,
+                                                              ),
+                                                            if (offer
+                                                                    .durationMonths !=
+                                                                null)
+                                                              _InfoPill(
+                                                                icon: Icons
+                                                                    .calendar_month_rounded,
+                                                                label:
+                                                                    '${offer.durationMonths} mois',
+                                                                color:
+                                                                    AppColorsLight
+                                                                        .warning,
+                                                              ),
+                                                            _InfoPill(
+                                                              icon: Icons
+                                                                  .schedule_rounded,
+                                                              label: 'offer_detail.published'.tr(
+                                                                args: [
+                                                                  offer
+                                                                      .postedAt,
+                                                                ],
+                                                              ),
+                                                              color: AppColorsLight
+                                                                  .textTertiary,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
                                                 ],
-                                                Wrap(
-                                                  spacing: AppSpacing.sm,
-                                                  runSpacing: AppSpacing.sm,
-                                                  children: [
-                                                    ...offer.matchingSkills
-                                                        .map((skill) =>
-                                                            _SkillTag(
-                                                              label: skill,
-                                                              isMatching: true,
-                                                            )),
-                                                    ...offer.missingSkills
-                                                        .map((skill) =>
-                                                            _SkillTag(
-                                                              label: skill,
-                                                              isMatching:
-                                                                  false,
-                                                            )),
-                                                    // Skills sans comparaison
-                                                    if (offer.matchingSkills
-                                                            .isEmpty &&
-                                                        offer.missingSkills
-                                                            .isEmpty)
-                                                      ...offer.requiredSkills
-                                                          .map((skill) =>
-                                                              _SkillTag(
-                                                                label: skill,
-                                                                isMatching:
-                                                                    false,
-                                                              )),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        const SizedBox(
-                                            height: AppSpacing.md),
-
-                                        // ── Niveau éducation ───────────
-                                        if (offer.minEducation.isNotEmpty)
-                                          _SectionCard(
-                                            title: 'offer_detail.education'.tr(),
-                                            icon: Icons.school_outlined,
-                                            child: Row(
-                                              children: [
-                                                Container(
-                                                  width: 40,
-                                                  height: 40,
-                                                  decoration: BoxDecoration(
-                                                    color: AppColorsLight
-                                                        .secondary
-                                                        .withOpacity(0.12),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            AppSpacing
-                                                                .radiusMd),
-                                                  ),
-                                                  child: Icon(
-                                                    Icons.school_rounded,
-                                                    size: 20,
-                                                    color: AppColorsLight
-                                                        .secondary,
-                                                  ),
-                                                ),
-                                                const SizedBox(
-                                                    width: AppSpacing.md),
-                                                Text(
-                                                  'offer_detail.minimum'.tr(args: [offer.minEducation.toUpperCase()]),
-                                                  style: AppTypography
-                                                      .bodyMedium
-                                                      .copyWith(
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        const SizedBox(
-                                            height: AppSpacing.md),
-
-                                        // ── Expérience ─────────────────
-                                        _SectionCard(
-                                          title: 'offer_detail.experience'.tr(),
-                                          icon: Icons.timeline_rounded,
-                                          child: Row(
-                                            children: [
-                                              Container(
-                                                width: 40,
-                                                height: 40,
-                                                decoration: BoxDecoration(
-                                                  color: AppColorsLight.warning
-                                                      .withOpacity(0.12),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          AppSpacing.radiusMd),
-                                                ),
-                                                child: Icon(
-                                                  Icons.timeline_rounded,
-                                                  size: 20,
-                                                  color: AppColorsLight.warning,
-                                                ),
                                               ),
-                                              const SizedBox(
-                                                  width: AppSpacing.md),
-                                              Text(
-                                                offer.yearsOfExperience == 0
-                                                    ? 'offer_detail.no_experience'.tr()
-                                                    : offer.yearsOfExperience > 1
-                                                        ? 'offer_detail.years_experience_plural'.tr(args: [offer.yearsOfExperience.toString()])
-                                                        : 'offer_detail.years_experience_single'.tr(args: [offer.yearsOfExperience.toString()]),
-                                                style: AppTypography.bodyMedium
-                                                    .copyWith(
-                                                  fontWeight: FontWeight.w600,
-                                                ),
+                                            ),
+
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: AppSpacing.lg,
+                                                  ),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  // ── Description ────────────────
+                                                  _SectionCard(
+                                                    title:
+                                                        'offer_detail.description'
+                                                            .tr(),
+                                                    icon: Icons
+                                                        .description_outlined,
+                                                    child: Text(
+                                                      offer.description.isEmpty
+                                                          ? 'offer_detail.no_description'
+                                                                .tr()
+                                                          : offer.description,
+                                                      style: AppTypography
+                                                          .bodyMedium
+                                                          .copyWith(
+                                                            height: 1.6,
+                                                            color: AppColorsLight
+                                                                .textPrimary
+                                                                .withOpacity(
+                                                                  0.8,
+                                                                ),
+                                                          ),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    height: AppSpacing.md,
+                                                  ),
+
+                                                  // ── Compétences ────────────────
+                                                  if (offer
+                                                      .requiredSkills
+                                                      .isNotEmpty)
+                                                    _SectionCard(
+                                                      title:
+                                                          'offer_detail.required_skills'
+                                                              .tr(),
+                                                      icon: Icons.bolt_rounded,
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          if (offer
+                                                                  .matchingSkills
+                                                                  .isNotEmpty ||
+                                                              offer
+                                                                  .missingSkills
+                                                                  .isNotEmpty) ...[
+                                                            Row(
+                                                              children: [
+                                                                _LegendDot(
+                                                                  color: AppColorsLight
+                                                                      .success,
+                                                                ),
+                                                                const SizedBox(
+                                                                  width: 4,
+                                                                ),
+                                                                Text(
+                                                                  'offer_detail.mastered'
+                                                                      .tr(),
+                                                                  style: AppTypography
+                                                                      .caption
+                                                                      .copyWith(
+                                                                        color: AppColorsLight
+                                                                            .textTertiary,
+                                                                      ),
+                                                                ),
+                                                                const SizedBox(
+                                                                  width:
+                                                                      AppSpacing
+                                                                          .md,
+                                                                ),
+                                                                _LegendDot(
+                                                                  color:
+                                                                      AppColorsLight
+                                                                          .error,
+                                                                ),
+                                                                const SizedBox(
+                                                                  width: 4,
+                                                                ),
+                                                                Text(
+                                                                  'offer_detail.to_acquire'
+                                                                      .tr(),
+                                                                  style: AppTypography
+                                                                      .caption
+                                                                      .copyWith(
+                                                                        color: AppColorsLight
+                                                                            .textTertiary,
+                                                                      ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            const SizedBox(
+                                                              height:
+                                                                  AppSpacing.sm,
+                                                            ),
+                                                          ],
+                                                          Wrap(
+                                                            spacing:
+                                                                AppSpacing.sm,
+                                                            runSpacing:
+                                                                AppSpacing.sm,
+                                                            children: [
+                                                              ...offer
+                                                                  .matchingSkills
+                                                                  .map(
+                                                                    (
+                                                                      skill,
+                                                                    ) => _SkillTag(
+                                                                      label:
+                                                                          skill,
+                                                                      isMatching:
+                                                                          true,
+                                                                    ),
+                                                                  ),
+                                                              ...offer
+                                                                  .missingSkills
+                                                                  .map(
+                                                                    (
+                                                                      skill,
+                                                                    ) => _SkillTag(
+                                                                      label:
+                                                                          skill,
+                                                                      isMatching:
+                                                                          false,
+                                                                    ),
+                                                                  ),
+                                                              // Skills sans comparaison
+                                                              if (offer
+                                                                      .matchingSkills
+                                                                      .isEmpty &&
+                                                                  offer
+                                                                      .missingSkills
+                                                                      .isEmpty)
+                                                                ...offer.requiredSkills.map(
+                                                                  (
+                                                                    skill,
+                                                                  ) => _SkillTag(
+                                                                    label:
+                                                                        skill,
+                                                                    isMatching:
+                                                                        false,
+                                                                  ),
+                                                                ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  const SizedBox(
+                                                    height: AppSpacing.md,
+                                                  ),
+
+                                                  // ── Niveau éducation ───────────
+                                                  if (offer
+                                                      .minEducation
+                                                      .isNotEmpty)
+                                                    _SectionCard(
+                                                      title:
+                                                          'offer_detail.education'
+                                                              .tr(),
+                                                      icon:
+                                                          Icons.school_outlined,
+                                                      child: Row(
+                                                        children: [
+                                                          Container(
+                                                            width: 40,
+                                                            height: 40,
+                                                            decoration: BoxDecoration(
+                                                              color: AppColorsLight
+                                                                  .secondary
+                                                                  .withOpacity(
+                                                                    0.12,
+                                                                  ),
+                                                              borderRadius:
+                                                                  BorderRadius.circular(
+                                                                    AppSpacing
+                                                                        .radiusMd,
+                                                                  ),
+                                                            ),
+                                                            child: Icon(
+                                                              Icons
+                                                                  .school_rounded,
+                                                              size: 20,
+                                                              color:
+                                                                  AppColorsLight
+                                                                      .secondary,
+                                                            ),
+                                                          ),
+                                                          const SizedBox(
+                                                            width:
+                                                                AppSpacing.md,
+                                                          ),
+                                                          Text(
+                                                            'offer_detail.minimum'.tr(
+                                                              args: [
+                                                                offer
+                                                                    .minEducation
+                                                                    .toUpperCase(),
+                                                              ],
+                                                            ),
+                                                            style: AppTypography
+                                                                .bodyMedium
+                                                                .copyWith(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  const SizedBox(
+                                                    height: AppSpacing.md,
+                                                  ),
+
+                                                  // ── Expérience ─────────────────
+                                                  _SectionCard(
+                                                    title:
+                                                        'offer_detail.experience'
+                                                            .tr(),
+                                                    icon:
+                                                        Icons.timeline_rounded,
+                                                    child: Row(
+                                                      children: [
+                                                        Container(
+                                                          width: 40,
+                                                          height: 40,
+                                                          decoration: BoxDecoration(
+                                                            color: AppColorsLight
+                                                                .warning
+                                                                .withOpacity(
+                                                                  0.12,
+                                                                ),
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  AppSpacing
+                                                                      .radiusMd,
+                                                                ),
+                                                          ),
+                                                          child: Icon(
+                                                            Icons
+                                                                .timeline_rounded,
+                                                            size: 20,
+                                                            color:
+                                                                AppColorsLight
+                                                                    .warning,
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          width: AppSpacing.md,
+                                                        ),
+                                                        Text(
+                                                          offer.yearsOfExperience ==
+                                                                  0
+                                                              ? 'offer_detail.no_experience'
+                                                                    .tr()
+                                                              : offer.yearsOfExperience >
+                                                                    1
+                                                              ? 'offer_detail.years_experience_plural'.tr(
+                                                                  args: [
+                                                                    offer
+                                                                        .yearsOfExperience
+                                                                        .toString(),
+                                                                  ],
+                                                                )
+                                                              : 'offer_detail.years_experience_single'.tr(
+                                                                  args: [
+                                                                    offer
+                                                                        .yearsOfExperience
+                                                                        .toString(),
+                                                                  ],
+                                                                ),
+                                                          style: AppTypography
+                                                              .bodyMedium
+                                                              .copyWith(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                              ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    height: AppSpacing.xl,
+                                                  ),
+                                                ],
                                               ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
-                                        const SizedBox(
-                                            height: AppSpacing.xl),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ),
-                          ],
-                                    ),
-                                  ),
+                                ),
                         ),
                       ),
                     ),
@@ -640,13 +830,14 @@ class _OfferDetailPageState extends State<OfferDetailPage> {
                               width: double.infinity,
                               height: 52,
                               decoration: BoxDecoration(
-                                color:
-                                    AppColorsLight.success.withOpacity(0.1),
+                                color: AppColorsLight.success.withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(
-                                    AppSpacing.radiusMd),
+                                  AppSpacing.radiusMd,
+                                ),
                                 border: Border.all(
-                                  color: AppColorsLight.success
-                                      .withOpacity(0.3),
+                                  color: AppColorsLight.success.withOpacity(
+                                    0.3,
+                                  ),
                                 ),
                               ),
                               child: Center(
@@ -661,8 +852,7 @@ class _OfferDetailPageState extends State<OfferDetailPage> {
                                     const SizedBox(width: AppSpacing.sm),
                                     Text(
                                       'offer_detail.applied_success'.tr(),
-                                      style: AppTypography.labelLarge
-                                          .copyWith(
+                                      style: AppTypography.labelLarge.copyWith(
                                         color: AppColorsLight.success,
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -677,18 +867,25 @@ class _OfferDetailPageState extends State<OfferDetailPage> {
                               height: 52,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(
-                                    AppSpacing.radiusMd),
+                                  AppSpacing.radiusMd,
+                                ),
                                 gradient: isApplying
-                                    ? LinearGradient(colors: [
-                                        AppColorsLight.primary
-                                            .withOpacity(0.5),
-                                        AppColorsLight.secondary
-                                            .withOpacity(0.5),
-                                      ])
-                                    : LinearGradient(colors: [
-                                        AppColorsLight.textPrimary,
-                                        AppColorsLight.primary,
-                                      ]),
+                                    ? LinearGradient(
+                                        colors: [
+                                          AppColorsLight.primary.withOpacity(
+                                            0.5,
+                                          ),
+                                          AppColorsLight.secondary.withOpacity(
+                                            0.5,
+                                          ),
+                                        ],
+                                      )
+                                    : LinearGradient(
+                                        colors: [
+                                          AppColorsLight.textPrimary,
+                                          AppColorsLight.primary,
+                                        ],
+                                      ),
                                 boxShadow: isApplying
                                     ? []
                                     : [
@@ -703,12 +900,11 @@ class _OfferDetailPageState extends State<OfferDetailPage> {
                               child: Material(
                                 color: Colors.transparent,
                                 borderRadius: BorderRadius.circular(
-                                    AppSpacing.radiusMd),
+                                  AppSpacing.radiusMd,
+                                ),
                                 clipBehavior: Clip.antiAlias,
                                 child: InkWell(
-                                  onTap: isApplying
-                                      ? null
-                                      : _handleApply,
+                                  onTap: isApplying ? null : _handleApply,
                                   child: Center(
                                     child: isApplying
                                         ? const SizedBox(
@@ -729,15 +925,16 @@ class _OfferDetailPageState extends State<OfferDetailPage> {
                                                 size: 18,
                                               ),
                                               const SizedBox(
-                                                  width: AppSpacing.sm),
+                                                width: AppSpacing.sm,
+                                              ),
                                               Text(
                                                 'offer_detail.apply'.tr(),
-                                                style: AppTypography
-                                                    .labelLarge
+                                                style: AppTypography.labelLarge
                                                     .copyWith(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
                                               ),
                                             ],
                                           ),
@@ -786,7 +983,6 @@ class _OfferDetailPageState extends State<OfferDetailPage> {
           );
         },
       );
-      
     } else {
       // Pas de compétences manquantes → postuler directement
       _cubit.applyToOffer();
@@ -802,12 +998,17 @@ class _OfferDetailPageState extends State<OfferDetailPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.error_outline_rounded,
-                color: AppColorsLight.textTertiary, size: 48),
+            const Icon(
+              Icons.error_outline_rounded,
+              color: AppColorsLight.textTertiary,
+              size: 48,
+            ),
             const SizedBox(height: AppSpacing.md),
-            Text('offer_detail.not_found'.tr(),
-                style: AppTypography.headingSmall,
-                textAlign: TextAlign.center),
+            Text(
+              'offer_detail.not_found'.tr(),
+              style: AppTypography.headingSmall,
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: AppSpacing.lg),
             ElevatedButton.icon(
               onPressed: () {
@@ -933,11 +1134,12 @@ class _SkillTag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color =
-        isMatching ? AppColorsLight.success : AppColorsLight.error;
+    final color = isMatching ? AppColorsLight.success : AppColorsLight.error;
     return Container(
       padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.sm,
+      ),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
         borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
@@ -1029,10 +1231,12 @@ class _CoachSuggestionSheet extends StatelessWidget {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(colors: [
-                        AppColorsLight.primary,
-                        AppColorsLight.secondary,
-                      ]),
+                      gradient: LinearGradient(
+                        colors: [
+                          AppColorsLight.primary,
+                          AppColorsLight.secondary,
+                        ],
+                      ),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
@@ -1072,7 +1276,9 @@ class _CoachSuggestionSheet extends StatelessWidget {
                         const SizedBox(height: AppSpacing.md),
                         Text(
                           'offer_detail.ai_analyzing'.tr(),
-                          style: AppTypography.bodyMedium.copyWith(color: AppColorsLight.textSecondary),
+                          style: AppTypography.bodyMedium.copyWith(
+                            color: AppColorsLight.textSecondary,
+                          ),
                         ),
                       ],
                     ),
@@ -1087,7 +1293,9 @@ class _CoachSuggestionSheet extends StatelessWidget {
                   ),
                   child: Text(
                     coachError,
-                    style: AppTypography.bodyMedium.copyWith(color: AppColorsLight.error),
+                    style: AppTypography.bodyMedium.copyWith(
+                      color: AppColorsLight.error,
+                    ),
                   ),
                 )
               else if (coachResult != null) ...[
@@ -1098,7 +1306,8 @@ class _CoachSuggestionSheet extends StatelessWidget {
                     borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                   ),
                   child: Text(
-                    coachResult['globalMessage'] ?? 'offer_detail.suggestions'.tr(),
+                    coachResult['globalMessage'] ??
+                        'offer_detail.suggestions'.tr(),
                     style: AppTypography.bodyMedium.copyWith(
                       color: AppColorsLight.textPrimary.withOpacity(0.8),
                       height: 1.5,
@@ -1108,56 +1317,62 @@ class _CoachSuggestionSheet extends StatelessWidget {
                 const SizedBox(height: AppSpacing.md),
 
                 if (coachResult['suggestions'] != null)
-                  ...(coachResult['suggestions'] as List).map((sugg) => Container(
-                        margin: const EdgeInsets.only(bottom: AppSpacing.sm),
-                        padding: const EdgeInsets.all(AppSpacing.md),
-                        decoration: BoxDecoration(
-                          color: AppColorsLight.warning.withOpacity(0.06),
-                          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-                          border: Border.all(
-                            color: AppColorsLight.warning.withOpacity(0.2),
+                  ...(coachResult['suggestions'] as List).map(
+                    (sugg) => Container(
+                      margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+                      padding: const EdgeInsets.all(AppSpacing.md),
+                      decoration: BoxDecoration(
+                        color: AppColorsLight.warning.withOpacity(0.06),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusMd,
+                        ),
+                        border: Border.all(
+                          color: AppColorsLight.warning.withOpacity(0.2),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 32,
+                            height: 32,
+                            decoration: BoxDecoration(
+                              color: AppColorsLight.warning.withOpacity(0.15),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.lightbulb_outline_rounded,
+                              size: 16,
+                              color: AppColorsLight.warning,
+                            ),
                           ),
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 32,
-                              height: 32,
-                              decoration: BoxDecoration(
-                                color: AppColorsLight.warning.withOpacity(0.15),
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                Icons.lightbulb_outline_rounded,
-                                size: 16,
-                                color: AppColorsLight.warning,
-                              ),
-                            ),
-                            const SizedBox(width: AppSpacing.sm),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'offer_detail.suggested_action'.tr(args: [sugg['skill']]),
-                                    style: AppTypography.labelSmall.copyWith(
-                                      color: AppColorsLight.warning,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                          const SizedBox(width: AppSpacing.sm),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'offer_detail.suggested_action'.tr(
+                                    args: [sugg['skill']],
                                   ),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    sugg['action'] ?? '',
-                                    style: AppTypography.bodySmall.copyWith(
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                                  style: AppTypography.labelSmall.copyWith(
+                                    color: AppColorsLight.warning,
+                                    fontWeight: FontWeight.w600,
                                   ),
-                                ],
-                              ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  sugg['action'] ?? '',
+                                  style: AppTypography.bodySmall.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      )),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
               ],
 
               const SizedBox(height: AppSpacing.lg),
@@ -1168,12 +1383,16 @@ class _CoachSuggestionSheet extends StatelessWidget {
                     child: Container(
                       height: 48,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusMd,
+                        ),
                         border: Border.all(color: AppColorsLight.bgSurface),
                       ),
                       child: Material(
                         color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusMd,
+                        ),
                         clipBehavior: Clip.antiAlias,
                         child: InkWell(
                           onTap: () => Navigator.pop(context),
@@ -1194,11 +1413,15 @@ class _CoachSuggestionSheet extends StatelessWidget {
                     child: Container(
                       height: 48,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-                        gradient: LinearGradient(colors: [
-                          AppColorsLight.textPrimary,
-                          AppColorsLight.primary,
-                        ]),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusMd,
+                        ),
+                        gradient: LinearGradient(
+                          colors: [
+                            AppColorsLight.textPrimary,
+                            AppColorsLight.primary,
+                          ],
+                        ),
                         boxShadow: [
                           BoxShadow(
                             color: AppColorsLight.primary.withOpacity(0.3),
@@ -1209,7 +1432,9 @@ class _CoachSuggestionSheet extends StatelessWidget {
                       ),
                       child: Material(
                         color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusMd,
+                        ),
                         clipBehavior: Clip.antiAlias,
                         child: InkWell(
                           onTap: onApplyAnyway,
@@ -1234,5 +1459,4 @@ class _CoachSuggestionSheet extends StatelessWidget {
       },
     );
   }
-       }
-      
+}

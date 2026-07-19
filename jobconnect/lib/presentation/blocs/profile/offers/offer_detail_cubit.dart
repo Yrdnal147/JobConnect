@@ -7,8 +7,8 @@ class OfferDetailCubit extends Cubit<OfferDetailState> {
   final SupabaseClient _client;
 
   OfferDetailCubit({SupabaseClient? client})
-      : _client = client ?? Supabase.instance.client,
-        super(const OfferDetailInitial());
+    : _client = client ?? Supabase.instance.client,
+      super(const OfferDetailInitial());
 
   // ─── Chargement de l'offre ────────────────────────────────────────────────
 
@@ -19,7 +19,8 @@ class OfferDetailCubit extends Cubit<OfferDetailState> {
       final offerRes = await _client
           .from('offers')
           .select(
-              'id, title, offer_type, location, is_active, created_at, duration_months, salary_range, description, required_skills, min_education, years_of_experience')
+            'id, title, offer_type, location, is_active, created_at, duration_months, salary_range, description, required_skills, min_education, years_of_experience',
+          )
           .eq('id', offerId)
           .maybeSingle();
 
@@ -48,8 +49,9 @@ class OfferDetailCubit extends Cubit<OfferDetailState> {
         durationMonths: offerRes['duration_months'] as int?,
         salaryRange: offerRes['salary_range'] as String?,
         description: offerRes['description'] as String? ?? '',
-        requiredSkills:
-            List<String>.from(offerRes['required_skills'] as List? ?? []),
+        requiredSkills: List<String>.from(
+          offerRes['required_skills'] as List? ?? [],
+        ),
         minEducation: offerRes['min_education'] as String? ?? '',
         yearsOfExperience: offerRes['years_of_experience'] as int? ?? 0,
       );
@@ -76,15 +78,16 @@ class OfferDetailCubit extends Cubit<OfferDetailState> {
     String? salaryRange,
   }) async {
     final current = state;
-    final currentOffer =
-        current is OfferDetailLoaded ? current.offer : null;
+    final currentOffer = current is OfferDetailLoaded ? current.offer : null;
     if (currentOffer == null) return;
 
     if (title.trim().isEmpty) {
-      emit(OfferDetailError(
-        message: 'Le titre est obligatoire.',
-        lastKnownOffer: currentOffer,
-      ));
+      emit(
+        OfferDetailError(
+          message: 'Le titre est obligatoire.',
+          lastKnownOffer: currentOffer,
+        ),
+      );
       _restoreLoaded(currentOffer);
       return;
     }
@@ -92,20 +95,22 @@ class OfferDetailCubit extends Cubit<OfferDetailState> {
     emit(OfferDetailUpdating(offer: currentOffer));
 
     try {
-      await _client.from('offers').update({
-        'title': title.trim(),
-        'description': description.trim(),
-        'offer_type': offerType,
-        'min_education': minEducation,
-        'location':
-            location.trim().isEmpty ? 'Douala' : location.trim(),
-        'required_skills': requiredSkills,
-        'years_of_experience': yearsOfExperience,
-        'is_active': isActive,
-        if (durationMonths != null) 'duration_months': durationMonths,
-        if (salaryRange != null && salaryRange.isNotEmpty)
-          'salary_range': salaryRange,
-      }).eq('id', offerId);
+      await _client
+          .from('offers')
+          .update({
+            'title': title.trim(),
+            'description': description.trim(),
+            'offer_type': offerType,
+            'min_education': minEducation,
+            'location': location.trim().isEmpty ? 'Douala' : location.trim(),
+            'required_skills': requiredSkills,
+            'years_of_experience': yearsOfExperience,
+            'is_active': isActive,
+            if (durationMonths != null) 'duration_months': durationMonths,
+            if (salaryRange != null && salaryRange.isNotEmpty)
+              'salary_range': salaryRange,
+          })
+          .eq('id', offerId);
 
       await loadOffer(offerId);
 
@@ -116,10 +121,12 @@ class OfferDetailCubit extends Cubit<OfferDetailState> {
         if (!isClosed) emit(OfferDetailLoaded(offer: loaded.offer));
       }
     } catch (e) {
-      emit(OfferDetailError(
-        message: 'Impossible de modifier : ${e.toString()}',
-        lastKnownOffer: currentOffer,
-      ));
+      emit(
+        OfferDetailError(
+          message: 'Impossible de modifier : ${e.toString()}',
+          lastKnownOffer: currentOffer,
+        ),
+      );
       _restoreLoaded(currentOffer);
     }
   }
@@ -128,8 +135,7 @@ class OfferDetailCubit extends Cubit<OfferDetailState> {
 
   Future<void> deleteOffer(String offerId) async {
     final current = state;
-    final currentOffer =
-        current is OfferDetailLoaded ? current.offer : null;
+    final currentOffer = current is OfferDetailLoaded ? current.offer : null;
     if (currentOffer == null) return;
 
     emit(OfferDetailDeleting(offer: currentOffer));
@@ -172,20 +178,19 @@ class OfferDetailCubit extends Cubit<OfferDetailState> {
       }
 
       // 4. Supprime les applications
-      await _client
-          .from('applications')
-          .delete()
-          .eq('offer_id', offerId);
+      await _client.from('applications').delete().eq('offer_id', offerId);
 
       // 5. Supprime l'offre
       await _client.from('offers').delete().eq('id', offerId);
 
       emit(const OfferDetailDeleted());
     } catch (e) {
-      emit(OfferDetailError(
-        message: 'Impossible de supprimer : ${e.toString()}',
-        lastKnownOffer: currentOffer,
-      ));
+      emit(
+        OfferDetailError(
+          message: 'Impossible de supprimer : ${e.toString()}',
+          lastKnownOffer: currentOffer,
+        ),
+      );
       _restoreLoaded(currentOffer);
     }
   }
@@ -203,8 +208,18 @@ class OfferDetailCubit extends Cubit<OfferDetailState> {
     try {
       final date = DateTime.parse(isoDate);
       const months = [
-        'Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun',
-        'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'
+        'Jan',
+        'Fév',
+        'Mar',
+        'Avr',
+        'Mai',
+        'Jun',
+        'Jul',
+        'Aoû',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Déc',
       ];
       return '${date.day} ${months[date.month - 1]} ${date.year}';
     } catch (_) {

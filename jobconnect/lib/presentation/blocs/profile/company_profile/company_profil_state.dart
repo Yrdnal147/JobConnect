@@ -59,10 +59,18 @@ class CompanyProfileData extends Equatable {
 
   @override
   List<Object?> get props => [
-        name, email, sector, size, description,
-        ceoName, website, location, logoUrl,
-        verificationStatus, isVerified,
-      ];
+    name,
+    email,
+    sector,
+    size,
+    description,
+    ceoName,
+    website,
+    location,
+    logoUrl,
+    verificationStatus,
+    isVerified,
+  ];
 }
 
 abstract class CompanyProfileState extends Equatable {
@@ -84,15 +92,9 @@ class CompanyProfileLoaded extends CompanyProfileState {
   final CompanyProfileData profile;
   final bool isDirty;
 
-  const CompanyProfileLoaded({
-    required this.profile,
-    this.isDirty = false,
-  });
+  const CompanyProfileLoaded({required this.profile, this.isDirty = false});
 
-  CompanyProfileLoaded copyWith({
-    CompanyProfileData? profile,
-    bool? isDirty,
-  }) {
+  CompanyProfileLoaded copyWith({CompanyProfileData? profile, bool? isDirty}) {
     return CompanyProfileLoaded(
       profile: profile ?? this.profile,
       isDirty: isDirty ?? this.isDirty,
@@ -131,10 +133,7 @@ class CompanyProfileError extends CompanyProfileState {
   final String message;
   final CompanyProfileData? lastKnownProfile;
 
-  const CompanyProfileError({
-    required this.message,
-    this.lastKnownProfile,
-  });
+  const CompanyProfileError({required this.message, this.lastKnownProfile});
 
   @override
   List<Object?> get props => [message, lastKnownProfile];

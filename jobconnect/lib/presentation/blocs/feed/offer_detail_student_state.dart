@@ -45,13 +45,26 @@ class StudentOfferDetail extends Equatable {
 
   @override
   List<Object?> get props => [
-        offerId, title, companyName, companyId,
-        isCompanyVerified, companyLogo, offerType, location,
-        description, requiredSkills, minEducation,
-        yearsOfExperience, salaryRange, durationMonths,
-        postedAt, matchScore, matchingSkills,
-        missingSkills, hasAlreadyApplied,
-      ];
+    offerId,
+    title,
+    companyName,
+    companyId,
+    isCompanyVerified,
+    companyLogo,
+    offerType,
+    location,
+    description,
+    requiredSkills,
+    minEducation,
+    yearsOfExperience,
+    salaryRange,
+    durationMonths,
+    postedAt,
+    matchScore,
+    matchingSkills,
+    missingSkills,
+    hasAlreadyApplied,
+  ];
 }
 
 abstract class OfferDetailStudentState extends Equatable {
@@ -96,12 +109,19 @@ class OfferDetailStudentLoaded extends OfferDetailStudentState {
       isSaved: isSaved ?? this.isSaved,
       isCoachingLoading: isCoachingLoading ?? this.isCoachingLoading,
       coachResult: coachResult ?? this.coachResult,
-      coachError: coachError, // on n'utilise pas le coalescing pour permettre de remettre à null
+      coachError:
+          coachError, // on n'utilise pas le coalescing pour permettre de remettre à null
     );
   }
 
   @override
-  List<Object?> get props => [offer, isSaved, isCoachingLoading, coachResult, coachError];
+  List<Object?> get props => [
+    offer,
+    isSaved,
+    isCoachingLoading,
+    coachResult,
+    coachError,
+  ];
 }
 
 class OfferDetailStudentApplying extends OfferDetailStudentState {
@@ -124,10 +144,7 @@ class OfferDetailStudentError extends OfferDetailStudentState {
   final String message;
   final StudentOfferDetail? lastKnownOffer;
 
-  const OfferDetailStudentError({
-    required this.message,
-    this.lastKnownOffer,
-  });
+  const OfferDetailStudentError({required this.message, this.lastKnownOffer});
 
   @override
   List<Object?> get props => [message, lastKnownOffer];

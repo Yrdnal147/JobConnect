@@ -66,9 +66,7 @@ class CandidatesPage extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: AppColorsLight.primary,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-                    border: Border.all(
-                      color: AppColorsLight.primary,
-                    ),
+                    border: Border.all(color: AppColorsLight.primary),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -238,10 +236,7 @@ class _CandidateCard extends StatelessWidget {
                   color: AppColorsLight.bgSurface,
                   borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
                 ),
-                child: Text(
-                  skill,
-                  style: AppTypography.caption,
-                ),
+                child: Text(skill, style: AppTypography.caption),
               );
             }).toList(),
           ),

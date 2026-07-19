@@ -86,16 +86,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     final result = await repository.getCurrentUser();
 
-    result.fold(
-      (failure) => emit(const AuthUnauthenticated()),
-      (user) {
-        if (user != null) {
-          emit(AuthAuthenticated(user));
-        } else {
-          emit(const AuthUnauthenticated());
-        }
-      },
-    );
+    result.fold((failure) => emit(const AuthUnauthenticated()), (user) {
+      if (user != null) {
+        emit(AuthAuthenticated(user));
+      } else {
+        emit(const AuthUnauthenticated());
+      }
+    });
   }
 
   Future<void> _onChangePasswordRequested(
@@ -104,13 +101,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(const AuthLoading());
 
-    final result = await changePasswordUseCase(event.oldPassword, event.newPassword);
+    final result = await changePasswordUseCase(
+      event.oldPassword,
+      event.newPassword,
+    );
 
     result.fold(
       (failure) => emit(AuthError(failure.message)),
       (_) => emit(const AuthPasswordChangedSuccess()),
     );
   }
-
-
 }

@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -62,21 +63,31 @@ class _HomePageState extends State<HomePage> {
 
   String _formatOfferType(String type) {
     switch (type.toLowerCase()) {
-      case 'cdi':                 return 'home.filters.cdi'.tr();
-      case 'cdd':                 return 'home.filters.cdd'.tr();
-      case 'stage_academique':    return 'home.filters.academic_internship'.tr();
-      case 'stage_professionnel': return 'home.filters.pro_internship'.tr();
-      default:                    return type.toUpperCase();
+      case 'cdi':
+        return 'home.filters.cdi'.tr();
+      case 'cdd':
+        return 'home.filters.cdd'.tr();
+      case 'stage_academique':
+        return 'home.filters.academic_internship'.tr();
+      case 'stage_professionnel':
+        return 'home.filters.pro_internship'.tr();
+      default:
+        return type.toUpperCase();
     }
   }
 
   String _translateFilter(String filter) {
     switch (filter) {
-      case 'Tous': return 'home.filters.all'.tr();
-      case 'CDI': return 'home.filters.cdi'.tr();
-      case 'CDD': return 'home.filters.cdd'.tr();
-      case 'Stage': return 'home.filters.internship'.tr();
-      default: return filter;
+      case 'Tous':
+        return 'home.filters.all'.tr();
+      case 'CDI':
+        return 'home.filters.cdi'.tr();
+      case 'CDD':
+        return 'home.filters.cdd'.tr();
+      case 'Stage':
+        return 'home.filters.internship'.tr();
+      default:
+        return filter;
     }
   }
 
@@ -126,12 +137,16 @@ class _HomePageState extends State<HomePage> {
       ],
       child: BlocBuilder<FeedCubit, FeedState>(
         builder: (context, state) {
-          final userName     = state is FeedLoaded ? state.userName     : 'home.candidate'.tr();
-          final photoUrl     = state is FeedLoaded ? state.photoUrl     : null;
-          final hasProfile   = state is FeedLoaded ? state.hasProfile   : false;
+          final userName = state is FeedLoaded
+              ? state.userName
+              : 'home.candidate'.tr();
+          final photoUrl = state is FeedLoaded ? state.photoUrl : null;
+          final hasProfile = state is FeedLoaded ? state.hasProfile : false;
           final profileScore = state is FeedLoaded ? state.profileScore : 0;
-          final activeFilter = state is FeedLoaded ? state.activeFilter : 'Tous';
-          final isLoading    = state is FeedLoading;
+          final activeFilter = state is FeedLoaded
+              ? state.activeFilter
+              : 'Tous';
+          final isLoading = state is FeedLoading;
 
           final size = MediaQuery.of(context).size;
 
@@ -147,16 +162,14 @@ class _HomePageState extends State<HomePage> {
                   height: size.height * 0.28,
                   child: Container(
                     decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [AppColorsLight.primary, Color(0xFF4A148C)],
-                      ),
+                      color: AppColorsLight.primary,
                     ),
                     child: SafeArea(
                       bottom: false,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.lg,
+                        ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -164,13 +177,53 @@ class _HomePageState extends State<HomePage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
+                                // Menu Button
+                                IconButton(
+                                  icon: const Icon(
+                                    Icons.menu_rounded,
+                                    color: Colors.white,
+                                  ),
+                                  onPressed: () {
+                                    final advancedDrawerController =
+                                        context.read<AdvancedDrawerController?>();
+                                    advancedDrawerController?.showDrawer();
+                                  },
+                                ),
                                 // Logo Text
                                 Text(
                                   "JobConnect",
-                                  style: AppTypography.headingMedium.copyWith(color: Colors.white),
+                                  style: AppTypography.headingMedium.copyWith(
+                                    color: Colors.white,
+                                  ),
                                 ),
-                                // Notifications
-                                BlocBuilder<NotificationCubit, NotificationState>(
+                                // Actions
+                                Row(
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                        right: AppSpacing.sm,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withValues(
+                                          alpha: 0.15,
+                                        ),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: IconButton(
+                                        icon: const Icon(
+                                          Icons.check_circle_rounded,
+                                          color: AppColorsLight.success,
+                                        ),
+                                        onPressed: () =>
+                                            context.push('/student/success'),
+                                        tooltip: 'profile.tooltip_success'.tr(),
+                                      ),
+                                    ),
+                                    // Notifications
+                                BlocBuilder<
+                                  NotificationCubit,
+                                  NotificationState
+                                >(
                                   builder: (context, notifState) {
                                     int unreadCount = 0;
                                     if (notifState is NotificationLoaded) {
@@ -180,19 +233,33 @@ class _HomePageState extends State<HomePage> {
                                       children: [
                                         Container(
                                           decoration: BoxDecoration(
-                                            color: Colors.white.withValues(alpha: 0.15),
-                                            borderRadius: BorderRadius.circular(12),
+                                            color: Colors.white.withValues(
+                                              alpha: 0.15,
+                                            ),
+                                            borderRadius: BorderRadius.circular(
+                                              12,
+                                            ),
                                           ),
                                           child: IconButton(
-                                            icon: const Icon(Icons.notifications_outlined, color: Colors.white),
-                                            onPressed: () => Navigator.of(context, rootNavigator: true).push(
-                                              MaterialPageRoute(
-                                                builder: (_) => BlocProvider.value(
-                                                  value: _notificationCubit,
-                                                  child: const NotificationsPage(),
-                                                ),
-                                              ),
+                                            icon: const Icon(
+                                              Icons.notifications_outlined,
+                                              color: Colors.white,
                                             ),
+                                            onPressed: () =>
+                                                Navigator.of(
+                                                  context,
+                                                  rootNavigator: true,
+                                                ).push(
+                                                  MaterialPageRoute(
+                                                    builder: (_) =>
+                                                        BlocProvider.value(
+                                                          value:
+                                                              _notificationCubit,
+                                                          child:
+                                                              const NotificationsPage(),
+                                                        ),
+                                                  ),
+                                                ),
                                           ),
                                         ),
                                         if (unreadCount > 0)
@@ -204,10 +271,15 @@ class _HomePageState extends State<HomePage> {
                                               decoration: BoxDecoration(
                                                 color: Colors.redAccent,
                                                 shape: BoxShape.circle,
-                                                border: Border.all(color: AppColorsLight.primary, width: 1.5),
+                                                border: Border.all(
+                                                  color: AppColorsLight.primary,
+                                                  width: 1.5,
+                                                ),
                                               ),
                                               child: Text(
-                                                unreadCount > 9 ? '9+' : unreadCount.toString(),
+                                                unreadCount > 9
+                                                    ? '9+'
+                                                    : unreadCount.toString(),
                                                 style: const TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 10,
@@ -220,6 +292,8 @@ class _HomePageState extends State<HomePage> {
                                     );
                                   },
                                 ),
+                                  ],
+                                ),
                               ],
                             ),
                             const SizedBox(height: AppSpacing.lg),
@@ -229,15 +303,22 @@ class _HomePageState extends State<HomePage> {
                                 const SizedBox(width: AppSpacing.md),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'home.greeting'.tr(),
-                                        style: AppTypography.bodySmall.copyWith(color: Colors.white.withOpacity(0.7)),
+                                        style: AppTypography.bodySmall.copyWith(
+                                          color: Colors.white.withOpacity(0.7),
+                                        ),
                                       ),
                                       Text(
                                         userName,
-                                        style: AppTypography.displayMedium.copyWith(color: Colors.white, fontSize: 24),
+                                        style: AppTypography.displayMedium
+                                            .copyWith(
+                                              color: Colors.white,
+                                              fontSize: 24,
+                                            ),
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                       ),
@@ -252,178 +333,227 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-                
+
                 // Carte Blanche Globale (Contenu Scrollable)
                 Positioned.fill(
                   top: size.height * 0.22, // Chevauchement
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(32),
-                        topRight: Radius.circular(32),
-                      ),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 18.0, sigmaY: 18.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.85),
-                            border: Border(
-                              top: BorderSide(
-                                color: Colors.white.withOpacity(0.6),
-                                width: 1.5,
-                              ),
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(32),
+                      topRight: Radius.circular(32),
+                    ),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 18.0, sigmaY: 18.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.85),
+                          border: Border(
+                            top: BorderSide(
+                              color: Colors.white.withOpacity(0.6),
+                              width: 1.5,
                             ),
                           ),
-                          child: ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(32),
-                        topRight: Radius.circular(32),
-                      ),
-                      child: RefreshIndicator(
-                        color: AppColorsLight.primary,
-                        onRefresh: _cubit.refresh,
-                        child: CustomScrollView(
-                          slivers: [
-                            // Contenu statique de la carte blanche
-                            SliverToBoxAdapter(
-                              child: Padding(
-                                padding: const EdgeInsets.all(AppSpacing.lg),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    // ── Banner profil ─────────────────────────
-                                    if (!hasProfile)
-                                      _buildIncompleteBanner()
-                                    else
-                                      _buildProfileScoreBanner(profileScore),
-                                    const SizedBox(height: AppSpacing.lg),
-
-                                    // ── Titre + filtres ───────────────────────
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        ),
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(32),
+                            topRight: Radius.circular(32),
+                          ),
+                          child: RefreshIndicator(
+                            color: AppColorsLight.primary,
+                            onRefresh: _cubit.refresh,
+                            child: CustomScrollView(
+                              slivers: [
+                                // Contenu statique de la carte blanche
+                                SliverToBoxAdapter(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(
+                                      AppSpacing.lg,
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          hasProfile ? 'home.offers.for_you'.tr() : 'home.offers.recent'.tr(),
-                                          style: AppTypography.headingSmall,
+                                        // ── Banner profil ─────────────────────────
+                                        if (!hasProfile)
+                                          _buildIncompleteBanner()
+                                        else
+                                          _buildProfileScoreBanner(
+                                            profileScore,
+                                          ),
+                                        const SizedBox(height: AppSpacing.lg),
+
+                                        // ── Titre + filtres ───────────────────────
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              hasProfile
+                                                  ? 'home.offers.for_you'.tr()
+                                                  : 'home.offers.recent'.tr(),
+                                              style: AppTypography.headingSmall,
+                                            ),
+                                            GestureDetector(
+                                              onTap: () => context.push(
+                                                '/student/search',
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    'home.offers.see_all'.tr(),
+                                                    style: AppTypography
+                                                        .bodySmall
+                                                        .copyWith(
+                                                          color: AppColorsLight
+                                                              .primary,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                        ),
+                                                  ),
+                                                  const SizedBox(width: 2),
+                                                  const Icon(
+                                                    Icons
+                                                        .arrow_forward_ios_rounded,
+                                                    size: 11,
+                                                    color:
+                                                        AppColorsLight.primary,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        GestureDetector(
-                                          onTap: () => context.push('/student/search'),
+                                        const SizedBox(height: AppSpacing.md),
+
+                                        // Filtres
+                                        SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
                                           child: Row(
-                                            children: [
-                                              Text(
-                                                'home.offers.see_all'.tr(),
-                                                style: AppTypography.bodySmall.copyWith(
-                                                  color: AppColorsLight.primary,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                              const SizedBox(width: 2),
-                                              const Icon(
-                                                Icons.arrow_forward_ios_rounded,
-                                                size: 11,
-                                                color: AppColorsLight.primary,
-                                              ),
-                                            ],
+                                            children: List.generate(
+                                              _filters.length,
+                                              (i) {
+                                                final filter = _filters[i];
+                                                final icon = _filterIcons[i];
+                                                final isSelected =
+                                                    activeFilter == filter;
+                                                return Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                        right: AppSpacing.sm,
+                                                      ),
+                                                  child: GestureDetector(
+                                                    onTap: () => _cubit
+                                                        .filterOffers(filter),
+                                                    child: _FilterChip(
+                                                      label: _translateFilter(
+                                                        filter,
+                                                      ),
+                                                      icon: icon,
+                                                      isSelected: isSelected,
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            ),
                                           ),
                                         ),
                                       ],
                                     ),
-                                    const SizedBox(height: AppSpacing.md),
-
-                                    // Filtres
-                                    SingleChildScrollView(
-                                      scrollDirection: Axis.horizontal,
-                                      child: Row(
-                                        children: List.generate(_filters.length, (i) {
-                                          final filter = _filters[i];
-                                          final icon   = _filterIcons[i];
-                                          final isSelected = activeFilter == filter;
-                                          return Padding(
-                                            padding: const EdgeInsets.only(right: AppSpacing.sm),
-                                            child: GestureDetector(
-                                              onTap: () => _cubit.filterOffers(filter),
-                                              child: _FilterChip(
-                                                label: _translateFilter(filter),
-                                                icon: icon,
-                                                isSelected: isSelected,
-                                              ),
-                                            ),
-                                          );
-                                        }),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-
-                            // ── Liste d'offres ────────────────────────────────
-                            if (state is FeedLoading)
-                              SliverList(
-                                delegate: SliverChildBuilderDelegate(
-                                  (_, __) => Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.sm),
-                                    child: Container(
-                                      height: 110,
-                                      decoration: BoxDecoration(
-                                        color: AppColorsLight.bgCard,
-                                        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-                                        border: Border.all(color: AppColorsLight.bgSurface),
-                                      ),
-                                    ),
                                   ),
-                                  childCount: 5,
                                 ),
-                              )
-                            else if (state is FeedError)
-                              SliverToBoxAdapter(
-                                child: _buildErrorState(state.message),
-                              )
-                            else if (state is FeedLoaded) ...[
-                              if (state.filteredOffers.isEmpty)
-                                SliverToBoxAdapter(
-                                  child: _buildEmptyState(state.activeFilter),
-                                )
-                              else
-                                SliverPadding(
-                                  padding: const EdgeInsets.only(bottom: AppSpacing.xl * 3), // Espace pour la bottom nav
-                                  sliver: SliverList(
+
+                                // ── Liste d'offres ────────────────────────────────
+                                if (state is FeedLoading)
+                                  SliverList(
                                     delegate: SliverChildBuilderDelegate(
-                                      (context, index) {
-                                        final offer = state.filteredOffers[index];
-                                        return Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.sm),
-                                          child: Material(
-                                            color: Colors.transparent,
-                                            borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-                                            clipBehavior: Clip.antiAlias,
-                                            child: InkWell(
-                                              onTap: () => context.push('/student/offer/${offer.offerId}'),
-                                              child: _OfferCard(
-                                                offer: offer,
-                                                hasProfile: hasProfile,
-                                                formatType: _formatOfferType,
-                                              ),
+                                      (_, __) => Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: AppSpacing.lg,
+                                          vertical: AppSpacing.sm,
+                                        ),
+                                        child: Container(
+                                          height: 110,
+                                          decoration: BoxDecoration(
+                                            color: AppColorsLight.bgCard,
+                                            borderRadius: BorderRadius.circular(
+                                              AppSpacing.radiusLg,
+                                            ),
+                                            border: Border.all(
+                                              color: AppColorsLight.bgSurface,
                                             ),
                                           ),
-                                        );
-                                      },
-                                      childCount: state.filteredOffers.length,
+                                        ),
+                                      ),
+                                      childCount: 5,
                                     ),
-                                  ),
-                                ),
-                            ],
-                          ],
+                                  )
+                                else if (state is FeedError)
+                                  SliverToBoxAdapter(
+                                    child: _buildErrorState(state.message),
+                                  )
+                                else if (state is FeedLoaded) ...[
+                                  if (state.filteredOffers.isEmpty)
+                                    SliverToBoxAdapter(
+                                      child: _buildEmptyState(
+                                        state.activeFilter,
+                                      ),
+                                    )
+                                  else
+                                    SliverPadding(
+                                      padding: const EdgeInsets.only(
+                                        bottom: AppSpacing.xl * 3,
+                                      ), // Espace pour la bottom nav
+                                      sliver: SliverList(
+                                        delegate: SliverChildBuilderDelegate(
+                                          (context, index) {
+                                            final offer =
+                                                state.filteredOffers[index];
+                                            return Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: AppSpacing.lg,
+                                                    vertical: AppSpacing.sm,
+                                                  ),
+                                              child: Material(
+                                                color: Colors.transparent,
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                      AppSpacing.radiusLg,
+                                                    ),
+                                                clipBehavior: Clip.antiAlias,
+                                                child: InkWell(
+                                                  onTap: () => context.push(
+                                                    '/student/offer/${offer.offerId}',
+                                                  ),
+                                                  child: _OfferCard(
+                                                    offer: offer,
+                                                    hasProfile: hasProfile,
+                                                    formatType:
+                                                        _formatOfferType,
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          childCount:
+                                              state.filteredOffers.length,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
-      );
-    },
+          );
+        },
       ),
     );
   }
@@ -443,9 +573,7 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
         borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-        border: Border.all(
-          color: AppColorsLight.primary.withOpacity(0.25),
-        ),
+        border: Border.all(color: AppColorsLight.primary.withOpacity(0.25)),
       ),
       child: Material(
         color: Colors.transparent,
@@ -460,10 +588,7 @@ class _HomePageState extends State<HomePage> {
                 height: 36,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [
-                      AppColorsLight.primary,
-                      AppColorsLight.secondary,
-                    ],
+                    colors: [AppColorsLight.primary, AppColorsLight.secondary],
                   ),
                   shape: BoxShape.circle,
                 ),
@@ -508,14 +633,14 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // ─── Banner profil complet avec score 
+  // ─── Banner profil complet avec score
 
   Widget _buildProfileScoreBanner(int score) {
     final scoreColor = score >= 75
         ? AppColorsLight.success
         : score >= 50
-            ? AppColorsLight.warning
-            : AppColorsLight.primary;
+        ? AppColorsLight.warning
+        : AppColorsLight.primary;
 
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
@@ -581,7 +706,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // ─── États auxiliaires 
+  // ─── États auxiliaires
 
   Widget _buildEmptyState(String filter) {
     return Padding(
@@ -615,8 +740,11 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.wifi_off_rounded,
-              color: AppColorsLight.textTertiary, size: 48),
+          const Icon(
+            Icons.wifi_off_rounded,
+            color: AppColorsLight.textTertiary,
+            size: 48,
+          ),
           const SizedBox(height: AppSpacing.md),
           Text(
             'home.offers.error_loading'.tr(),
@@ -667,17 +795,14 @@ class _FilterChip extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         gradient: isSelected
-            ? LinearGradient(colors: [
-                AppColorsLight.textPrimary,
-                AppColorsLight.primary,
-              ])
+            ? LinearGradient(
+                colors: [AppColorsLight.textPrimary, AppColorsLight.primary],
+              )
             : null,
         color: isSelected ? null : AppColorsLight.bgCard,
         borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
         border: Border.all(
-          color: isSelected
-              ? Colors.transparent
-              : AppColorsLight.bgSurface,
+          color: isSelected ? Colors.transparent : AppColorsLight.bgSurface,
         ),
         boxShadow: isSelected
             ? [
@@ -701,11 +826,8 @@ class _FilterChip extends StatelessWidget {
           Text(
             label,
             style: AppTypography.labelSmall.copyWith(
-              color: isSelected
-                  ? Colors.white
-                  : AppColorsLight.textSecondary,
-              fontWeight:
-                  isSelected ? FontWeight.w600 : FontWeight.w400,
+              color: isSelected ? Colors.white : AppColorsLight.textSecondary,
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
             ),
           ),
         ],
@@ -740,11 +862,11 @@ class _OfferCard extends StatelessWidget {
     final scoreColor = offer.matchScore >= 75
         ? AppColorsLight.success
         : offer.matchScore >= 50
-            ? AppColorsLight.warning
-            : AppColorsLight.error;
+        ? AppColorsLight.warning
+        : AppColorsLight.error;
 
     final gradientIndex = offer.offerId.hashCode % _avatarGradients.length;
-    final gradient      = _avatarGradients[gradientIndex.abs()];
+    final gradient = _avatarGradients[gradientIndex.abs()];
 
     return Container(
       padding: const EdgeInsets.all(AppSpacing.lg),
@@ -770,8 +892,7 @@ class _OfferCard extends StatelessWidget {
                 padding: const EdgeInsets.all(3),
                 decoration: BoxDecoration(
                   color: AppColorsLight.bgCard,
-                  borderRadius:
-                      BorderRadius.circular(AppSpacing.radiusMd + 2),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd + 2),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.06),
@@ -827,8 +948,7 @@ class _OfferCard extends StatelessWidget {
                 ),
                 decoration: BoxDecoration(
                   color: AppColorsLight.primary.withOpacity(0.1),
-                  borderRadius:
-                      BorderRadius.circular(AppSpacing.radiusFull),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
                 ),
                 child: Text(
                   formatType(offer.offerType),

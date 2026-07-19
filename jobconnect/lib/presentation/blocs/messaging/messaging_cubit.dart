@@ -16,9 +16,9 @@ class MessagingCubit extends Cubit<MessagingState> {
   MessagingCubit({
     SupabaseClient? client,
     IMastraRemoteDataSource? mastraDataSource,
-  })  : _client = client ?? Supabase.instance.client,
-        _mastraDataSource = mastraDataSource,
-        super(const MessagingInitial());
+  }) : _client = client ?? Supabase.instance.client,
+       _mastraDataSource = mastraDataSource,
+       super(const MessagingInitial());
 
   // ─── Conversations recruteur ──────────────────────────────────────────────
 
@@ -54,7 +54,9 @@ class MessagingCubit extends Cubit<MessagingState> {
 
       final convsRes = await _client
           .from('conversations')
-          .select('id, last_message, last_message_at, student_id, application_id')
+          .select(
+            'id, last_message, last_message_at, student_id, application_id',
+          )
           .eq('company_id', companyId)
           .order('last_message_at', ascending: false);
 
@@ -88,7 +90,7 @@ class MessagingCubit extends Cubit<MessagingState> {
                 .neq('sender_id', user.id);
             unreadCount = (unreadRes as List).length;
           } catch (_) {}
-          
+
           String offerTitle = '';
           if (applicationId != null) {
             try {
@@ -98,21 +100,27 @@ class MessagingCubit extends Cubit<MessagingState> {
                   .eq('id', applicationId)
                   .maybeSingle();
               if (appRes != null && appRes['offers'] != null) {
-                offerTitle = (appRes['offers'] as Map)['title'] as String? ?? '';
+                offerTitle =
+                    (appRes['offers'] as Map)['title'] as String? ?? '';
               }
             } catch (_) {}
           }
 
           if (profileRes != null) {
-            conversations.add(ConversationItem(
-              conversationId: conv['id'] as String,
-              otherPartyName: profileRes['full_name'] as String? ?? 'Étudiant',
-              otherPartySubtitle: offerTitle.isNotEmpty ? offerTitle : (profileRes['field_of_study'] as String? ?? ''),
-              otherPartyPhotoUrl: profileRes['photo_url'] as String?,
-              lastMessage: conv['last_message'] as String? ?? '',
-              lastMessageAt: _formatTime(conv['last_message_at'] as String?),
-              unreadCount: unreadCount,
-            ));
+            conversations.add(
+              ConversationItem(
+                conversationId: conv['id'] as String,
+                otherPartyName:
+                    profileRes['full_name'] as String? ?? 'Étudiant',
+                otherPartySubtitle: offerTitle.isNotEmpty
+                    ? offerTitle
+                    : (profileRes['field_of_study'] as String? ?? ''),
+                otherPartyPhotoUrl: profileRes['photo_url'] as String?,
+                lastMessage: conv['last_message'] as String? ?? '',
+                lastMessageAt: _formatTime(conv['last_message_at'] as String?),
+                unreadCount: unreadCount,
+              ),
+            );
           }
         } catch (_) {
           continue;
@@ -121,11 +129,17 @@ class MessagingCubit extends Cubit<MessagingState> {
 
       if (isClosed) return;
       _allConversations = conversations;
-      emit(ConversationsLoaded(
-        conversations: _applyFilters(_allConversations, filterType, searchQuery),
-        filterType: filterType,
-        searchQuery: searchQuery,
-      ));
+      emit(
+        ConversationsLoaded(
+          conversations: _applyFilters(
+            _allConversations,
+            filterType,
+            searchQuery,
+          ),
+          filterType: filterType,
+          searchQuery: searchQuery,
+        ),
+      );
     } catch (e) {
       if (isClosed) return;
       emit(ConversationsError(e.toString()));
@@ -167,7 +181,9 @@ class MessagingCubit extends Cubit<MessagingState> {
 
       final convsRes = await _client
           .from('conversations')
-          .select('id, last_message, last_message_at, company_id, application_id')
+          .select(
+            'id, last_message, last_message_at, company_id, application_id',
+          )
           .eq('student_id', studentId)
           .order('last_message_at', ascending: false);
 
@@ -202,7 +218,7 @@ class MessagingCubit extends Cubit<MessagingState> {
                 .neq('sender_id', user.id);
             unreadCount = (unreadRes as List).length;
           } catch (_) {}
-          
+
           String offerTitle = '';
           if (applicationId != null) {
             try {
@@ -212,21 +228,26 @@ class MessagingCubit extends Cubit<MessagingState> {
                   .eq('id', applicationId)
                   .maybeSingle();
               if (appRes != null && appRes['offers'] != null) {
-                offerTitle = (appRes['offers'] as Map)['title'] as String? ?? '';
+                offerTitle =
+                    (appRes['offers'] as Map)['title'] as String? ?? '';
               }
             } catch (_) {}
           }
 
           if (companyRes != null) {
-            conversations.add(ConversationItem(
-              conversationId: conv['id'] as String,
-              otherPartyName: companyRes['name'] as String? ?? 'Entreprise',
-              otherPartySubtitle: offerTitle.isNotEmpty ? offerTitle : (companyRes['sector'] as String? ?? ''),
-              otherPartyPhotoUrl: companyRes['logo_url'] as String?,
-              lastMessage: conv['last_message'] as String? ?? '',
-              lastMessageAt: _formatTime(conv['last_message_at'] as String?),
-              unreadCount: unreadCount,
-            ));
+            conversations.add(
+              ConversationItem(
+                conversationId: conv['id'] as String,
+                otherPartyName: companyRes['name'] as String? ?? 'Entreprise',
+                otherPartySubtitle: offerTitle.isNotEmpty
+                    ? offerTitle
+                    : (companyRes['sector'] as String? ?? ''),
+                otherPartyPhotoUrl: companyRes['logo_url'] as String?,
+                lastMessage: conv['last_message'] as String? ?? '',
+                lastMessageAt: _formatTime(conv['last_message_at'] as String?),
+                unreadCount: unreadCount,
+              ),
+            );
           }
         } catch (_) {
           continue;
@@ -235,11 +256,17 @@ class MessagingCubit extends Cubit<MessagingState> {
 
       if (isClosed) return;
       _allConversations = conversations;
-      emit(ConversationsLoaded(
-        conversations: _applyFilters(_allConversations, filterType, searchQuery),
-        filterType: filterType,
-        searchQuery: searchQuery,
-      ));
+      emit(
+        ConversationsLoaded(
+          conversations: _applyFilters(
+            _allConversations,
+            filterType,
+            searchQuery,
+          ),
+          filterType: filterType,
+          searchQuery: searchQuery,
+        ),
+      );
     } catch (e) {
       if (isClosed) return;
       emit(ConversationsError(e.toString()));
@@ -248,8 +275,7 @@ class MessagingCubit extends Cubit<MessagingState> {
 
   // ─── Chat (commun recruteur + candidat) ──────────────────────────────────
 
-  Future<void> openChat(String conversationId,
-      {bool isStudent = false}) async {
+  Future<void> openChat(String conversationId, {bool isStudent = false}) async {
     emit(const ChatLoading());
 
     try {
@@ -272,17 +298,46 @@ class MessagingCubit extends Cubit<MessagingState> {
 
       final applicationId = convRes['application_id'] as String?;
       String offerTitle = '';
+      List<String> jobDetails = [];
+
       if (applicationId != null) {
-          try {
-            final appRes = await _client
-                .from('applications')
-                .select('offers(title)')
-                .eq('id', applicationId)
-                .maybeSingle();
-            if (appRes != null && appRes['offers'] != null) {
-              offerTitle = (appRes['offers'] as Map)['title'] as String? ?? '';
+        try {
+          final appRes = await _client
+              .from('applications')
+              .select('offers(title, offer_type, location, salary_range, description, required_skills)')
+              .eq('id', applicationId)
+              .maybeSingle();
+          if (appRes != null && appRes['offers'] != null) {
+            final offerMap = appRes['offers'] as Map;
+            offerTitle = offerMap['title'] as String? ?? '';
+            
+            if (offerTitle.isNotEmpty) {
+              jobDetails.add("Poste : $offerTitle");
             }
-          } catch (_) {}
+            final offerType = offerMap['offer_type'] as String? ?? '';
+            final location = offerMap['location'] as String? ?? '';
+            if (offerType.isNotEmpty || location.isNotEmpty) {
+              jobDetails.add([
+                if (offerType.isNotEmpty) "Type : $offerType",
+                if (location.isNotEmpty) "Lieu : $location",
+              ].join(" - "));
+            }
+            final salary = offerMap['salary_range'] as String? ?? '';
+            if (salary.isNotEmpty) {
+              jobDetails.add("Salaire : $salary");
+            }
+            final skills = offerMap['required_skills'] as List? ?? [];
+            if (skills.isNotEmpty) {
+              final skillsStr = skills.map((s) => s.toString()).take(4).join(", ");
+              jobDetails.add("Compétences : $skillsStr${skills.length > 4 ? '...' : ''}");
+            }
+            final description = offerMap['description'] as String? ?? '';
+            if (description.isNotEmpty) {
+              final shortDesc = description.length > 80 ? '${description.substring(0, 80).trim()}...' : description;
+              jobDetails.add("Mission : $shortDesc");
+            }
+          }
+        } catch (_) {}
       }
 
       String otherPartyName;
@@ -298,8 +353,10 @@ class MessagingCubit extends Cubit<MessagingState> {
             .eq('id', companyId)
             .maybeSingle();
 
-        otherPartyName     = companyRes?['name'] as String? ?? 'Entreprise';
-        otherPartySubtitle = offerTitle.isNotEmpty ? offerTitle : (companyRes?['sector'] as String? ?? '');
+        otherPartyName = companyRes?['name'] as String? ?? 'Entreprise';
+        otherPartySubtitle = offerTitle.isNotEmpty
+            ? offerTitle
+            : (companyRes?['sector'] as String? ?? '');
         otherPartyPhotoUrl = companyRes?['logo_url'] as String?;
       } else {
         // Recruteur → affiche infos étudiant
@@ -310,15 +367,19 @@ class MessagingCubit extends Cubit<MessagingState> {
             .eq('id', studentId)
             .maybeSingle();
 
-        otherPartyName     = profileRes?['full_name'] as String? ?? 'Étudiant';
-        otherPartySubtitle = offerTitle.isNotEmpty ? offerTitle : (profileRes?['field_of_study'] as String? ?? '');
+        otherPartyName = profileRes?['full_name'] as String? ?? 'Étudiant';
+        otherPartySubtitle = offerTitle.isNotEmpty
+            ? offerTitle
+            : (profileRes?['field_of_study'] as String? ?? '');
         otherPartyPhotoUrl = profileRes?['photo_url'] as String?;
       }
 
       // Messages
       final messagesRes = await _client
           .from('messages')
-          .select('id, content, sender_id, created_at, is_read, is_edited, is_deleted')
+          .select(
+            'id, content, sender_id, created_at, is_read, is_edited, is_deleted',
+          )
           .eq('conversation_id', conversationId)
           .order('created_at', ascending: true);
 
@@ -355,19 +416,22 @@ class MessagingCubit extends Cubit<MessagingState> {
             ];
 
       if (isClosed) return;
-      emit(ChatLoaded(
-        conversationId: conversationId,
-        otherPartyName: otherPartyName,
-        otherPartySubtitle: otherPartySubtitle,
-        otherPartyPhotoUrl: otherPartyPhotoUrl,
-        messages: messages,
-        suggestions: suggestions,
-        showSuggestions: messages.isNotEmpty,
-        isStudent: isStudent,
-      ));
+      emit(
+        ChatLoaded(
+          conversationId: conversationId,
+          otherPartyName: otherPartyName,
+          otherPartySubtitle: otherPartySubtitle,
+          otherPartyPhotoUrl: otherPartyPhotoUrl,
+          messages: messages,
+          suggestions: suggestions,
+          showSuggestions: messages.isNotEmpty,
+          isStudent: isStudent,
+          jobDetails: jobDetails,
+        ),
+      );
 
       _subscribeToMessages(conversationId, user.id);
-      
+
       // Fetch AI suggestions if the last message is not from me
       if (messages.isNotEmpty && !messages.last.isMe) {
         // Run asynchronously without awaiting to not block UI
@@ -399,21 +463,24 @@ class MessagingCubit extends Cubit<MessagingState> {
             final current = state;
             if (current is! ChatLoaded) return;
 
-            final msgRecord = payload.eventType == PostgresChangeEvent.delete 
-                ? payload.oldRecord 
+            final msgRecord = payload.eventType == PostgresChangeEvent.delete
+                ? payload.oldRecord
                 : payload.newRecord;
 
             final messageId = msgRecord['id'] as String;
 
             if (payload.eventType == PostgresChangeEvent.insert) {
-              if (current.messages.any((m) => m.messageId == messageId)) return; // Evite les doublons
+              if (current.messages.any((m) => m.messageId == messageId))
+                return; // Evite les doublons
 
               final message = MessageItem(
                 messageId: messageId,
                 content: msgRecord['content'] as String,
                 isMe: msgRecord['sender_id'] == currentUserId,
                 createdAt: _formatTime(msgRecord['created_at'] as String?),
-                rawCreatedAt: DateTime.parse(msgRecord['created_at'] as String).toUtc(),
+                rawCreatedAt: DateTime.parse(
+                  msgRecord['created_at'] as String,
+                ).toUtc(),
                 isRead: msgRecord['is_read'] as bool? ?? false,
                 isEdited: msgRecord['is_edited'] as bool? ?? false,
                 isDeleted: msgRecord['is_deleted'] as bool? ?? false,
@@ -425,14 +492,20 @@ class MessagingCubit extends Cubit<MessagingState> {
                     .update({'is_read': true})
                     .eq('id', messageId)
                     .then((_) {});
-                
-                _fetchAISuggestions(conversationId, message.content, currentUserId);
+
+                _fetchAISuggestions(
+                  conversationId,
+                  message.content,
+                  currentUserId,
+                );
               }
 
-              emit(current.copyWith(
-                messages: [...current.messages, message],
-                showSuggestions: !message.isMe,
-              ));
+              emit(
+                current.copyWith(
+                  messages: [...current.messages, message],
+                  showSuggestions: !message.isMe,
+                ),
+              );
             } else if (payload.eventType == PostgresChangeEvent.update) {
               final updatedMessages = current.messages.map((m) {
                 if (m.messageId == messageId) {
@@ -466,19 +539,26 @@ class MessagingCubit extends Cubit<MessagingState> {
 
     try {
       // Insère le message
-      final inserted = await _client.from('messages').insert({
-        'conversation_id': current.conversationId,
-        'sender_id': user.id,
-        'content': content.trim(),
-        'is_read': false,
-        'created_at': DateTime.now().toUtc().toIso8601String(),
-      }).select().single();
+      final inserted = await _client
+          .from('messages')
+          .insert({
+            'conversation_id': current.conversationId,
+            'sender_id': user.id,
+            'content': content.trim(),
+            'is_read': false,
+            'created_at': DateTime.now().toUtc().toIso8601String(),
+          })
+          .select()
+          .single();
 
       // Met à jour last_message
-      await _client.from('conversations').update({
-        'last_message': content.trim(),
-        'last_message_at': DateTime.now().toUtc().toIso8601String(),
-      }).eq('id', current.conversationId);
+      await _client
+          .from('conversations')
+          .update({
+            'last_message': content.trim(),
+            'last_message_at': DateTime.now().toUtc().toIso8601String(),
+          })
+          .eq('id', current.conversationId);
 
       final newMessage = MessageItem(
         messageId: inserted['id'] as String,
@@ -492,11 +572,13 @@ class MessagingCubit extends Cubit<MessagingState> {
       );
 
       if (isClosed) return;
-      emit(current.copyWith(
-        messages: [...current.messages, newMessage],
-        isSending: false,
-        showSuggestions: false,
-      ));
+      emit(
+        current.copyWith(
+          messages: [...current.messages, newMessage],
+          isSending: false,
+          showSuggestions: false,
+        ),
+      );
     } catch (e) {
       if (isClosed) return;
       emit(current.copyWith(isSending: false));
@@ -516,15 +598,17 @@ class MessagingCubit extends Cubit<MessagingState> {
       }).toList();
       emit(current.copyWith(messages: updatedMessages));
 
-      await _client.from('messages').update({
-        'content': newContent,
-        'is_edited': true,
-      }).eq('id', messageId);
+      await _client
+          .from('messages')
+          .update({'content': newContent, 'is_edited': true})
+          .eq('id', messageId);
 
-      if (updatedMessages.isNotEmpty && updatedMessages.last.messageId == messageId) {
-         await _client.from('conversations').update({
-            'last_message': newContent,
-         }).eq('id', current.conversationId);
+      if (updatedMessages.isNotEmpty &&
+          updatedMessages.last.messageId == messageId) {
+        await _client
+            .from('conversations')
+            .update({'last_message': newContent})
+            .eq('id', current.conversationId);
       }
     } catch (_) {}
   }
@@ -543,15 +627,17 @@ class MessagingCubit extends Cubit<MessagingState> {
       }).toList();
       emit(current.copyWith(messages: updatedMessages));
 
-      await _client.from('messages').update({
-        'content': deletedText,
-        'is_deleted': true,
-      }).eq('id', messageId);
+      await _client
+          .from('messages')
+          .update({'content': deletedText, 'is_deleted': true})
+          .eq('id', messageId);
 
-      if (updatedMessages.isNotEmpty && updatedMessages.last.messageId == messageId) {
-         await _client.from('conversations').update({
-            'last_message': deletedText,
-         }).eq('id', current.conversationId);
+      if (updatedMessages.isNotEmpty &&
+          updatedMessages.last.messageId == messageId) {
+        await _client
+            .from('conversations')
+            .update({'last_message': deletedText})
+            .eq('id', current.conversationId);
       }
     } catch (_) {}
   }
@@ -570,14 +656,19 @@ class MessagingCubit extends Cubit<MessagingState> {
 
   // ─── Helper ──────────────────────────────────────────────────────────────
 
-  Future<void> _fetchAISuggestions(String conversationId, String content, String senderId) async {
+  Future<void> _fetchAISuggestions(
+    String conversationId,
+    String content,
+    String senderId,
+  ) async {
     final current = state;
     if (current is! ChatLoaded) return;
     if (_mastraDataSource == null) return;
-    
+
     try {
       final senderRole = current.isStudent ? 'company' : 'student';
-      final prompt = '''
+      final prompt =
+          '''
 Génère 3 suggestions de réponse courtes pour ce message.
 conversationId: $conversationId
 userId de l'expéditeur: $senderId
@@ -586,10 +677,10 @@ Dernier message : "$content"
 Réponds STRICTEMENT en format JSON valide contenant une clé "suggestions" qui est une liste d'objets avec "tone" et "message".
 ''';
       final response = await _mastraDataSource.executeAgent(
-        ApiEndpoints.messageAssistant, 
+        ApiEndpoints.messageAssistant,
         prompt,
       );
-      
+
       final text = response['text'] as String?;
       if (text != null) {
         final match = RegExp(r'\{.*\}', dotAll: true).firstMatch(text);
@@ -597,13 +688,18 @@ Réponds STRICTEMENT en format JSON valide contenant une clé "suggestions" qui 
           final decoded = jsonDecode(match.group(0)!);
           if (decoded['suggestions'] != null) {
             final List<dynamic> suggs = decoded['suggestions'];
-            final List<String> stringSuggestions = suggs.map((s) => s['message'].toString()).toList();
-            
-            if (state is ChatLoaded && (state as ChatLoaded).conversationId == conversationId) {
-              emit((state as ChatLoaded).copyWith(
-                suggestions: stringSuggestions,
-                showSuggestions: true,
-              ));
+            final List<String> stringSuggestions = suggs
+                .map((s) => s['message'].toString())
+                .toList();
+
+            if (state is ChatLoaded &&
+                (state as ChatLoaded).conversationId == conversationId) {
+              emit(
+                (state as ChatLoaded).copyWith(
+                  suggestions: stringSuggestions,
+                  showSuggestions: true,
+                ),
+              );
             }
           }
         }
@@ -615,7 +711,7 @@ Réponds STRICTEMENT en format JSON valide contenant une clé "suggestions" qui 
     if (isoDate == null) return '';
     try {
       final date = DateTime.parse(isoDate).toLocal();
-      final now  = DateTime.now();
+      final now = DateTime.now();
       final diff = now.difference(date);
 
       if (diff.inDays == 0) {
@@ -635,13 +731,18 @@ Réponds STRICTEMENT en format JSON valide contenant une clé "suggestions" qui 
 
   // --- Local Filtering and Archiving ---
 
-  List<ConversationItem> _applyFilters(List<ConversationItem> source, String filterType, String query) {
+  List<ConversationItem> _applyFilters(
+    List<ConversationItem> source,
+    String filterType,
+    String query,
+  ) {
     var list = source.where((c) {
       final isArchived = _archivedConversations.contains(c.conversationId);
       if (filterType == 'archived') {
         return isArchived;
       } else {
-        if (isArchived) return false; // Hide archived conversations from other views
+        if (isArchived)
+          return false; // Hide archived conversations from other views
         if (filterType == 'unread') return c.unreadCount > 0;
         if (filterType == 'read') return c.unreadCount == 0;
         return true;
@@ -650,9 +751,13 @@ Réponds STRICTEMENT en format JSON valide contenant une clé "suggestions" qui 
 
     if (query.isNotEmpty) {
       final lower = query.toLowerCase();
-      list = list.where((c) =>
-          c.otherPartyName.toLowerCase().contains(lower) ||
-          c.otherPartySubtitle.toLowerCase().contains(lower)).toList();
+      list = list
+          .where(
+            (c) =>
+                c.otherPartyName.toLowerCase().contains(lower) ||
+                c.otherPartySubtitle.toLowerCase().contains(lower),
+          )
+          .toList();
     }
     return list;
   }
@@ -660,50 +765,76 @@ Réponds STRICTEMENT en format JSON valide contenant une clé "suggestions" qui 
   void setFilterType(String type, {bool isStudent = false}) {
     if (state is ConversationsLoaded) {
       final current = state as ConversationsLoaded;
-      final filtered = _applyFilters(_allConversations, type, current.searchQuery);
-      emit(current.copyWith(
-        filterType: type,
-        conversations: filtered,
-      ));
+      final filtered = _applyFilters(
+        _allConversations,
+        type,
+        current.searchQuery,
+      );
+      emit(current.copyWith(filterType: type, conversations: filtered));
     }
   }
 
   void setSearchQuery(String query, {bool isStudent = true}) {
     if (state is ConversationsLoaded) {
       final current = state as ConversationsLoaded;
-      final filtered = _applyFilters(_allConversations, current.filterType, query);
-      emit(current.copyWith(
-        searchQuery: query,
-        conversations: filtered,
-      ));
+      final filtered = _applyFilters(
+        _allConversations,
+        current.filterType,
+        query,
+      );
+      emit(current.copyWith(searchQuery: query, conversations: filtered));
     }
   }
 
-  Future<void> archiveConversation(String conversationId, bool isStudent) async {
+  Future<void> archiveConversation(
+    String conversationId,
+    bool isStudent,
+  ) async {
     _archivedConversations.add(conversationId);
     if (state is ConversationsLoaded) {
-       final current = state as ConversationsLoaded;
-       emit(current.copyWith(
-          conversations: _applyFilters(_allConversations, current.filterType, current.searchQuery)
-       ));
+      final current = state as ConversationsLoaded;
+      emit(
+        current.copyWith(
+          conversations: _applyFilters(
+            _allConversations,
+            current.filterType,
+            current.searchQuery,
+          ),
+        ),
+      );
     }
     try {
       final column = isStudent ? 'student_archived' : 'company_archived';
-      await _client.from('conversations').update({column: true}).eq('id', conversationId);
+      await _client
+          .from('conversations')
+          .update({column: true})
+          .eq('id', conversationId);
     } catch (_) {}
   }
 
-  Future<void> unarchiveConversation(String conversationId, bool isStudent) async {
+  Future<void> unarchiveConversation(
+    String conversationId,
+    bool isStudent,
+  ) async {
     _archivedConversations.remove(conversationId);
     if (state is ConversationsLoaded) {
-       final current = state as ConversationsLoaded;
-       emit(current.copyWith(
-          conversations: _applyFilters(_allConversations, current.filterType, current.searchQuery)
-       ));
+      final current = state as ConversationsLoaded;
+      emit(
+        current.copyWith(
+          conversations: _applyFilters(
+            _allConversations,
+            current.filterType,
+            current.searchQuery,
+          ),
+        ),
+      );
     }
     try {
       final column = isStudent ? 'student_archived' : 'company_archived';
-      await _client.from('conversations').update({column: false}).eq('id', conversationId);
+      await _client
+          .from('conversations')
+          .update({column: false})
+          .eq('id', conversationId);
     } catch (_) {}
   }
 

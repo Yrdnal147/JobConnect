@@ -58,6 +58,8 @@ dependencies:
   flutter_dotenv: ^5.1.0
   sidebarx: ^0.17.2
   easy_localization: ^3.0.7
+  flutter_native_splash: ^2.4.7
+  flutter_advanced_drawer: ^1.5.0
 
 dev_dependencies:
   flutter_test:

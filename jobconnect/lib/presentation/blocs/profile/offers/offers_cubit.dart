@@ -6,8 +6,8 @@ class OffersCubit extends Cubit<OffersState> {
   final SupabaseClient _client;
 
   OffersCubit({SupabaseClient? client})
-      : _client = client ?? Supabase.instance.client,
-        super(const OffersInitial());
+    : _client = client ?? Supabase.instance.client,
+      super(const OffersInitial());
 
   // ─── Charge toutes les offres ─────────────────────────────────────────────
 
@@ -38,7 +38,9 @@ class OffersCubit extends Cubit<OffersState> {
       // Récupère toutes les offres
       final offersRes = await _client
           .from('offers')
-          .select('id, title, offer_type, location, is_active, created_at, duration_months, salary_range')
+          .select(
+            'id, title, offer_type, location, is_active, created_at, duration_months, salary_range',
+          )
           .eq('company_id', companyId)
           .order('created_at', ascending: false);
 
@@ -63,17 +65,19 @@ class OffersCubit extends Cubit<OffersState> {
             applicationsCount = (appsRes as List).length;
           } catch (_) {}
 
-          offers.add(OfferItem(
-            offerId: offer['id'] as String,
-            title: offer['title'] as String,
-            offerType: offer['offer_type'] as String? ?? '',
-            location: offer['location'] as String? ?? 'Douala',
-            applicationsCount: applicationsCount,
-            isActive: offer['is_active'] as bool? ?? true,
-            postedAt: _formatDate(offer['created_at'] as String?),
-            durationMonths: offer['duration_months'] as int?,
-            salaryRange: offer['salary_range'] as String?,
-          ));
+          offers.add(
+            OfferItem(
+              offerId: offer['id'] as String,
+              title: offer['title'] as String,
+              offerType: offer['offer_type'] as String? ?? '',
+              location: offer['location'] as String? ?? 'Douala',
+              applicationsCount: applicationsCount,
+              isActive: offer['is_active'] as bool? ?? true,
+              postedAt: _formatDate(offer['created_at'] as String?),
+              durationMonths: offer['duration_months'] as int?,
+              salaryRange: offer['salary_range'] as String?,
+            ),
+          );
         } catch (_) {
           continue;
         }
@@ -92,10 +96,7 @@ class OffersCubit extends Cubit<OffersState> {
     if (current is! OffersLoaded) return;
 
     // Affiche un état de chargement sur cette offre spécifique
-    emit(OfferToggling(
-      offers: current.offers,
-      togglingOfferId: offerId,
-    ));
+    emit(OfferToggling(offers: current.offers, togglingOfferId: offerId));
 
     try {
       await _client
@@ -129,8 +130,18 @@ class OffersCubit extends Cubit<OffersState> {
     try {
       final date = DateTime.parse(isoDate);
       const months = [
-        'Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun',
-        'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'
+        'Jan',
+        'Fév',
+        'Mar',
+        'Avr',
+        'Mai',
+        'Jun',
+        'Jul',
+        'Aoû',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Déc',
       ];
       return '${date.day} ${months[date.month - 1]} ${date.year}';
     } catch (_) {

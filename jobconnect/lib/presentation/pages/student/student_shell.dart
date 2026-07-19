@@ -3,50 +3,131 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
 import 'dart:ui';
+import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
+import '../../blocs/profile/student_profile/student_profile_cubit.dart';
+import '../../blocs/profile/student_profile/student_profile_state.dart';
+import '../../widgets/app_drawer.dart';
+import '../../../../injection_container.dart';
 
-class StudentShell extends StatelessWidget {
+class StudentShell extends StatefulWidget {
   final Widget child;
   const StudentShell({super.key, required this.child});
 
+  @override
+  State<StudentShell> createState() => _StudentShellState();
+}
+
+class _StudentShellState extends State<StudentShell> {
+  final _advancedDrawerController = AdvancedDrawerController();
+
   int _currentIndex(BuildContext context) {
     final location = GoRouterState.of(context).uri.toString();
-    if (location.startsWith('/student/search'))       return 1;
+    if (location.startsWith('/student/search')) return 1;
     if (location.startsWith('/student/applications')) return 2;
-    if (location.startsWith('/student/messages'))     return 3;
-    if (location.startsWith('/student/profile'))      return 4;
+    if (location.startsWith('/student/messages')) return 3;
+    if (location.startsWith('/student/profile')) return 4;
     return 0;
   }
 
   static const _items = [
-    (icon: Icons.home_outlined,            activeIcon: Icons.home_rounded,            label: 'nav.home'),
-    (icon: Icons.search_outlined,          activeIcon: Icons.search_rounded,          label: 'nav.search'),
-    (icon: Icons.assignment_outlined,      activeIcon: Icons.assignment_rounded,      label: 'nav.applications'),
-    (icon: Icons.chat_bubble_outline_rounded, activeIcon: Icons.chat_bubble_rounded,  label: 'nav.messages'),
-    (icon: Icons.person_outline_rounded,   activeIcon: Icons.person_rounded,          label: 'nav.profile'),
+    (
+      icon: Icons.home_outlined,
+      activeIcon: Icons.home_rounded,
+      label: 'nav.home',
+    ),
+    (
+      icon: Icons.search_outlined,
+      activeIcon: Icons.search_rounded,
+      label: 'nav.search',
+    ),
+    (
+      icon: Icons.assignment_outlined,
+      activeIcon: Icons.assignment_rounded,
+      label: 'nav.applications',
+    ),
+    (
+      icon: Icons.chat_bubble_outline_rounded,
+      activeIcon: Icons.chat_bubble_rounded,
+      label: 'nav.messages',
+    ),
+    (
+      icon: Icons.person_outline_rounded,
+      activeIcon: Icons.person_rounded,
+      label: 'nav.profile',
+    ),
   ];
 
   void _onTap(BuildContext context, int index) {
     switch (index) {
-      case 0: context.go('/student/home');         break;
-      case 1: context.go('/student/search');       break;
-      case 2: context.go('/student/applications'); break;
-      case 3: context.go('/student/messages');     break;
-      case 4: context.go('/student/profile');      break;
+      case 0:
+        context.go('/student/home');
+        break;
+      case 1:
+        context.go('/student/search');
+        break;
+      case 2:
+        context.go('/student/applications');
+        break;
+      case 3:
+        context.go('/student/messages');
+        break;
+      case 4:
+        context.go('/student/profile');
+        break;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final selected = _currentIndex(context);
-    return Scaffold(
-      backgroundColor: AppColorsLight.bgDark,
-      extendBody: true, // Permet au contenu de glisser sous la barre
-      body: child,
+    return BlocProvider<StudentProfileCubit>(
+      create: (_) => sl<StudentProfileCubit>()..loadProfile(),
+      child: ListenableProvider<AdvancedDrawerController>.value(
+        value: _advancedDrawerController,
+      child: AdvancedDrawer(
+        backdrop: Container(
+          width: double.infinity,
+          height: double.infinity,
+          color: AppColorsLight.primary,
+        ),
+        controller: _advancedDrawerController,
+        animationCurve: Curves.easeInOut,
+        animationDuration: const Duration(milliseconds: 300),
+        animateChildDecoration: true,
+        rtlOpening: false,
+        disabledGestures: false,
+        childDecoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(16)),
+        ),
+        drawer: BlocBuilder<StudentProfileCubit, StudentProfileState>(
+          builder: (context, state) {
+            String userName = 'Student';
+            String? photoUrl;
+            if (state is StudentProfileLoaded) {
+              userName = state.profile.fullName;
+              photoUrl = state.profile.photoUrl;
+            }
+            return StudentDrawer(
+              userName: userName,
+              photoUrl: photoUrl,
+            );
+          },
+        ),
+        child: Scaffold(
+          backgroundColor: AppColorsLight.bgDark,
+          extendBody: true,
+          body: widget.child,
       bottomNavigationBar: _AnimatedNavBar(
         selected: selected,
         items: _items,
         onTap: (i) => _onTap(context, i),
       ),
+    ),
+    ),
+      )
+
     );
   }
 }
@@ -67,8 +148,8 @@ class _AnimatedNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     // Assurez-vous que dart:ui est importé en haut, ou on l'utilise directement ici si besoin (ImageFilter)
-    
+    // Assurez-vous que dart:ui est importé en haut, ou on l'utilise directement ici si besoin (ImageFilter)
+
     return SafeArea(
       child: Container(
         margin: const EdgeInsets.only(left: 20, right: 20, bottom: 16, top: 0),
@@ -76,7 +157,9 @@ class _AnimatedNavBar extends StatelessWidget {
           borderRadius: BorderRadius.circular(32),
           boxShadow: [
             BoxShadow(
-              color: AppColorsLight.primary.withOpacity(0.15), // Ombre légèrement teintée
+              color: AppColorsLight.primary.withValues(
+                alpha: 0.15,
+              ), // Ombre légèrement teintée
               blurRadius: 24,
               offset: const Offset(0, 10),
             ),
@@ -85,14 +168,14 @@ class _AnimatedNavBar extends StatelessWidget {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(32),
           child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+            filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
             child: Container(
               height: 72, // Légèrement plus haut pour un aspect premium
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.85),
+                color: Colors.white.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(32),
                 border: Border.all(
-                  color: Colors.white.withOpacity(0.6),
+                  color: AppColorsLight.primary.withValues(alpha: 0.35),
                   width: 1.5,
                 ),
               ),
@@ -113,10 +196,12 @@ class _AnimatedNavBar extends StatelessWidget {
             ),
           ),
         ),
-      ),
-    );
+        ),
+      );
   }
-}
+    
+  }
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Item animé
@@ -132,18 +217,17 @@ class _NavItem extends StatefulWidget {
 }
 
 class _NavItemState extends State<_NavItem> with TickerProviderStateMixin {
-
   // 1. Pill + scale (persiste tant qu'actif)
   late final AnimationController _pillCtrl;
-  late final Animation<double>   _scaleAnim;
+  late final Animation<double> _scaleAnim;
 
   // 2. Bounce vertical (joue une fois au tap)
   late final AnimationController _bounceCtrl;
-  late final Animation<double>   _translateY;
+  late final Animation<double> _translateY;
 
   // 3. Rotation balancement (joue une fois au tap)
   late final AnimationController _rotCtrl;
-  late final Animation<double>   _rotation;
+  late final Animation<double> _rotation;
 
   @override
   void initState() {
@@ -154,9 +238,10 @@ class _NavItemState extends State<_NavItem> with TickerProviderStateMixin {
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
-    _scaleAnim = Tween<double>(begin: 1.0, end: 1.15).animate(
-      CurvedAnimation(parent: _pillCtrl, curve: Curves.elasticOut),
-    );
+    _scaleAnim = Tween<double>(
+      begin: 1.0,
+      end: 1.15,
+    ).animate(CurvedAnimation(parent: _pillCtrl, curve: Curves.elasticOut));
     if (widget.isActive) _pillCtrl.forward();
 
     // ── Bounce Y amorti (~900ms) ────────────────────────────────────
@@ -165,13 +250,13 @@ class _NavItemState extends State<_NavItem> with TickerProviderStateMixin {
       duration: const Duration(milliseconds: 900),
     );
     _translateY = TweenSequence<double>([
-      TweenSequenceItem(tween: Tween(begin: 0.0,  end: -9.0), weight: 12),
-      TweenSequenceItem(tween: Tween(begin: -9.0, end:  0.0), weight: 15),
-      TweenSequenceItem(tween: Tween(begin: 0.0,  end: -5.0), weight: 10),
-      TweenSequenceItem(tween: Tween(begin: -5.0, end:  0.0), weight: 13),
-      TweenSequenceItem(tween: Tween(begin: 0.0,  end: -2.5), weight: 8),
-      TweenSequenceItem(tween: Tween(begin: -2.5, end:  0.0), weight: 12),
-      TweenSequenceItem(tween: Tween(begin: 0.0,  end:  0.0), weight: 30),
+      TweenSequenceItem(tween: Tween(begin: 0.0, end: -9.0), weight: 12),
+      TweenSequenceItem(tween: Tween(begin: -9.0, end: 0.0), weight: 15),
+      TweenSequenceItem(tween: Tween(begin: 0.0, end: -5.0), weight: 10),
+      TweenSequenceItem(tween: Tween(begin: -5.0, end: 0.0), weight: 13),
+      TweenSequenceItem(tween: Tween(begin: 0.0, end: -2.5), weight: 8),
+      TweenSequenceItem(tween: Tween(begin: -2.5, end: 0.0), weight: 12),
+      TweenSequenceItem(tween: Tween(begin: 0.0, end: 0.0), weight: 30),
     ]).animate(CurvedAnimation(parent: _bounceCtrl, curve: Curves.easeInOut));
 
     // ── Rotation balancement gauche-droite (~700ms) ─────────────────
@@ -180,11 +265,11 @@ class _NavItemState extends State<_NavItem> with TickerProviderStateMixin {
       duration: const Duration(milliseconds: 700),
     );
     _rotation = TweenSequence<double>([
-      TweenSequenceItem(tween: Tween(begin: 0.0,   end: -0.06), weight: 15),
-      TweenSequenceItem(tween: Tween(begin: -0.06, end:  0.06), weight: 25),
-      TweenSequenceItem(tween: Tween(begin:  0.06, end: -0.03), weight: 20),
-      TweenSequenceItem(tween: Tween(begin: -0.03, end:  0.03), weight: 15),
-      TweenSequenceItem(tween: Tween(begin:  0.03, end:  0.0),  weight: 25),
+      TweenSequenceItem(tween: Tween(begin: 0.0, end: -0.06), weight: 15),
+      TweenSequenceItem(tween: Tween(begin: -0.06, end: 0.06), weight: 25),
+      TweenSequenceItem(tween: Tween(begin: 0.06, end: -0.03), weight: 20),
+      TweenSequenceItem(tween: Tween(begin: -0.03, end: 0.03), weight: 15),
+      TweenSequenceItem(tween: Tween(begin: 0.03, end: 0.0), weight: 25),
     ]).animate(CurvedAnimation(parent: _rotCtrl, curve: Curves.easeInOut));
   }
 
@@ -210,12 +295,12 @@ class _NavItemState extends State<_NavItem> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final activeColor   = AppColorsLight.primary;
+    final activeColor = AppColorsLight.primary;
     final inactiveColor = AppColorsLight.textTertiaryDark;
 
     return AnimatedBuilder(
       animation: Listenable.merge([_pillCtrl, _bounceCtrl, _rotCtrl]),
-      builder: (_, __) {
+      builder: (_, child) {
         final color = widget.isActive ? activeColor : inactiveColor;
         return Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -227,10 +312,10 @@ class _NavItemState extends State<_NavItem> with TickerProviderStateMixin {
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 220),
                   curve: Curves.easeOutCubic,
-                  width:  widget.isActive ? 56 : 0,
+                  width: widget.isActive ? 56 : 0,
                   height: 34,
                   decoration: BoxDecoration(
-                    color: AppColorsLight.primary.withOpacity(0.12),
+                    color: AppColorsLight.primary.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(17),
                   ),
                 ),
@@ -258,9 +343,7 @@ class _NavItemState extends State<_NavItem> with TickerProviderStateMixin {
               duration: const Duration(milliseconds: 200),
               style: TextStyle(
                 fontSize: 11,
-                fontWeight: widget.isActive
-                    ? FontWeight.w800
-                    : FontWeight.w600,
+                fontWeight: widget.isActive ? FontWeight.w800 : FontWeight.w600,
                 color: color,
                 fontFamily: 'Poppins',
               ),

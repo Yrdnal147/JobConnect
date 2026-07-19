@@ -13,19 +13,22 @@ class MastraRemoteDataSource implements IMastraRemoteDataSource {
   final Dio _dio = DioClient.instance;
 
   @override
-  Future<Map<String, dynamic>> executeAgent(String endpoint, dynamic input) async {
+  Future<Map<String, dynamic>> executeAgent(
+    String endpoint,
+    dynamic input,
+  ) async {
     try {
       final response = await _dio.post(
         endpoint,
         data: {
           'messages': [
-            {'role': 'user', 'content': input}
-          ]
+            {'role': 'user', 'content': input},
+          ],
         },
       );
 
       if (response.statusCode == 200) {
-        // Mastra renvoie généralement un objet contenant la clé 'text' ou 'object' 
+        // Mastra renvoie généralement un objet contenant la clé 'text' ou 'object'
         // selon si le format de sortie est textuel ou structuré (Zod)
         return response.data as Map<String, dynamic>;
       } else {
@@ -37,18 +40,16 @@ class MastraRemoteDataSource implements IMastraRemoteDataSource {
   }
 
   @override
-  Future<Map<String, dynamic>> startWorkflow(String endpoint, dynamic input) async {
+  Future<Map<String, dynamic>> startWorkflow(
+    String endpoint,
+    dynamic input,
+  ) async {
     try {
       print('=============================================');
       print('🚀 TENTATIVE DE POST SUR : $endpoint');
       print('🚀 PAYLOAD : $input');
       print('=============================================');
-      final response = await _dio.post(
-        endpoint,
-        data: {
-          'input': input,
-        },
-      );
+      final response = await _dio.post(endpoint, data: {'input': input});
 
       if (response.statusCode == 200) {
         return response.data as Map<String, dynamic>;
@@ -59,7 +60,9 @@ class MastraRemoteDataSource implements IMastraRemoteDataSource {
       print('❌ ERREUR DIO SUR LE WORKFLOW: ${e.message}');
       print('❌ TYPE: ${e.type}');
       print('❌ ERREUR COMPLETE: $e');
-      throw Exception("Échec de la communication avec le Workflow : ${e.message}");
+      throw Exception(
+        "Échec de la communication avec le Workflow : ${e.message}",
+      );
     }
   }
 }

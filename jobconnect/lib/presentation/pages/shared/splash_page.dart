@@ -18,7 +18,7 @@ class _SplashPageState extends State<SplashPage>
 
   late Animation<double> _logoScale;
   late Animation<double> _logoFade;
-  
+
   final String _textJob = "Job";
   final String _textConnect = "Connect";
   late List<Animation<double>> _letterFades;
@@ -51,27 +51,33 @@ class _SplashPageState extends State<SplashPage>
     final totalLetters = _textJob.length + _textConnect.length;
     _letterFades = [];
     _letterSlides = [];
-    
-    final double letterDuration = 0.35; // Chaque lettre prend ~910ms pour s'animer (très fluide)
-    final double staggerDelay = (0.80 - letterDuration) / (totalLetters > 1 ? totalLetters - 1 : 1);
+
+    final double letterDuration =
+        0.35; // Chaque lettre prend ~910ms pour s'animer (très fluide)
+    final double staggerDelay =
+        (0.80 - letterDuration) / (totalLetters > 1 ? totalLetters - 1 : 1);
 
     for (int i = 0; i < totalLetters; i++) {
       final start = 0.20 + (i * staggerDelay);
       final end = start + letterDuration;
-      
-      _letterFades.add(Tween<double>(begin: 0.0, end: 1.0).animate(
-        CurvedAnimation(
-          parent: _controller,
-          curve: Interval(start, end, curve: Curves.easeOut),
+
+      _letterFades.add(
+        Tween<double>(begin: 0.0, end: 1.0).animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: Interval(start, end, curve: Curves.easeOut),
+          ),
         ),
-      ));
-      
-      _letterSlides.add(Tween<Offset>(begin: const Offset(0.4, 0.0), end: Offset.zero).animate(
-        CurvedAnimation(
-          parent: _controller,
-          curve: Interval(start, end, curve: Curves.easeOutCubic),
+      );
+
+      _letterSlides.add(
+        Tween<Offset>(begin: const Offset(0.4, 0.0), end: Offset.zero).animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: Interval(start, end, curve: Curves.easeOutCubic),
+          ),
         ),
-      ));
+      );
     }
 
     _controller.forward();
@@ -108,9 +114,12 @@ class _SplashPageState extends State<SplashPage>
         child: Text(
           letter,
           style: AppTypography.displayMedium.copyWith(
-            color: isJobPart ? Colors.white : Colors.white.withOpacity(0.85), // Texte blanc sur fond violet
+            color: isJobPart
+                ? AppColorsLight.primary
+                : AppColorsLight.primary.withOpacity(0.85), // Texte bleu sur fond blanc
             fontWeight: isJobPart ? FontWeight.w900 : FontWeight.w600,
             letterSpacing: -0.6,
+            fontSize: 42, // Taille réduite
           ),
         ),
       ),
@@ -122,48 +131,14 @@ class _SplashPageState extends State<SplashPage>
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [AppColorsLight.primary, Color(0xFF3B0086)], // Fond violet profond
-          ),
+          color: Colors.white, // Fond blanc
         ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // ================= LOGO =================
-              FadeTransition(
-                opacity: _logoFade,
-                child: ScaleTransition(
-                  scale: _logoScale,
-                  child: Container(
-                    width: 110,
-                    height: 110,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(32), // Coins fortement arrondis
-                      color: Colors.white, // Logo blanc sur fond violet
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.25),
-                          blurRadius: 30,
-                          offset: const Offset(0, 15),
-                        ),
-                      ],
-                    ),
-                    child: const Center(
-                      child: Icon(
-                        Icons.device_hub,
-                        color: AppColorsLight.primary, // Icône violette
-                        size: 50,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              
-              const SizedBox(height: 32),
-              
+        child: Stack(
+          children: [
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
               // ================= APP NAME ANIMATED =================
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -176,20 +151,53 @@ class _SplashPageState extends State<SplashPage>
               ),
 
               const SizedBox(height: 12),
-              
+
               // ================= TAGLINE =================
               FadeTransition(
                 opacity: _logoFade, // Fade in with the logo
                 child: Text(
                   "Trouve ton opportunité",
                   style: AppTypography.bodyMedium.copyWith(
-                    color: Colors.white.withOpacity(0.7), // Gris très clair pour le contraste
+                    color: Colors.black.withOpacity(
+                      0.6,
+                    ), // Gris foncé
                     letterSpacing: 0.5,
                   ),
                 ),
               ),
-            ],
-          ),
+                ],
+              ),
+            ),
+            
+            // ================= BOTTOM TEXT =================
+            Positioned(
+              bottom: 40,
+              left: 0,
+              right: 0,
+              child: FadeTransition(
+                opacity: _logoFade,
+                child: Column(
+                  children: [
+                    Text(
+                      "from Ziloo",
+                      style: AppTypography.bodySmall.copyWith(
+                        color: Colors.black.withOpacity(0.8),
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      "v1.0.0",
+                      style: AppTypography.caption.copyWith(
+                        color: Colors.black.withOpacity(0.4),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

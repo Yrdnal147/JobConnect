@@ -72,7 +72,7 @@ class NotificationsPage extends StatelessWidget {
         return 'Notif';
     }
   }
-  
+
   String _formatTime(DateTime time) {
     final now = DateTime.now();
     final difference = now.difference(time);
@@ -112,11 +112,7 @@ class NotificationsPage extends StatelessWidget {
                 height: MediaQuery.of(context).size.height * 0.28,
                 child: Container(
                   decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [AppColorsLight.primary, Color(0xFF4A148C)],
-                    ),
+                    color: AppColorsLight.primary,
                   ),
                   child: SafeArea(
                     bottom: false,
@@ -147,7 +143,9 @@ class NotificationsPage extends StatelessWidget {
                                 children: [
                                   Text(
                                     'settings.notifications'.tr(),
-                                    style: AppTypography.headingMedium.copyWith(color: Colors.white),
+                                    style: AppTypography.headingMedium.copyWith(
+                                      color: Colors.white,
+                                    ),
                                   ),
                                   if (unreadCount > 0) ...[
                                     const SizedBox(width: AppSpacing.sm),
@@ -157,13 +155,21 @@ class NotificationsPage extends StatelessWidget {
                                         vertical: 3,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: Colors.white.withValues(alpha: 0.2),
-                                        borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
+                                        color: Colors.white.withValues(
+                                          alpha: 0.2,
+                                        ),
+                                        borderRadius: BorderRadius.circular(
+                                          AppSpacing.radiusFull,
+                                        ),
                                       ),
                                       child: Text(
                                         unreadCount > 1
-                                            ? 'home.notifications_plural'.tr(args: [unreadCount.toString()])
-                                            : 'home.notifications_single'.tr(args: [unreadCount.toString()]),
+                                            ? 'home.notifications_plural'.tr(
+                                                args: [unreadCount.toString()],
+                                              )
+                                            : 'home.notifications_single'.tr(
+                                                args: [unreadCount.toString()],
+                                              ),
                                         style: AppTypography.caption.copyWith(
                                           color: Colors.white,
                                           fontWeight: FontWeight.w700,
@@ -177,9 +183,14 @@ class NotificationsPage extends StatelessWidget {
                           ),
                           if (unreadCount > 0)
                             IconButton(
-                              icon: const Icon(Icons.done_all_rounded, color: Colors.white),
+                              icon: const Icon(
+                                Icons.done_all_rounded,
+                                color: Colors.white,
+                              ),
                               tooltip: 'home.mark_all_read'.tr(),
-                              onPressed: () => context.read<NotificationCubit>().markAllAsRead(),
+                              onPressed: () => context
+                                  .read<NotificationCubit>()
+                                  .markAllAsRead(),
                             ),
                         ],
                       ),
@@ -214,243 +225,310 @@ class NotificationsPage extends StatelessWidget {
                           topRight: Radius.circular(32),
                         ),
                         child: isLoading
-                            ? const Center(child: CircularProgressIndicator(color: AppColorsLight.primary))
+                            ? const Center(
+                                child: CircularProgressIndicator(
+                                  color: AppColorsLight.primary,
+                                ),
+                              )
                             : notifications.isEmpty
-                                ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: 96,
-                              height: 96,
-                              decoration: BoxDecoration(
-                                color: AppColorsLight.textTertiary.withValues(alpha: 0.08),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                Icons.notifications_none_rounded,
-                                size: 40,
-                                color: AppColorsLight.textTertiary,
-                              ),
-                            ),
-                            const SizedBox(height: AppSpacing.md),
-                            Text(
-                              'home.empty_notifications_title'.tr(),
-                              style: AppTypography.bodyMedium.copyWith(
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              'home.empty_notifications_subtitle'.tr(),
-                              style: AppTypography.bodySmall.copyWith(
-                                color: AppColorsLight.textTertiary,
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    : ListView.builder(
-                        padding: const EdgeInsets.all(AppSpacing.lg),
-                        itemCount: notifications.length,
-                        itemBuilder: (context, index) {
-                          final notif = notifications[index];
-                          final isRead = notif.isRead;
-                          final type = notif.type;
-                          final color = _colorForType(type);
-                          final gradient = _gradientForType(type);
-                          final label = _labelForType(type);
-
-                          return Container(
-                            margin: const EdgeInsets.only(bottom: AppSpacing.md),
-                            decoration: BoxDecoration(
-                              color: AppColorsLight.bgCard,
-                              borderRadius:
-                                  BorderRadius.circular(AppSpacing.radiusLg),
-                              border: Border.all(
-                                color: isRead
-                                    ? AppColorsLight.bgSurface
-                                    : color.withValues(alpha: 0.25),
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: isRead
-                                      ? Colors.black.withValues(alpha: 0.03)
-                                      : color.withValues(alpha: 0.08),
-                                  blurRadius: 12,
-                                  offset: const Offset(0, 4),
+                            ? Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      width: 96,
+                                      height: 96,
+                                      decoration: BoxDecoration(
+                                        color: AppColorsLight.textTertiary
+                                            .withValues(alpha: 0.08),
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Icon(
+                                        Icons.notifications_none_rounded,
+                                        size: 40,
+                                        color: AppColorsLight.textTertiary,
+                                      ),
+                                    ),
+                                    const SizedBox(height: AppSpacing.md),
+                                    Text(
+                                      'home.empty_notifications_title'.tr(),
+                                      style: AppTypography.bodyMedium.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      'home.empty_notifications_subtitle'.tr(),
+                                      style: AppTypography.bodySmall.copyWith(
+                                        color: AppColorsLight.textTertiary,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                            child: Material(
-                              color: Colors.transparent,
-                              borderRadius:
-                                  BorderRadius.circular(AppSpacing.radiusLg),
-                              clipBehavior: Clip.antiAlias,
-                              child: InkWell(
-                                onTap: () {
-                                  if (!isRead) {
-                                    context.read<NotificationCubit>().markAsRead(notif.id);
-                                  }
-                                  
-                                  // Navigation logic if data contains relevant IDs
-                                  if (notif.data != null) {
-                                    final data = notif.data!;
-                                    if (type == 'application_retained' || type == 'application_refused') {
-                                      if (data['application_id'] != null) {
-                                        context.push('/student/applications/${data['application_id']}');
-                                      }
-                                    } else if (type == 'message') {
-                                      if (data['conversation_id'] != null) {
-                                        context.push('/student/messages/${data['conversation_id']}');
-                                      }
-                                    }
-                                  }
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(AppSpacing.md),
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      // Icône en cercle dégradé
-                                      Container(
-                                        width: 46,
-                                        height: 46,
-                                        decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            begin: Alignment.topLeft,
-                                            end: Alignment.bottomRight,
-                                            colors: isRead
-                                                ? [
-                                                    color.withValues(alpha: 0.15),
-                                                    color.withValues(alpha: 0.15),
-                                                  ]
-                                                : gradient,
+                              )
+                            : ListView.builder(
+                                padding: const EdgeInsets.all(AppSpacing.lg),
+                                itemCount: notifications.length,
+                                itemBuilder: (context, index) {
+                                  final notif = notifications[index];
+                                  final isRead = notif.isRead;
+                                  final type = notif.type;
+                                  final color = _colorForType(type);
+                                  final gradient = _gradientForType(type);
+                                  final label = _labelForType(type);
+
+                                  return Container(
+                                    margin: const EdgeInsets.only(
+                                      bottom: AppSpacing.md,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: AppColorsLight.bgCard,
+                                      borderRadius: BorderRadius.circular(
+                                        AppSpacing.radiusLg,
+                                      ),
+                                      border: Border.all(
+                                        color: isRead
+                                            ? AppColorsLight.bgSurface
+                                            : color.withValues(alpha: 0.25),
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: isRead
+                                              ? Colors.black.withValues(
+                                                  alpha: 0.03,
+                                                )
+                                              : color.withValues(alpha: 0.08),
+                                          blurRadius: 12,
+                                          offset: const Offset(0, 4),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      borderRadius: BorderRadius.circular(
+                                        AppSpacing.radiusLg,
+                                      ),
+                                      clipBehavior: Clip.antiAlias,
+                                      child: InkWell(
+                                        onTap: () {
+                                          if (!isRead) {
+                                            context
+                                                .read<NotificationCubit>()
+                                                .markAsRead(notif.id);
+                                          }
+
+                                          // Navigation logic if data contains relevant IDs
+                                          if (notif.data != null) {
+                                            final data = notif.data!;
+                                            if (type ==
+                                                    'application_retained' ||
+                                                type == 'application_refused') {
+                                              if (data['application_id'] !=
+                                                  null) {
+                                                context.push(
+                                                  '/student/applications/${data['application_id']}',
+                                                );
+                                              }
+                                            } else if (type == 'message') {
+                                              if (data['conversation_id'] !=
+                                                  null) {
+                                                context.push(
+                                                  '/student/messages/${data['conversation_id']}',
+                                                );
+                                              }
+                                            }
+                                          }
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(
+                                            AppSpacing.md,
                                           ),
-                                          shape: BoxShape.circle,
-                                          boxShadow: isRead
-                                              ? []
-                                              : [
-                                                  BoxShadow(
-                                                    color:
-                                                        color.withValues(alpha: 0.2),
-                                                    blurRadius: 8,
-                                                    offset: const Offset(0, 3),
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              // Icône en cercle dégradé
+                                              Container(
+                                                width: 46,
+                                                height: 46,
+                                                decoration: BoxDecoration(
+                                                  gradient: LinearGradient(
+                                                    begin: Alignment.topLeft,
+                                                    end: Alignment.bottomRight,
+                                                    colors: isRead
+                                                        ? [
+                                                            color.withValues(
+                                                              alpha: 0.15,
+                                                            ),
+                                                            color.withValues(
+                                                              alpha: 0.15,
+                                                            ),
+                                                          ]
+                                                        : gradient,
                                                   ),
-                                                ],
-                                        ),
-                                        child: Icon(
-                                          _iconForType(type),
-                                          color: isRead ? color : Colors.white,
-                                          size: 20,
-                                        ),
-                                      ),
-                                      const SizedBox(width: AppSpacing.md),
-
-                                      // Contenu
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            // Titre + badge type
-                                            Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Expanded(
-                                                  child: Text(
-                                                    notif.title,
-                                                    style: AppTypography
-                                                        .headingSmall
-                                                        .copyWith(
-                                                      fontWeight: isRead
-                                                          ? FontWeight.w500
-                                                          : FontWeight.w700,
-                                                    ),
-                                                  ),
+                                                  shape: BoxShape.circle,
+                                                  boxShadow: isRead
+                                                      ? []
+                                                      : [
+                                                          BoxShadow(
+                                                            color: color
+                                                                .withValues(
+                                                                  alpha: 0.2,
+                                                                ),
+                                                            blurRadius: 8,
+                                                            offset:
+                                                                const Offset(
+                                                                  0,
+                                                                  3,
+                                                                ),
+                                                          ),
+                                                        ],
                                                 ),
-                                                const SizedBox(width: 6),
-                                                Container(
-                                                  padding:
-                                                      const EdgeInsets.symmetric(
-                                                    horizontal: 7,
-                                                    vertical: 2,
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                    color:
-                                                        color.withValues(alpha: 0.1),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            AppSpacing.radiusFull),
-                                                  ),
-                                                  child: Text(
-                                                    label,
-                                                    style: AppTypography.caption
-                                                        .copyWith(
-                                                      color: color,
-                                                      fontWeight: FontWeight.w600,
-                                                    ),
-                                                  ),
+                                                child: Icon(
+                                                  _iconForType(type),
+                                                  color: isRead
+                                                      ? color
+                                                      : Colors.white,
+                                                  size: 20,
                                                 ),
-                                              ],
-                                            ),
-                                            const SizedBox(height: 4),
-                                            Text(
-                                              notif.body,
-                                              style:
-                                                  AppTypography.bodySmall.copyWith(
-                                                color: AppColorsLight.textPrimary
-                                                    .withValues(
-                                                        alpha: isRead ? 0.55 : 0.8),
                                               ),
-                                            ),
-                                            const SizedBox(height: 6),
-                                            // Temps + point non-lu
-                                            Row(
-                                              children: [
-                                                Icon(
-                                                  Icons.schedule_rounded,
-                                                  size: 12,
-                                                  color: AppColorsLight.textTertiary,
-                                                ),
-                                                const SizedBox(width: 3),
-                                                Text(
-                                                  _formatTime(notif.createdAt),
-                                                  style:
-                                                      AppTypography.caption.copyWith(
-                                                    color:
-                                                        AppColorsLight.textTertiary,
-                                                  ),
-                                                ),
-                                                if (!isRead) ...[
-                                                  const Spacer(),
-                                                  Container(
-                                                    width: 8,
-                                                    height: 8,
-                                                    decoration: BoxDecoration(
-                                                      color: color,
-                                                      shape: BoxShape.circle,
+                                              const SizedBox(
+                                                width: AppSpacing.md,
+                                              ),
+
+                                              // Contenu
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    // Titre + badge type
+                                                    Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Expanded(
+                                                          child: Text(
+                                                            notif.title,
+                                                            style: AppTypography
+                                                                .headingSmall
+                                                                .copyWith(
+                                                                  fontWeight:
+                                                                      isRead
+                                                                      ? FontWeight
+                                                                            .w500
+                                                                      : FontWeight
+                                                                            .w700,
+                                                                ),
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 6,
+                                                        ),
+                                                        Container(
+                                                          padding:
+                                                              const EdgeInsets.symmetric(
+                                                                horizontal: 7,
+                                                                vertical: 2,
+                                                              ),
+                                                          decoration: BoxDecoration(
+                                                            color: color
+                                                                .withValues(
+                                                                  alpha: 0.1,
+                                                                ),
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  AppSpacing
+                                                                      .radiusFull,
+                                                                ),
+                                                          ),
+                                                          child: Text(
+                                                            label,
+                                                            style: AppTypography
+                                                                .caption
+                                                                .copyWith(
+                                                                  color: color,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                ),
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                  ),
-                                                ],
-                                              ],
-                                            ),
-                                          ],
+                                                    const SizedBox(height: 4),
+                                                    Text(
+                                                      notif.body,
+                                                      style: AppTypography
+                                                          .bodySmall
+                                                          .copyWith(
+                                                            color:
+                                                                AppColorsLight
+                                                                    .textPrimary
+                                                                    .withValues(
+                                                                      alpha:
+                                                                          isRead
+                                                                          ? 0.55
+                                                                          : 0.8,
+                                                                    ),
+                                                          ),
+                                                    ),
+                                                    const SizedBox(height: 6),
+                                                    // Temps + point non-lu
+                                                    Row(
+                                                      children: [
+                                                        Icon(
+                                                          Icons
+                                                              .schedule_rounded,
+                                                          size: 12,
+                                                          color: AppColorsLight
+                                                              .textTertiary,
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 3,
+                                                        ),
+                                                        Text(
+                                                          _formatTime(
+                                                            notif.createdAt,
+                                                          ),
+                                                          style: AppTypography
+                                                              .caption
+                                                              .copyWith(
+                                                                color: AppColorsLight
+                                                                    .textTertiary,
+                                                              ),
+                                                        ),
+                                                        if (!isRead) ...[
+                                                          const Spacer(),
+                                                          Container(
+                                                            width: 8,
+                                                            height: 8,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                                  color: color,
+                                                                  shape: BoxShape
+                                                                      .circle,
+                                                                ),
+                                                          ),
+                                                        ],
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ),
+                                    ),
+                                  );
+                                },
                               ),
-                            ),
-                          );
-                        },
                       ),
                     ),
                   ),
                 ),
-              ),
               ),
             ],
           ),

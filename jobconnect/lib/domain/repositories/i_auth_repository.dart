@@ -15,7 +15,10 @@ abstract class IAuthRepository {
     required UserRole role,
   });
 
-  Future<Either<Failure, void>> changePassword(String oldPassword, String newPassword);
+  Future<Either<Failure, void>> changePassword(
+    String oldPassword,
+    String newPassword,
+  );
 
   Future<Either<Failure, void>> logout();
 

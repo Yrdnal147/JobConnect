@@ -6,8 +6,8 @@ class DashboardCubit extends Cubit<DashboardState> {
   final SupabaseClient _client;
 
   DashboardCubit({SupabaseClient? client})
-      : _client = client ?? Supabase.instance.client,
-        super(const DashboardInitial());
+    : _client = client ?? Supabase.instance.client,
+      super(const DashboardInitial());
 
   Future<void> loadDashboard() async {
     emit(const DashboardLoading());
@@ -25,11 +25,13 @@ class DashboardCubit extends Cubit<DashboardState> {
           .maybeSingle();
 
       if (companyRow == null) {
-        emit(DashboardLoaded(
-          companyName: companyName,
-          metrics: const DashboardMetrics(),
-          recentApplications: [],
-        ));
+        emit(
+          DashboardLoaded(
+            companyName: companyName,
+            metrics: const DashboardMetrics(),
+            recentApplications: [],
+          ),
+        );
         return;
       }
 
@@ -112,30 +114,37 @@ class DashboardCubit extends Cubit<DashboardState> {
                 .maybeSingle();
 
             if (profileRes != null) {
-              recentApplications.add(RecentApplication(
-                applicationId: app['id'] as String,
-                studentName: profileRes['full_name'] as String? ?? 'Candidat',
-                fieldOfStudy: profileRes['field_of_study'] as String? ?? 'Non renseigné',
-                educationLevel: profileRes['education_level'] as String? ?? '',
-                matchScore: app['match_score'] as int? ?? 0,
-                photoUrl: profileRes['photo_url'] as String?,
-              ));
+              recentApplications.add(
+                RecentApplication(
+                  applicationId: app['id'] as String,
+                  studentName: profileRes['full_name'] as String? ?? 'Candidat',
+                  fieldOfStudy:
+                      profileRes['field_of_study'] as String? ??
+                      'Non renseigné',
+                  educationLevel:
+                      profileRes['education_level'] as String? ?? '',
+                  matchScore: app['match_score'] as int? ?? 0,
+                  photoUrl: profileRes['photo_url'] as String?,
+                ),
+              );
             }
           } catch (_) {}
         }
       } catch (_) {}
 
-      emit(DashboardLoaded(
-        companyName: companyName,
-        companyLogo: companyLogo,
-        metrics: DashboardMetrics(
-          activeOffers: activeOffers,
-          totalApplications: totalApplications,
-          retainedCandidates: retainedCandidates,
-          unreadMessages: unreadMessages,
+      emit(
+        DashboardLoaded(
+          companyName: companyName,
+          companyLogo: companyLogo,
+          metrics: DashboardMetrics(
+            activeOffers: activeOffers,
+            totalApplications: totalApplications,
+            retainedCandidates: retainedCandidates,
+            unreadMessages: unreadMessages,
+          ),
+          recentApplications: recentApplications,
         ),
-        recentApplications: recentApplications,
-      ));
+      );
     } catch (e) {
       emit(DashboardError(e.toString()));
     }

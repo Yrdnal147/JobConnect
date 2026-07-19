@@ -6,7 +6,7 @@ class CompanyDataSource {
   final SupabaseClient _client;
 
   CompanyDataSource({SupabaseClient? client})
-      : _client = client ?? Supabase.instance.client;
+    : _client = client ?? Supabase.instance.client;
 
   // ─── Read ────────────────────────────────────────────────────────────────
 
@@ -91,17 +91,21 @@ class CompanyDataSource {
     try {
       final userId = _currentUserId;
       final ext = imageFile.path.split('.').last;
-      final ts = DateTime.now().millisecondsSinceEpoch; // ← timestamp anti-cache
-      final fileName = '$userId/logo_$ts.$ext';         // ← userId en premier segment
+      final ts =
+          DateTime.now().millisecondsSinceEpoch; // ← timestamp anti-cache
+      final fileName = '$userId/logo_$ts.$ext'; // ← userId en premier segment
 
-      await _client.storage.from('company-assets').upload(
+      await _client.storage
+          .from('company-assets')
+          .upload(
             fileName,
             imageFile,
             fileOptions: const FileOptions(upsert: true),
           );
 
-      final publicUrl =
-          _client.storage.from('company-assets').getPublicUrl(fileName);
+      final publicUrl = _client.storage
+          .from('company-assets')
+          .getPublicUrl(fileName);
 
       return publicUrl;
     } on StorageException catch (e) {
@@ -119,20 +123,27 @@ class CompanyDataSource {
       final ext = document.path.split('.').last;
       final fileName = '$userId/rccm.$ext'; // ← userId en premier segment
 
-      await _client.storage.from('verification-docs').upload( // ← bon bucket
+      await _client.storage
+          .from('verification-docs')
+          .upload(
+            // ← bon bucket
             fileName,
             document,
             fileOptions: const FileOptions(upsert: true),
           );
 
-      final publicUrl =
-          _client.storage.from('verification-docs').getPublicUrl(fileName);
+      final publicUrl = _client.storage
+          .from('verification-docs')
+          .getPublicUrl(fileName);
 
-      await _client.from('companies').update({
-        'rccm_url': publicUrl,
-        'verification_status': 'pending',
-        'updated_at': DateTime.now().toIso8601String(),
-      }).eq('user_id', userId);
+      await _client
+          .from('companies')
+          .update({
+            'rccm_url': publicUrl,
+            'verification_status': 'pending',
+            'updated_at': DateTime.now().toIso8601String(),
+          })
+          .eq('user_id', userId);
     } on PostgrestException catch (e) {
       throw ServerException(e.message);
     } on StorageException catch (e) {

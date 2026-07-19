@@ -40,8 +40,8 @@ class _CandidateDetailPageState extends State<CandidateDetailPage> {
 
   String _getInitials(String name) {
     if (name.isEmpty) return '?';
-    final parts  = name.trim().split(RegExp(r'\s+'));
-    final first  = parts.first.isNotEmpty ? parts.first[0] : '';
+    final parts = name.trim().split(RegExp(r'\s+'));
+    final first = parts.first.isNotEmpty ? parts.first[0] : '';
     final second = parts.length > 1 && parts[1].isNotEmpty ? parts[1][0] : '';
     return (first + second).toUpperCase();
   }
@@ -50,8 +50,9 @@ class _CandidateDetailPageState extends State<CandidateDetailPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(msg),
-        backgroundColor:
-            isError ? AppColorsLight.error : AppColorsLight.success,
+        backgroundColor: isError
+            ? AppColorsLight.error
+            : AppColorsLight.success,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
@@ -93,10 +94,10 @@ class _CandidateDetailPageState extends State<CandidateDetailPage> {
         },
         builder: (context, state) {
           String? status;
-          if (state is CandidateDetailLoaded)  status = state.candidate.status;
-          if (state is CandidateDetailActing)  status = state.candidate.status;
-          if (state is CandidateRetained)      status = 'retained';
-          if (state is CandidateRefused)       status = 'refused';
+          if (state is CandidateDetailLoaded) status = state.candidate.status;
+          if (state is CandidateDetailActing) status = state.candidate.status;
+          if (state is CandidateRetained) status = 'retained';
+          if (state is CandidateRefused) status = 'refused';
 
           final size = MediaQuery.of(context).size;
 
@@ -112,16 +113,14 @@ class _CandidateDetailPageState extends State<CandidateDetailPage> {
                   height: size.height * 0.25,
                   child: Container(
                     decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [AppColorsLight.primary, Color(0xFF4A148C)],
-                      ),
+                      color: AppColorsLight.primary,
                     ),
                     child: SafeArea(
                       bottom: false,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.lg,
+                        ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -134,7 +133,10 @@ class _CandidateDetailPageState extends State<CandidateDetailPage> {
                                     IconButton(
                                       padding: EdgeInsets.zero,
                                       constraints: const BoxConstraints(),
-                                      icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.white),
+                                      icon: const Icon(
+                                        Icons.arrow_back_ios_rounded,
+                                        color: Colors.white,
+                                      ),
                                       onPressed: () {
                                         if (Navigator.of(context).canPop()) {
                                           Navigator.of(context).pop();
@@ -146,7 +148,11 @@ class _CandidateDetailPageState extends State<CandidateDetailPage> {
                                     const SizedBox(width: AppSpacing.md),
                                     Text(
                                       'Profil candidat',
-                                      style: AppTypography.displayMedium.copyWith(color: Colors.white, fontSize: 26),
+                                      style: AppTypography.displayMedium
+                                          .copyWith(
+                                            color: Colors.white,
+                                            fontSize: 26,
+                                          ),
                                     ),
                                   ],
                                 ),
@@ -220,19 +226,25 @@ class _CandidateDetailPageState extends State<CandidateDetailPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.error_outline_rounded,
-                  color: AppColorsLight.error, size: 56),
+              const Icon(
+                Icons.error_outline_rounded,
+                color: AppColorsLight.error,
+                size: 56,
+              ),
               const SizedBox(height: AppSpacing.md),
-              Text(state.message,
-                  style: AppTypography.bodyMedium,
-                  textAlign: TextAlign.center),
+              Text(
+                state.message,
+                style: AppTypography.bodyMedium,
+                textAlign: TextAlign.center,
+              ),
               const SizedBox(height: AppSpacing.lg),
               ElevatedButton.icon(
                 onPressed: () => _cubit.loadCandidate(widget.applicationId),
                 icon: const Icon(Icons.refresh_rounded),
                 label: const Text('Réessayer'),
                 style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColorsLight.primary),
+                  backgroundColor: AppColorsLight.primary,
+                ),
               ),
             ],
           ),
@@ -241,14 +253,14 @@ class _CandidateDetailPageState extends State<CandidateDetailPage> {
     }
 
     CandidateDetailData? candidate;
-    bool isActing      = false;
+    bool isActing = false;
     String actingAction = '';
 
     if (state is CandidateDetailLoaded) {
       candidate = state.candidate;
     } else if (state is CandidateDetailActing) {
-      candidate    = state.candidate;
-      isActing     = true;
+      candidate = state.candidate;
+      isActing = true;
       actingAction = state.action;
     } else if (state is CandidateRetained) {
       candidate = state.candidate;
@@ -305,8 +317,7 @@ class _CandidateDetailPageState extends State<CandidateDetailPage> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.white,
-                    border: Border.all(
-                        color: Colors.white, width: 4),
+                    border: Border.all(color: Colors.white, width: 4),
                     boxShadow: [
                       BoxShadow(
                         color: AppColorsLight.primary.withOpacity(0.2),
@@ -325,13 +336,21 @@ class _CandidateDetailPageState extends State<CandidateDetailPage> {
                 ),
                 if (candidate.status == 'retained')
                   Positioned(
-                    right: 2, bottom: 2,
-                    child: _statusDot(AppColorsLight.success, Icons.check_rounded),
+                    right: 2,
+                    bottom: 2,
+                    child: _statusDot(
+                      AppColorsLight.success,
+                      Icons.check_rounded,
+                    ),
                   ),
                 if (candidate.status == 'refused')
                   Positioned(
-                    right: 2, bottom: 2,
-                    child: _statusDot(AppColorsLight.error, Icons.close_rounded),
+                    right: 2,
+                    bottom: 2,
+                    child: _statusDot(
+                      AppColorsLight.error,
+                      Icons.close_rounded,
+                    ),
                   ),
               ],
             ),
@@ -341,9 +360,11 @@ class _CandidateDetailPageState extends State<CandidateDetailPage> {
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
             child: Column(
               children: [
-                Text(candidate.studentName,
-                    style: AppTypography.headingLarge,
-                    textAlign: TextAlign.center),
+                Text(
+                  candidate.studentName,
+                  style: AppTypography.headingLarge,
+                  textAlign: TextAlign.center,
+                ),
                 const SizedBox(height: 4),
                 if (candidate.educationLevel.isNotEmpty ||
                     candidate.fieldOfStudy.isNotEmpty)
@@ -360,19 +381,24 @@ class _CandidateDetailPageState extends State<CandidateDetailPage> {
                 const SizedBox(height: AppSpacing.sm),
                 Container(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.md, vertical: 5),
+                    horizontal: AppSpacing.md,
+                    vertical: 5,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColorsLight.primary.withOpacity(0.08),
-                    borderRadius:
-                        BorderRadius.circular(AppSpacing.radiusFull),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
                     border: Border.all(
-                        color: AppColorsLight.primary.withOpacity(0.2)),
+                      color: AppColorsLight.primary.withOpacity(0.2),
+                    ),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.work_outline_rounded,
-                          size: 13, color: AppColorsLight.primary),
+                      const Icon(
+                        Icons.work_outline_rounded,
+                        size: 13,
+                        color: AppColorsLight.primary,
+                      ),
                       const SizedBox(width: 5),
                       Flexible(
                         child: Text(
@@ -398,9 +424,11 @@ class _CandidateDetailPageState extends State<CandidateDetailPage> {
 
   Widget _statusDot(Color color, IconData icon) {
     return Container(
-      width: 26, height: 26,
+      width: 26,
+      height: 26,
       decoration: BoxDecoration(
-        color: color, shape: BoxShape.circle,
+        color: color,
+        shape: BoxShape.circle,
         border: Border.all(color: AppColorsLight.bgDark, width: 2),
       ),
       child: Icon(icon, size: 14, color: Colors.white),
@@ -409,7 +437,8 @@ class _CandidateDetailPageState extends State<CandidateDetailPage> {
 
   Widget _initialsWidget(String name, double size) {
     return Container(
-      width: size, height: size,
+      width: size,
+      height: size,
       color: AppColorsLight.primary.withOpacity(0.12),
       child: Center(
         child: Text(
@@ -430,7 +459,11 @@ class _CandidateDetailPageState extends State<CandidateDetailPage> {
 
     return Container(
       margin: const EdgeInsets.fromLTRB(
-          AppSpacing.md, AppSpacing.sm, AppSpacing.md, 0),
+        AppSpacing.md,
+        AppSpacing.sm,
+        AppSpacing.md,
+        0,
+      ),
       padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
         color: AppColorsLight.bgDark,
@@ -438,7 +471,8 @@ class _CandidateDetailPageState extends State<CandidateDetailPage> {
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.04),
-            blurRadius: 16, offset: const Offset(0, 4),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -460,19 +494,24 @@ class _CandidateDetailPageState extends State<CandidateDetailPage> {
                 color: AppColorsLight.primary.withOpacity(0.05),
                 borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                 border: Border.all(
-                    color: AppColorsLight.primary.withOpacity(0.15)),
+                  color: AppColorsLight.primary.withOpacity(0.15),
+                ),
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.auto_awesome_rounded,
-                      color: AppColorsLight.primary, size: 16),
+                  const Icon(
+                    Icons.auto_awesome_rounded,
+                    color: AppColorsLight.primary,
+                    size: 16,
+                  ),
                   const SizedBox(width: AppSpacing.sm),
                   Expanded(
                     child: Text(
                       candidate.matchExplanation!,
                       style: AppTypography.bodySmall.copyWith(
-                        color: AppColorsLight.primary, height: 1.5,
+                        color: AppColorsLight.primary,
+                        height: 1.5,
                       ),
                     ),
                   ),
@@ -489,12 +528,16 @@ class _CandidateDetailPageState extends State<CandidateDetailPage> {
 
   Widget _buildSkillsCard(List<SkillDetail> skills) {
     final technical = skills.where((s) => s.skillType == 'technical').toList();
-    final soft      = skills.where((s) => s.skillType == 'soft').toList();
+    final soft = skills.where((s) => s.skillType == 'soft').toList();
     final languages = skills.where((s) => s.skillType == 'language').toList();
 
     return Container(
       margin: const EdgeInsets.fromLTRB(
-          AppSpacing.md, AppSpacing.sm, AppSpacing.md, 0),
+        AppSpacing.md,
+        AppSpacing.sm,
+        AppSpacing.md,
+        0,
+      ),
       padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
         color: AppColorsLight.bgDark,
@@ -502,7 +545,8 @@ class _CandidateDetailPageState extends State<CandidateDetailPage> {
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.04),
-            blurRadius: 16, offset: const Offset(0, 4),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -512,13 +556,17 @@ class _CandidateDetailPageState extends State<CandidateDetailPage> {
           Row(
             children: [
               Container(
-                width: 32, height: 32,
+                width: 32,
+                height: 32,
                 decoration: BoxDecoration(
                   color: AppColorsLight.secondary.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                 ),
-                child: const Icon(Icons.bolt_rounded,
-                    color: AppColorsLight.secondary, size: 18),
+                child: const Icon(
+                  Icons.bolt_rounded,
+                  color: AppColorsLight.secondary,
+                  size: 18,
+                ),
               ),
               const SizedBox(width: AppSpacing.sm),
               Text('Compétences', style: AppTypography.headingSmall),
@@ -531,10 +579,9 @@ class _CandidateDetailPageState extends State<CandidateDetailPage> {
             _skillGroupLabel('Techniques', AppColorsLight.primary),
             const SizedBox(height: AppSpacing.sm),
             Wrap(
-              spacing: AppSpacing.sm, runSpacing: AppSpacing.sm,
-              children: technical
-                  .map((s) => _SkillTag(label: s.name))
-                  .toList(),
+              spacing: AppSpacing.sm,
+              runSpacing: AppSpacing.sm,
+              children: technical.map((s) => _SkillTag(label: s.name)).toList(),
             ),
             const SizedBox(height: AppSpacing.md),
           ],
@@ -542,10 +589,15 @@ class _CandidateDetailPageState extends State<CandidateDetailPage> {
             _skillGroupLabel('Soft skills', AppColorsLight.secondary),
             const SizedBox(height: AppSpacing.sm),
             Wrap(
-              spacing: AppSpacing.sm, runSpacing: AppSpacing.sm,
+              spacing: AppSpacing.sm,
+              runSpacing: AppSpacing.sm,
               children: soft
-                  .map((s) => _SkillTag(
-                        label: s.name, color: AppColorsLight.secondary))
+                  .map(
+                    (s) => _SkillTag(
+                      label: s.name,
+                      color: AppColorsLight.secondary,
+                    ),
+                  )
                   .toList(),
             ),
             const SizedBox(height: AppSpacing.md),
@@ -554,10 +606,13 @@ class _CandidateDetailPageState extends State<CandidateDetailPage> {
             _skillGroupLabel('Langues', AppColorsLight.success),
             const SizedBox(height: AppSpacing.sm),
             Wrap(
-              spacing: AppSpacing.sm, runSpacing: AppSpacing.sm,
+              spacing: AppSpacing.sm,
+              runSpacing: AppSpacing.sm,
               children: languages
-                  .map((s) => _SkillTag(
-                        label: s.name, color: AppColorsLight.success))
+                  .map(
+                    (s) =>
+                        _SkillTag(label: s.name, color: AppColorsLight.success),
+                  )
                   .toList(),
             ),
           ],
@@ -570,14 +625,18 @@ class _CandidateDetailPageState extends State<CandidateDetailPage> {
     return Row(
       children: [
         Container(
-          width: 6, height: 6,
+          width: 6,
+          height: 6,
           decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
         const SizedBox(width: 6),
-        Text(label,
-            style: AppTypography.labelSmall.copyWith(
-              color: color, fontWeight: FontWeight.w700,
-            )),
+        Text(
+          label,
+          style: AppTypography.labelSmall.copyWith(
+            color: color,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
       ],
     );
   }
@@ -587,7 +646,11 @@ class _CandidateDetailPageState extends State<CandidateDetailPage> {
   Widget _buildCvCard(CandidateDetailData candidate) {
     return Container(
       margin: const EdgeInsets.fromLTRB(
-          AppSpacing.md, AppSpacing.sm, AppSpacing.md, 0),
+        AppSpacing.md,
+        AppSpacing.sm,
+        AppSpacing.md,
+        0,
+      ),
       padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
         color: AppColorsLight.bgDark,
@@ -595,7 +658,8 @@ class _CandidateDetailPageState extends State<CandidateDetailPage> {
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.04),
-            blurRadius: 16, offset: const Offset(0, 4),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -605,16 +669,23 @@ class _CandidateDetailPageState extends State<CandidateDetailPage> {
           Row(
             children: [
               Container(
-                width: 32, height: 32,
+                width: 32,
+                height: 32,
                 decoration: BoxDecoration(
                   color: AppColorsLight.error.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                 ),
-                child: const Icon(Icons.picture_as_pdf_rounded,
-                    color: AppColorsLight.error, size: 18),
+                child: const Icon(
+                  Icons.picture_as_pdf_rounded,
+                  color: AppColorsLight.error,
+                  size: 18,
+                ),
               ),
               const SizedBox(width: AppSpacing.sm),
-              Text('Curriculum Vitae du candidat', style: AppTypography.headingSmall),
+              Text(
+                'Curriculum Vitae du candidat',
+                style: AppTypography.headingSmall,
+              ),
             ],
           ),
           const SizedBox(height: AppSpacing.md),
@@ -631,19 +702,25 @@ class _CandidateDetailPageState extends State<CandidateDetailPage> {
                     color: AppColorsLight.bgSurface,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
                     border: Border.all(
-                        color: AppColorsLight.error.withOpacity(0.2)),
+                      color: AppColorsLight.error.withOpacity(0.2),
+                    ),
                   ),
                   child: Row(
                     children: [
                       Container(
-                        width: 48, height: 48,
+                        width: 48,
+                        height: 48,
                         decoration: BoxDecoration(
                           color: AppColorsLight.error.withOpacity(0.1),
-                          borderRadius:
-                              BorderRadius.circular(AppSpacing.radiusMd),
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusMd,
+                          ),
                         ),
-                        child: const Icon(Icons.picture_as_pdf_rounded,
-                            color: AppColorsLight.error, size: 28),
+                        child: const Icon(
+                          Icons.picture_as_pdf_rounded,
+                          color: AppColorsLight.error,
+                          size: 28,
+                        ),
                       ),
                       const SizedBox(width: AppSpacing.md),
                       Expanded(
@@ -652,27 +729,35 @@ class _CandidateDetailPageState extends State<CandidateDetailPage> {
                           children: [
                             Text(
                               candidate.cvFileName ?? 'CV du candidat',
-                              style: AppTypography.labelLarge
-                                  .copyWith(fontWeight: FontWeight.w600),
+                              style: AppTypography.labelLarge.copyWith(
+                                fontWeight: FontWeight.w600,
+                              ),
                               overflow: TextOverflow.ellipsis,
                             ),
                             const SizedBox(height: 2),
-                            Text('Appuyer pour ouvrir',
-                                style: AppTypography.caption.copyWith(
-                                  color: AppColorsLight.primary,
-                                )),
+                            Text(
+                              'Appuyer pour ouvrir',
+                              style: AppTypography.caption.copyWith(
+                                color: AppColorsLight.primary,
+                              ),
+                            ),
                           ],
                         ),
                       ),
                       Container(
-                        width: 36, height: 36,
+                        width: 36,
+                        height: 36,
                         decoration: BoxDecoration(
                           color: AppColorsLight.primary.withOpacity(0.1),
-                          borderRadius:
-                              BorderRadius.circular(AppSpacing.radiusMd),
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusMd,
+                          ),
                         ),
-                        child: const Icon(Icons.open_in_new_rounded,
-                            size: 18, color: AppColorsLight.primary),
+                        child: const Icon(
+                          Icons.open_in_new_rounded,
+                          size: 18,
+                          color: AppColorsLight.primary,
+                        ),
                       ),
                     ],
                   ),
@@ -689,11 +774,16 @@ class _CandidateDetailPageState extends State<CandidateDetailPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.info_outline_rounded,
-                      color: AppColorsLight.textTertiary, size: 18),
+                  const Icon(
+                    Icons.info_outline_rounded,
+                    color: AppColorsLight.textTertiary,
+                    size: 18,
+                  ),
                   const SizedBox(width: AppSpacing.sm),
-                  Text('Aucun CV uploadé par ce candidat',
-                      style: AppTypography.bodySmall),
+                  Text(
+                    'Aucun CV uploadé par ce candidat',
+                    style: AppTypography.bodySmall,
+                  ),
                 ],
               ),
             ),
@@ -705,13 +795,18 @@ class _CandidateDetailPageState extends State<CandidateDetailPage> {
   // ─── Actions sticky ───────────────────────────────────────────────────────
 
   Widget _buildStickyActions(
-      CandidateDetailData candidate, bool isActing, String action) {
+    CandidateDetailData candidate,
+    bool isActing,
+    String action,
+  ) {
     final isRetained = candidate.status == 'retained';
-    final isRefused  = candidate.status == 'refused';
+    final isRefused = candidate.status == 'refused';
 
     return Container(
       padding: EdgeInsets.fromLTRB(
-        AppSpacing.lg, AppSpacing.md, AppSpacing.lg,
+        AppSpacing.lg,
+        AppSpacing.md,
+        AppSpacing.lg,
         AppSpacing.md + MediaQuery.of(context).padding.bottom,
       ),
       decoration: BoxDecoration(
@@ -720,104 +815,131 @@ class _CandidateDetailPageState extends State<CandidateDetailPage> {
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.06),
-            blurRadius: 20, offset: const Offset(0, -4),
+            blurRadius: 20,
+            offset: const Offset(0, -4),
           ),
         ],
       ),
       child: isRetained
-          ? _statusBanner('Candidature retenue',
-              AppColorsLight.success, Icons.check_circle_rounded)
+          ? _statusBanner(
+              'Candidature retenue',
+              AppColorsLight.success,
+              Icons.check_circle_rounded,
+            )
           : isRefused
-              ? _statusBanner('Candidature refusée',
-                  AppColorsLight.error, Icons.cancel_rounded)
-              : Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed: isActing ? null : _cubit.refuseCandidate,
-                        icon: (isActing && action == 'refusing')
-                            ? const SizedBox(
-                                width: 16, height: 16,
-                                child: CircularProgressIndicator(
-                                    color: AppColorsLight.error,
-                                    strokeWidth: 2),
-                              )
-                            : const Icon(Icons.close_rounded,
-                                size: 18, color: AppColorsLight.error),
-                        label: Text('Refuser',
-                            style: AppTypography.labelLarge
-                                .copyWith(color: AppColorsLight.error)),
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: AppColorsLight.error,
-                          side: const BorderSide(color: AppColorsLight.error),
-                          minimumSize: const Size(0, 52),
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(AppSpacing.radiusMd),
+          ? _statusBanner(
+              'Candidature refusée',
+              AppColorsLight.error,
+              Icons.cancel_rounded,
+            )
+          : Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: isActing ? null : _cubit.refuseCandidate,
+                    icon: (isActing && action == 'refusing')
+                        ? const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(
+                              color: AppColorsLight.error,
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : const Icon(
+                            Icons.close_rounded,
+                            size: 18,
+                            color: AppColorsLight.error,
                           ),
+                    label: Text(
+                      'Refuser',
+                      style: AppTypography.labelLarge.copyWith(
+                        color: AppColorsLight.error,
+                      ),
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AppColorsLight.error,
+                      side: const BorderSide(color: AppColorsLight.error),
+                      minimumSize: const Size(0, 52),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusMd,
                         ),
                       ),
                     ),
-                    const SizedBox(width: AppSpacing.md),
-                    Expanded(
-                      flex: 2,
-                      child: Container(
-                        height: 52,
-                        decoration: BoxDecoration(
-                          gradient: isActing
-                              ? LinearGradient(colors: [
-                                  AppColorsLight.success.withOpacity(0.5),
-                                  AppColorsLight.success.withOpacity(0.3),
-                                ])
-                              : const LinearGradient(colors: [
-                                  AppColorsLight.success,
-                                  Color(0xFF00C853),
-                                ]),
-                          borderRadius:
-                              BorderRadius.circular(AppSpacing.radiusMd),
-                          boxShadow: isActing ? [] : [
-                            BoxShadow(
-                              color: AppColorsLight.success.withOpacity(0.35),
-                              blurRadius: 16, offset: const Offset(0, 6),
-                            ),
-                          ],
-                        ),
-                        child: Material(
-                          color: Colors.transparent,
-                          borderRadius:
-                              BorderRadius.circular(AppSpacing.radiusMd),
-                          clipBehavior: Clip.antiAlias,
-                          child: InkWell(
-                            onTap: isActing ? null : _cubit.retainCandidate,
-                            child: Center(
-                              child: (isActing && action == 'retaining')
-                                  ? const SizedBox(
-                                      width: 20, height: 20,
-                                      child: CircularProgressIndicator(
-                                          color: Colors.white, strokeWidth: 2),
-                                    )
-                                  : Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        const Icon(Icons.check_rounded,
-                                            color: Colors.white, size: 18),
-                                        const SizedBox(width: 6),
-                                        Text('Retenir ce candidat',
-                                            style: AppTypography.labelLarge
-                                                .copyWith(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w600,
-                                            )),
-                                      ],
-                                    ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
+                const SizedBox(width: AppSpacing.md),
+                Expanded(
+                  flex: 2,
+                  child: Container(
+                    height: 52,
+                    decoration: BoxDecoration(
+                      gradient: isActing
+                          ? LinearGradient(
+                              colors: [
+                                AppColorsLight.success.withOpacity(0.5),
+                                AppColorsLight.success.withOpacity(0.3),
+                              ],
+                            )
+                          : const LinearGradient(
+                              colors: [
+                                AppColorsLight.success,
+                                Color(0xFF00C853),
+                              ],
+                            ),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                      boxShadow: isActing
+                          ? []
+                          : [
+                              BoxShadow(
+                                color: AppColorsLight.success.withOpacity(0.35),
+                                blurRadius: 16,
+                                offset: const Offset(0, 6),
+                              ),
+                            ],
+                    ),
+                    child: Material(
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                      clipBehavior: Clip.antiAlias,
+                      child: InkWell(
+                        onTap: isActing ? null : _cubit.retainCandidate,
+                        child: Center(
+                          child: (isActing && action == 'retaining')
+                              ? const SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(
+                                      Icons.check_rounded,
+                                      color: Colors.white,
+                                      size: 18,
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      'Retenir ce candidat',
+                                      style: AppTypography.labelLarge.copyWith(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
     );
   }
 
@@ -834,8 +956,7 @@ class _CandidateDetailPageState extends State<CandidateDetailPage> {
         children: [
           Icon(icon, color: color, size: 20),
           const SizedBox(width: AppSpacing.sm),
-          Text(label,
-              style: AppTypography.labelLarge.copyWith(color: color)),
+          Text(label, style: AppTypography.labelLarge.copyWith(color: color)),
         ],
       ),
     );
@@ -858,17 +979,17 @@ class _StatusBadge extends StatelessWidget {
       case 'retained':
         color = AppColorsLight.primary;
         label = 'Retenu';
-        icon  = Icons.check_circle_rounded;
+        icon = Icons.check_circle_rounded;
         break;
       case 'refused':
         color = AppColorsLight.textTertiary;
         label = 'Refusé';
-        icon  = Icons.cancel_rounded;
+        icon = Icons.cancel_rounded;
         break;
       default:
         color = AppColorsLight.textSecondary;
         label = 'En attente';
-        icon  = Icons.hourglass_top_rounded;
+        icon = Icons.hourglass_top_rounded;
     }
 
     return Container(
@@ -883,10 +1004,13 @@ class _StatusBadge extends StatelessWidget {
         children: [
           Icon(icon, size: 12, color: color),
           const SizedBox(width: 4),
-          Text(label,
-              style: AppTypography.caption.copyWith(
-                color: color, fontWeight: FontWeight.w600,
-              )),
+          Text(
+            label,
+            style: AppTypography.caption.copyWith(
+              color: color,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         ],
       ),
     );
@@ -897,16 +1021,14 @@ class _SkillTag extends StatelessWidget {
   final String label;
   final Color color;
 
-  const _SkillTag({
-    required this.label,
-    this.color = AppColorsLight.primary,
-  });
+  const _SkillTag({required this.label, this.color = AppColorsLight.primary});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.md, vertical: 6,
+        horizontal: AppSpacing.md,
+        vertical: 6,
       ),
       decoration: BoxDecoration(
         color: color.withOpacity(0.08),
@@ -916,7 +1038,8 @@ class _SkillTag extends StatelessWidget {
       child: Text(
         label,
         style: AppTypography.labelSmall.copyWith(
-          color: color, fontWeight: FontWeight.w500,
+          color: color,
+          fontWeight: FontWeight.w500,
         ),
       ),
     );

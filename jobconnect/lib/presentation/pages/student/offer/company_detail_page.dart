@@ -37,21 +37,31 @@ class _CompanyDetailPageState extends State<CompanyDetailPage> {
 
   String _formatOfferType(String type) {
     switch (type) {
-      case 'cdi':                 return 'CDI';
-      case 'cdd':                 return 'CDD';
-      case 'stage_academique':    return 'Stage académique';
-      case 'stage_professionnel': return 'Stage pro';
-      default:                    return type.toUpperCase();
+      case 'cdi':
+        return 'CDI';
+      case 'cdd':
+        return 'CDD';
+      case 'stage_academique':
+        return 'Stage académique';
+      case 'stage_professionnel':
+        return 'Stage pro';
+      default:
+        return type.toUpperCase();
     }
   }
 
   String _formatSize(String size) {
     switch (size) {
-      case '1-10':   return '1–10 employés';
-      case '11-50':  return '11–50 employés';
-      case '51-200': return '51–200 employés';
-      case '200+':   return '200+ employés';
-      default:       return size;
+      case '1-10':
+        return '1–10 employés';
+      case '11-50':
+        return '11–50 employés';
+      case '51-200':
+        return '51–200 employés';
+      case '200+':
+        return '200+ employés';
+      default:
+        return size;
     }
   }
 
@@ -63,9 +73,7 @@ class _CompanyDetailPageState extends State<CompanyDetailPage> {
         builder: (context, state) {
           return Scaffold(
             backgroundColor: AppColorsLight.bgDark,
-            body: SafeArea(
-              child: _buildBody(context, state),
-            ),
+            body: SafeArea(child: _buildBody(context, state)),
           );
         },
       ),
@@ -102,8 +110,7 @@ class _CompanyDetailPageState extends State<CompanyDetailPage> {
           pinned: true,
           backgroundColor: AppColorsLight.bgDark,
           elevation: 0,
-          shape: Border(
-              bottom: BorderSide(color: AppColorsLight.bgSurface)),
+          shape: Border(bottom: BorderSide(color: AppColorsLight.bgSurface)),
           leading: Padding(
             padding: const EdgeInsets.only(left: AppSpacing.sm),
             child: Container(
@@ -113,8 +120,11 @@ class _CompanyDetailPageState extends State<CompanyDetailPage> {
                 border: Border.all(color: AppColorsLight.bgSurface),
               ),
               child: IconButton(
-                icon: const Icon(Icons.arrow_back_ios_rounded,
-                    size: 18, color: AppColorsLight.textPrimary),
+                icon: const Icon(
+                  Icons.arrow_back_ios_rounded,
+                  size: 18,
+                  color: AppColorsLight.textPrimary,
+                ),
                 onPressed: () {
                   if (Navigator.of(context).canPop()) {
                     Navigator.of(context).pop();
@@ -125,8 +135,7 @@ class _CompanyDetailPageState extends State<CompanyDetailPage> {
               ),
             ),
           ),
-          title: Text('Profil entreprise',
-              style: AppTypography.headingMedium),
+          title: Text('Profil entreprise', style: AppTypography.headingMedium),
         ),
 
         SliverToBoxAdapter(
@@ -140,8 +149,7 @@ class _CompanyDetailPageState extends State<CompanyDetailPage> {
                   clipBehavior: Clip.antiAlias,
                   decoration: BoxDecoration(
                     color: AppColorsLight.bgCard,
-                    borderRadius:
-                        BorderRadius.circular(AppSpacing.radiusXl),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
                     border: Border.all(color: AppColorsLight.bgSurface),
                     boxShadow: [
                       BoxShadow(
@@ -195,7 +203,8 @@ class _CompanyDetailPageState extends State<CompanyDetailPage> {
                                 imageUrl: company.logoUrl,
                                 radius: 30,
                                 defaultIcon: Icons.business_rounded,
-                                backgroundColor: AppColorsLight.primary.withOpacity(0.12),
+                                backgroundColor: AppColorsLight.primary
+                                    .withOpacity(0.12),
                                 iconColor: AppColorsLight.primary,
                               ),
                             ),
@@ -213,8 +222,7 @@ class _CompanyDetailPageState extends State<CompanyDetailPage> {
                                   ),
                                 const SizedBox(width: AppSpacing.sm),
                                 _BannerStat(
-                                  value:
-                                      '${company.activeOffersCount}',
+                                  value: '${company.activeOffersCount}',
                                   label: 'Offres',
                                 ),
                               ],
@@ -234,14 +242,18 @@ class _CompanyDetailPageState extends State<CompanyDetailPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(company.name,
-                                style: AppTypography.headingMedium),
+                            Text(
+                              company.name,
+                              style: AppTypography.headingMedium,
+                            ),
                             const SizedBox(height: 4),
                             Row(
                               children: [
-                                const Icon(Icons.category_outlined,
-                                    size: 13,
-                                    color: AppColorsLight.textTertiary),
+                                const Icon(
+                                  Icons.category_outlined,
+                                  size: 13,
+                                  color: AppColorsLight.textTertiary,
+                                ),
                                 const SizedBox(width: 4),
                                 Text(
                                   [
@@ -265,26 +277,30 @@ class _CompanyDetailPageState extends State<CompanyDetailPage> {
                                   vertical: 3,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: AppColorsLight.success
-                                      .withOpacity(0.1),
+                                  color: AppColorsLight.success.withOpacity(
+                                    0.1,
+                                  ),
                                   borderRadius: BorderRadius.circular(
-                                      AppSpacing.radiusFull),
+                                    AppSpacing.radiusFull,
+                                  ),
                                   border: Border.all(
-                                    color: AppColorsLight.success
-                                        .withOpacity(0.3),
+                                    color: AppColorsLight.success.withOpacity(
+                                      0.3,
+                                    ),
                                   ),
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    const Icon(Icons.verified_rounded,
-                                        size: 12,
-                                        color: AppColorsLight.success),
+                                    const Icon(
+                                      Icons.verified_rounded,
+                                      size: 12,
+                                      color: AppColorsLight.success,
+                                    ),
                                     const SizedBox(width: 4),
                                     Text(
                                       'Vérifiée',
-                                      style: AppTypography.caption
-                                          .copyWith(
+                                      style: AppTypography.caption.copyWith(
                                         color: AppColorsLight.success,
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -302,7 +318,8 @@ class _CompanyDetailPageState extends State<CompanyDetailPage> {
                                   color: AppColorsLight.textTertiary
                                       .withOpacity(0.1),
                                   borderRadius: BorderRadius.circular(
-                                      AppSpacing.radiusFull),
+                                    AppSpacing.radiusFull,
+                                  ),
                                   border: Border.all(
                                     color: AppColorsLight.textTertiary
                                         .withOpacity(0.3),
@@ -325,8 +342,7 @@ class _CompanyDetailPageState extends State<CompanyDetailPage> {
 
               // ── Corps ──────────────────────────────────────────────────
               Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.lg),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -339,8 +355,7 @@ class _CompanyDetailPageState extends State<CompanyDetailPage> {
                           company.description,
                           style: AppTypography.bodyMedium.copyWith(
                             height: 1.6,
-                            color: AppColorsLight.textPrimary
-                                .withOpacity(0.8),
+                            color: AppColorsLight.textPrimary.withOpacity(0.8),
                           ),
                         ),
                       ),
@@ -376,13 +391,11 @@ class _CompanyDetailPageState extends State<CompanyDetailPage> {
                             ),
                             const SizedBox(width: AppSpacing.md),
                             Column(
-                              crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   company.ceoName,
-                                  style: AppTypography.labelLarge
-                                      .copyWith(
+                                  style: AppTypography.labelLarge.copyWith(
                                     fontWeight: FontWeight.w700,
                                   ),
                                 ),
@@ -411,23 +424,23 @@ class _CompanyDetailPageState extends State<CompanyDetailPage> {
                         decoration: BoxDecoration(
                           color: AppColorsLight.bgDark,
                           borderRadius: BorderRadius.circular(
-                              AppSpacing.radiusMd),
-                          border: Border.all(
-                              color: AppColorsLight.bgSurface),
+                            AppSpacing.radiusMd,
+                          ),
+                          border: Border.all(color: AppColorsLight.bgSurface),
                         ),
                         child: Stack(
                           children: [
                             Center(
                               child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Container(
                                     width: 48,
                                     height: 48,
                                     decoration: BoxDecoration(
-                                      color: AppColorsLight.primary
-                                          .withOpacity(0.1),
+                                      color: AppColorsLight.primary.withOpacity(
+                                        0.1,
+                                      ),
                                       shape: BoxShape.circle,
                                     ),
                                     child: const Icon(
@@ -451,9 +464,11 @@ class _CompanyDetailPageState extends State<CompanyDetailPage> {
                                 decoration: BoxDecoration(
                                   color: AppColorsLight.bgCard,
                                   borderRadius: BorderRadius.circular(
-                                      AppSpacing.radiusMd),
+                                    AppSpacing.radiusMd,
+                                  ),
                                   border: Border.all(
-                                      color: AppColorsLight.bgSurface),
+                                    color: AppColorsLight.bgSurface,
+                                  ),
                                 ),
                                 child: Row(
                                   children: [
@@ -475,8 +490,7 @@ class _CompanyDetailPageState extends State<CompanyDetailPage> {
                                     Expanded(
                                       child: Text(
                                         company.location,
-                                        style: AppTypography.bodySmall
-                                            .copyWith(
+                                        style: AppTypography.bodySmall.copyWith(
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
@@ -494,17 +508,20 @@ class _CompanyDetailPageState extends State<CompanyDetailPage> {
                     // Offres actives
                     if (company.activeOffers.isNotEmpty) ...[
                       Row(
-                        mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Row(
                             children: [
-                              const Icon(Icons.work_outline_rounded,
-                                  size: 16,
-                                  color: AppColorsLight.primary),
+                              const Icon(
+                                Icons.work_outline_rounded,
+                                size: 16,
+                                color: AppColorsLight.primary,
+                              ),
                               const SizedBox(width: 6),
-                              Text('Offres actives',
-                                  style: AppTypography.headingSmall),
+                              Text(
+                                'Offres actives',
+                                style: AppTypography.headingSmall,
+                              ),
                             ],
                           ),
                           Text(
@@ -525,43 +542,49 @@ class _CompanyDetailPageState extends State<CompanyDetailPage> {
                           itemBuilder: (context, index) {
                             final offer = company.activeOffers[index];
                             final gradients = [
-                              [AppColorsLight.primary,
-                                  AppColorsLight.secondary],
-                              [AppColorsLight.secondary,
-                                  AppColorsLight.primary],
-                              [AppColorsLight.primary,
-                                  AppColorsLight.accentRed],
+                              [
+                                AppColorsLight.primary,
+                                AppColorsLight.secondary,
+                              ],
+                              [
+                                AppColorsLight.secondary,
+                                AppColorsLight.primary,
+                              ],
+                              [
+                                AppColorsLight.primary,
+                                AppColorsLight.accentRed,
+                              ],
                             ];
-                            final g = gradients[
-                                index % gradients.length];
+                            final g = gradients[index % gradients.length];
 
                             return GestureDetector(
                               onTap: () => context.push(
-                                  '/student/offer/${offer.offerId}'),
+                                '/student/offer/${offer.offerId}',
+                              ),
                               child: Container(
                                 width: 190,
                                 margin: const EdgeInsets.only(
-                                    right: AppSpacing.sm),
-                                padding: const EdgeInsets.all(
-                                    AppSpacing.md),
+                                  right: AppSpacing.sm,
+                                ),
+                                padding: const EdgeInsets.all(AppSpacing.md),
                                 decoration: BoxDecoration(
                                   color: AppColorsLight.bgCard,
                                   borderRadius: BorderRadius.circular(
-                                      AppSpacing.radiusLg),
+                                    AppSpacing.radiusLg,
+                                  ),
                                   border: Border.all(
-                                      color: AppColorsLight.bgSurface),
+                                    color: AppColorsLight.bgSurface,
+                                  ),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.black
-                                          .withOpacity(0.03),
+                                      color: Colors.black.withOpacity(0.03),
                                       blurRadius: 8,
                                       offset: const Offset(0, 3),
                                     ),
                                   ],
                                 ),
                                 child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Row(
                                       children: [
@@ -569,10 +592,10 @@ class _CompanyDetailPageState extends State<CompanyDetailPage> {
                                           width: 28,
                                           height: 28,
                                           decoration: BoxDecoration(
-                                            gradient: LinearGradient(
-                                                colors: g),
-                                            borderRadius:
-                                                BorderRadius.circular(7),
+                                            gradient: LinearGradient(colors: g),
+                                            borderRadius: BorderRadius.circular(
+                                              7,
+                                            ),
                                           ),
                                           child: const Icon(
                                             Icons.work_rounded,
@@ -582,37 +605,32 @@ class _CompanyDetailPageState extends State<CompanyDetailPage> {
                                         ),
                                         const Spacer(),
                                         Container(
-                                          padding:
-                                              const EdgeInsets.symmetric(
+                                          padding: const EdgeInsets.symmetric(
                                             horizontal: 7,
                                             vertical: 2,
                                           ),
                                           decoration: BoxDecoration(
                                             color: AppColorsLight.primary
                                                 .withOpacity(0.1),
-                                            borderRadius:
-                                                BorderRadius.circular(
-                                                    AppSpacing.radiusFull),
+                                            borderRadius: BorderRadius.circular(
+                                              AppSpacing.radiusFull,
+                                            ),
                                           ),
                                           child: Text(
-                                            _formatOfferType(
-                                                offer.offerType),
+                                            _formatOfferType(offer.offerType),
                                             style: AppTypography.caption
                                                 .copyWith(
-                                              color:
-                                                  AppColorsLight.primary,
-                                              fontWeight: FontWeight.w600,
-                                            ),
+                                                  color: AppColorsLight.primary,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
                                           ),
                                         ),
                                       ],
                                     ),
-                                    const SizedBox(
-                                        height: AppSpacing.sm),
+                                    const SizedBox(height: AppSpacing.sm),
                                     Text(
                                       offer.title,
-                                      style: AppTypography.labelLarge
-                                          .copyWith(
+                                      style: AppTypography.labelLarge.copyWith(
                                         fontWeight: FontWeight.w600,
                                       ),
                                       maxLines: 1,
@@ -624,16 +642,13 @@ class _CompanyDetailPageState extends State<CompanyDetailPage> {
                                         const Icon(
                                           Icons.location_on_outlined,
                                           size: 11,
-                                          color:
-                                              AppColorsLight.textTertiary,
+                                          color: AppColorsLight.textTertiary,
                                         ),
                                         const SizedBox(width: 2),
                                         Text(
                                           offer.location,
-                                          style: AppTypography.caption
-                                              .copyWith(
-                                            color: AppColorsLight
-                                                .textTertiary,
+                                          style: AppTypography.caption.copyWith(
+                                            color: AppColorsLight.textTertiary,
                                           ),
                                         ),
                                       ],
@@ -666,16 +681,23 @@ class _CompanyDetailPageState extends State<CompanyDetailPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.business_outlined,
-                color: AppColorsLight.textTertiary, size: 48),
+            const Icon(
+              Icons.business_outlined,
+              color: AppColorsLight.textTertiary,
+              size: 48,
+            ),
             const SizedBox(height: AppSpacing.md),
-            Text('Entreprise introuvable',
-                style: AppTypography.headingSmall,
-                textAlign: TextAlign.center),
+            Text(
+              'Entreprise introuvable',
+              style: AppTypography.headingSmall,
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: AppSpacing.sm),
-            Text(message,
-                style: AppTypography.bodySmall,
-                textAlign: TextAlign.center),
+            Text(
+              message,
+              style: AppTypography.bodySmall,
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: AppSpacing.lg),
             ElevatedButton.icon(
               onPressed: () {

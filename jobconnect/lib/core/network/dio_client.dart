@@ -10,7 +10,9 @@ class DioClient {
       BaseOptions(
         baseUrl: dotenv.env['MASTRA_BASE_URL'] ?? 'http://localhost:3000',
         connectTimeout: const Duration(seconds: 30),
-        receiveTimeout: const Duration(seconds: 300), // 5 minutes pour les workflows IA
+        receiveTimeout: const Duration(
+          seconds: 300,
+        ), // 5 minutes pour les workflows IA
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',

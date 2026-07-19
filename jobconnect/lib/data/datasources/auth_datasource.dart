@@ -3,10 +3,7 @@ import '../../core/errors/exceptions.dart' as app_exceptions;
 import '../models/user_model.dart';
 
 abstract class IAuthDataSource {
-  Future<UserModel> login({
-    required String email,
-    required String password,
-  });
+  Future<UserModel> login({required String email, required String password});
 
   Future<UserModel> register({
     required String email,
@@ -15,7 +12,10 @@ abstract class IAuthDataSource {
     required String role,
   });
 
-  Future<void> changePassword({required String oldPassword, required String newPassword});
+  Future<void> changePassword({
+    required String oldPassword,
+    required String newPassword,
+  });
 
   Future<void> logout();
 
@@ -66,10 +66,7 @@ class AuthDataSourceImpl implements IAuthDataSource {
       final response = await client.auth.signUp(
         email: email,
         password: password,
-        data: {
-          'full_name': fullName,
-          'role': role,
-        },
+        data: {'full_name': fullName, 'role': role},
       );
 
       if (response.user == null) {
@@ -89,7 +86,10 @@ class AuthDataSourceImpl implements IAuthDataSource {
   }
 
   @override
-  Future<void> changePassword({required String oldPassword, required String newPassword}) async {
+  Future<void> changePassword({
+    required String oldPassword,
+    required String newPassword,
+  }) async {
     try {
       final user = client.auth.currentUser;
       if (user == null || user.email == null) {
@@ -106,7 +106,7 @@ class AuthDataSourceImpl implements IAuthDataSource {
       final response = await client.auth.updateUser(
         supa.UserAttributes(password: newPassword),
       );
-      
+
       if (response.user == null) {
         throw const app_exceptions.AuthException(
           'Impossible de modifier le mot de passe.',
@@ -114,7 +114,9 @@ class AuthDataSourceImpl implements IAuthDataSource {
       }
     } on supa.AuthException catch (e) {
       if (e.message.contains('Invalid login credentials')) {
-        throw const app_exceptions.AuthException('L\'ancien mot de passe est incorrect.');
+        throw const app_exceptions.AuthException(
+          'L\'ancien mot de passe est incorrect.',
+        );
       }
       throw app_exceptions.AuthException(e.message);
     } catch (e) {
@@ -129,9 +131,7 @@ class AuthDataSourceImpl implements IAuthDataSource {
     try {
       await client.auth.signOut();
     } catch (e) {
-      throw app_exceptions.ServerException(
-        'Erreur lors de la déconnexion.',
-      );
+      throw app_exceptions.ServerException('Erreur lors de la déconnexion.');
     }
   }
 

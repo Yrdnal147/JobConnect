@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -34,7 +35,8 @@ class _ConversationsPageState extends State<ConversationsPage> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
       // Trigger lazy loading
       _cubit.loadStudentConversations(loadMore: true);
     }
@@ -69,16 +71,14 @@ class _ConversationsPageState extends State<ConversationsPage> {
                   height: size.height * 0.28,
                   child: Container(
                     decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [AppColorsLight.primary, Color(0xFF4A148C)],
-                      ),
+                      color: AppColorsLight.primary,
                     ),
                     child: SafeArea(
                       bottom: false,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.lg,
+                        ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -86,22 +86,37 @@ class _ConversationsPageState extends State<ConversationsPage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  (state is ConversationsLoaded && state.filterType == 'archived') 
-                                      ? 'Archives' 
-                                      : 'messaging.title'.tr(),
-                                  style: AppTypography.displayMedium.copyWith(color: Colors.white, fontSize: 26),
+                                Row(
+                                  children: [
+
+                                    Text(
+                                      (state is ConversationsLoaded &&
+                                              state.filterType == 'archived')
+                                          ? 'Archives'
+                                          : 'messaging.title'.tr(),
+                                      style: AppTypography.displayMedium.copyWith(
+                                        color: Colors.white,
+                                        fontSize: 26,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                                 if (state is ConversationsLoaded)
                                   IconButton(
                                     icon: Icon(
-                                      state.filterType == 'archived' ? Icons.unarchive_rounded : Icons.archive_outlined,
+                                      state.filterType == 'archived'
+                                          ? Icons.unarchive_rounded
+                                          : Icons.archive_outlined,
                                       color: Colors.white.withOpacity(0.9),
                                     ),
-                                    tooltip: state.filterType == 'archived' ? 'Voir les messages' : 'Voir les archives',
+                                    tooltip: state.filterType == 'archived'
+                                        ? 'Voir les messages'
+                                        : 'Voir les archives',
                                     onPressed: () => _cubit.setFilterType(
-                                      state.filterType == 'archived' ? 'all' : 'archived', 
-                                      isStudent: true
+                                      state.filterType == 'archived'
+                                          ? 'all'
+                                          : 'archived',
+                                      isStudent: true,
                                     ),
                                   ),
                               ],
@@ -109,11 +124,19 @@ class _ConversationsPageState extends State<ConversationsPage> {
                             const SizedBox(height: AppSpacing.sm),
                             // Barre de recherche
                             Container(
-                              margin: const EdgeInsets.symmetric(vertical: AppSpacing.sm, horizontal: 0),
+                              margin: const EdgeInsets.symmetric(
+                                vertical: AppSpacing.sm,
+                                horizontal: 0,
+                              ),
                               decoration: BoxDecoration(
                                 color: Colors.white.withOpacity(0.15),
-                                borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-                                border: Border.all(color: Colors.white.withOpacity(0.4), width: 1.2),
+                                borderRadius: BorderRadius.circular(
+                                  AppSpacing.radiusLg,
+                                ),
+                                border: Border.all(
+                                  color: Colors.white.withOpacity(0.4),
+                                  width: 1.2,
+                                ),
                                 boxShadow: [
                                   BoxShadow(
                                     color: Colors.black.withOpacity(0.05),
@@ -127,18 +150,27 @@ class _ConversationsPageState extends State<ConversationsPage> {
                                   const SizedBox(width: AppSpacing.md),
                                   Icon(
                                     Icons.search_rounded,
-                                    color: _searchController.text.isNotEmpty ? Colors.white : Colors.white.withOpacity(0.8),
+                                    color: _searchController.text.isNotEmpty
+                                        ? Colors.white
+                                        : Colors.white.withOpacity(0.8),
                                     size: 22,
                                   ),
                                   const SizedBox(width: AppSpacing.sm),
                                   Expanded(
                                     child: TextField(
                                       controller: _searchController,
-                                      style: AppTypography.bodyLarge.copyWith(color: Colors.white),
+                                      style: AppTypography.bodyLarge.copyWith(
+                                        color: Colors.white,
+                                      ),
                                       cursorColor: Colors.white,
                                       decoration: InputDecoration(
                                         hintText: 'messaging.search_hint'.tr(),
-                                        hintStyle: AppTypography.bodyLarge.copyWith(color: Colors.white.withOpacity(0.7)),
+                                        hintStyle: AppTypography.bodyLarge
+                                            .copyWith(
+                                              color: Colors.white.withOpacity(
+                                                0.7,
+                                              ),
+                                            ),
                                         border: InputBorder.none,
                                         focusedBorder: InputBorder.none,
                                         enabledBorder: InputBorder.none,
@@ -146,7 +178,10 @@ class _ConversationsPageState extends State<ConversationsPage> {
                                         disabledBorder: InputBorder.none,
                                         filled: true,
                                         fillColor: Colors.transparent,
-                                        contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                              vertical: 12,
+                                            ),
                                       ),
                                       onChanged: (val) {
                                         setState(() {});
@@ -163,7 +198,11 @@ class _ConversationsPageState extends State<ConversationsPage> {
                                           color: Colors.white.withOpacity(0.2),
                                           shape: BoxShape.circle,
                                         ),
-                                        child: const Icon(Icons.close_rounded, size: 14, color: Colors.white),
+                                        child: const Icon(
+                                          Icons.close_rounded,
+                                          size: 14,
+                                          color: Colors.white,
+                                        ),
                                       ),
                                       onPressed: () {
                                         _searchController.clear();
@@ -194,7 +233,12 @@ class _ConversationsPageState extends State<ConversationsPage> {
                       child: Container(
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.85),
-                          border: Border(top: BorderSide(color: Colors.white.withOpacity(0.6), width: 1.5)),
+                          border: Border(
+                            top: BorderSide(
+                              color: Colors.white.withOpacity(0.6),
+                              width: 1.5,
+                            ),
+                          ),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -232,12 +276,23 @@ class _ConversationsPageState extends State<ConversationsPage> {
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
       child: Row(
         children: [
-          _buildChip('messaging.filters.all'.tr(), 'all', currentFilter == 'all'),
+          _buildChip(
+            'messaging.filters.all'.tr(),
+            'all',
+            currentFilter == 'all',
+          ),
           const SizedBox(width: AppSpacing.sm),
-          _buildChip('messaging.filters.unread'.tr(), 'unread', currentFilter == 'unread'),
+          _buildChip(
+            'messaging.filters.unread'.tr(),
+            'unread',
+            currentFilter == 'unread',
+          ),
           const SizedBox(width: AppSpacing.sm),
-          _buildChip('messaging.filters.read'.tr(), 'read', currentFilter == 'read'),
-          
+          _buildChip(
+            'messaging.filters.read'.tr(),
+            'read',
+            currentFilter == 'read',
+          ),
         ],
       ),
     );
@@ -248,15 +303,26 @@ class _ConversationsPageState extends State<ConversationsPage> {
       onTap: () => _cubit.setFilterType(value, isStudent: true),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: 8),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.lg,
+          vertical: 8,
+        ),
         decoration: BoxDecoration(
           color: isSelected ? AppColorsLight.primary : Colors.white,
           borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
           border: Border.all(
-            color: isSelected ? AppColorsLight.primary : AppColorsLight.textTertiary.withOpacity(0.2),
+            color: isSelected
+                ? AppColorsLight.primary
+                : AppColorsLight.textTertiary.withOpacity(0.2),
           ),
           boxShadow: isSelected
-              ? [BoxShadow(color: AppColorsLight.primary.withOpacity(0.3), blurRadius: 8, offset: const Offset(0, 2))]
+              ? [
+                  BoxShadow(
+                    color: AppColorsLight.primary.withOpacity(0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ]
               : [],
         ),
         child: Text(
@@ -290,7 +356,12 @@ class _ConversationsPageState extends State<ConversationsPage> {
         onRefresh: () => _cubit.loadStudentConversations(loadMore: false),
         child: ListView.builder(
           controller: _scrollController,
-          padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.md, AppSpacing.lg, 100),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.lg,
+            AppSpacing.md,
+            AppSpacing.lg,
+            100,
+          ),
           itemCount: state.conversations.length + (state.isLoadingMore ? 1 : 0),
           itemBuilder: (context, index) {
             if (index == state.conversations.length) {
@@ -300,7 +371,11 @@ class _ConversationsPageState extends State<ConversationsPage> {
               );
             }
             final conv = state.conversations[index];
-            return _buildConversationTile(context, conv, state.filterType == 'archived');
+            return _buildConversationTile(
+              context,
+              conv,
+              state.filterType == 'archived',
+            );
           },
         ),
       );
@@ -309,7 +384,11 @@ class _ConversationsPageState extends State<ConversationsPage> {
     return const SizedBox.shrink();
   }
 
-  Widget _buildConversationTile(BuildContext context, ConversationItem conv, bool isArchived) {
+  Widget _buildConversationTile(
+    BuildContext context,
+    ConversationItem conv,
+    bool isArchived,
+  ) {
     final hasUnread = conv.unreadCount > 0;
 
     return Dismissible(
@@ -321,13 +400,19 @@ class _ConversationsPageState extends State<ConversationsPage> {
         } else {
           _cubit.archiveConversation(conv.conversationId, true);
         }
-        
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(isArchived ? 'messaging.restored_success'.tr() : 'messaging.archived_success'.tr()),
+            content: Text(
+              isArchived
+                  ? 'messaging.restored_success'.tr()
+                  : 'messaging.archived_success'.tr(),
+            ),
             behavior: SnackBarBehavior.floating,
             backgroundColor: AppColorsLight.bgDark,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
           ),
         );
       },
@@ -336,10 +421,16 @@ class _ConversationsPageState extends State<ConversationsPage> {
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
         alignment: Alignment.centerRight,
         decoration: BoxDecoration(
-          color: isArchived ? AppColorsLight.success.withOpacity(0.8) : AppColorsLight.error.withOpacity(0.8),
+          color: isArchived
+              ? AppColorsLight.success.withOpacity(0.8)
+              : AppColorsLight.error.withOpacity(0.8),
           borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
         ),
-        child: Icon(isArchived ? Icons.unarchive_rounded : Icons.archive_rounded, color: Colors.white, size: 32),
+        child: Icon(
+          isArchived ? Icons.unarchive_rounded : Icons.archive_rounded,
+          color: Colors.white,
+          size: 32,
+        ),
       ),
       child: Container(
         margin: const EdgeInsets.only(bottom: AppSpacing.md),
@@ -365,7 +456,8 @@ class _ConversationsPageState extends State<ConversationsPage> {
           borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
           clipBehavior: Clip.antiAlias,
           child: InkWell(
-            onTap: () => context.push('/student/messages/${conv.conversationId}'),
+            onTap: () =>
+                context.push('/student/messages/${conv.conversationId}'),
             child: Padding(
               padding: const EdgeInsets.all(AppSpacing.lg),
               child: Row(
@@ -389,7 +481,9 @@ class _ConversationsPageState extends State<ConversationsPage> {
                           imageUrl: conv.otherPartyPhotoUrl,
                           radius: 26,
                           defaultIcon: Icons.business_rounded,
-                          backgroundColor: AppColorsLight.primary.withOpacity(0.1),
+                          backgroundColor: AppColorsLight.primary.withOpacity(
+                            0.1,
+                          ),
                           iconColor: AppColorsLight.primary,
                         ),
                       ),
@@ -404,7 +498,14 @@ class _ConversationsPageState extends State<ConversationsPage> {
                               color: AppColorsLight.success,
                               shape: BoxShape.circle,
                               border: Border.all(color: Colors.white, width: 2),
-                              boxShadow: [BoxShadow(color: AppColorsLight.success.withOpacity(0.4), blurRadius: 4)],
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppColorsLight.success.withOpacity(
+                                    0.4,
+                                  ),
+                                  blurRadius: 4,
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -429,8 +530,12 @@ class _ConversationsPageState extends State<ConversationsPage> {
                             Text(
                               conv.lastMessageAt,
                               style: AppTypography.caption.copyWith(
-                                color: hasUnread ? AppColorsLight.primary : AppColorsLight.textTertiary,
-                                fontWeight: hasUnread ? FontWeight.w600 : FontWeight.normal,
+                                color: hasUnread
+                                    ? AppColorsLight.primary
+                                    : AppColorsLight.textTertiary,
+                                fontWeight: hasUnread
+                                    ? FontWeight.w600
+                                    : FontWeight.normal,
                               ),
                             ),
                           ],
@@ -449,8 +554,12 @@ class _ConversationsPageState extends State<ConversationsPage> {
                               child: Text(
                                 conv.lastMessage,
                                 style: AppTypography.bodySmall.copyWith(
-                                  color: hasUnread ? AppColorsLight.textPrimary : AppColorsLight.textTertiary,
-                                  fontWeight: hasUnread ? FontWeight.w600 : FontWeight.normal,
+                                  color: hasUnread
+                                      ? AppColorsLight.textPrimary
+                                      : AppColorsLight.textTertiary,
+                                  fontWeight: hasUnread
+                                      ? FontWeight.w600
+                                      : FontWeight.normal,
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -458,8 +567,13 @@ class _ConversationsPageState extends State<ConversationsPage> {
                             ),
                             if (hasUnread)
                               Container(
-                                margin: const EdgeInsets.only(left: AppSpacing.sm),
-                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                margin: const EdgeInsets.only(
+                                  left: AppSpacing.sm,
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                  vertical: 2,
+                                ),
                                 decoration: BoxDecoration(
                                   color: AppColorsLight.primary,
                                   borderRadius: BorderRadius.circular(10),
@@ -508,33 +622,41 @@ class _ConversationsPageState extends State<ConversationsPage> {
     return Center(
       child: SingleChildScrollView(
         child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(AppSpacing.xl),
-            decoration: BoxDecoration(
-              color: AppColorsLight.primary.withOpacity(0.1),
-              shape: BoxShape.circle,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(AppSpacing.xl),
+              decoration: BoxDecoration(
+                color: AppColorsLight.primary.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                isArchived
+                    ? Icons.archive_outlined
+                    : Icons.chat_bubble_outline_rounded,
+                size: 48,
+                color: AppColorsLight.primary.withOpacity(0.5),
+              ),
             ),
-            child: Icon(
-              isArchived ? Icons.archive_outlined : Icons.chat_bubble_outline_rounded,
-              size: 48,
-              color: AppColorsLight.primary.withOpacity(0.5),
+            const SizedBox(height: AppSpacing.lg),
+            Text(
+              isArchived
+                  ? 'messaging.empty.archived_title'.tr()
+                  : 'messaging.empty.title'.tr(),
+              style: AppTypography.headingMedium,
             ),
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          Text(
-            isArchived ? 'messaging.empty.archived_title'.tr() : 'messaging.empty.title'.tr(),
-            style: AppTypography.headingMedium,
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          Text(
-            isArchived ? 'messaging.empty.archived_subtitle'.tr() : 'messaging.empty.subtitle'.tr(),
-            style: AppTypography.bodyMedium.copyWith(color: AppColorsLight.textSecondary),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              isArchived
+                  ? 'messaging.empty.archived_subtitle'.tr()
+                  : 'messaging.empty.subtitle'.tr(),
+              style: AppTypography.bodyMedium.copyWith(
+                color: AppColorsLight.textSecondary,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
     );
   }

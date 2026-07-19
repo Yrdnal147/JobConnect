@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -25,7 +26,11 @@ class _SearchPageState extends State<SearchPage> {
   final _focusNode = FocusNode();
 
   final List<String> _filters = [
-    'Tous', 'CDI', 'CDD', 'Stage académique', 'Stage pro',
+    'Tous',
+    'CDI',
+    'CDD',
+    'Stage académique',
+    'Stage pro',
   ];
 
   final List<IconData> _filterIcons = [
@@ -86,22 +91,33 @@ class _SearchPageState extends State<SearchPage> {
 
   String _formatOfferType(String type) {
     switch (type) {
-      case 'cdi':                 return 'home.filters.cdi'.tr();
-      case 'cdd':                 return 'home.filters.cdd'.tr();
-      case 'stage_academique':    return 'home.filters.academic_internship'.tr();
-      case 'stage_professionnel': return 'home.filters.pro_internship'.tr();
-      default:                    return type.toUpperCase();
+      case 'cdi':
+        return 'home.filters.cdi'.tr();
+      case 'cdd':
+        return 'home.filters.cdd'.tr();
+      case 'stage_academique':
+        return 'home.filters.academic_internship'.tr();
+      case 'stage_professionnel':
+        return 'home.filters.pro_internship'.tr();
+      default:
+        return type.toUpperCase();
     }
   }
 
   String _translateFilter(String filter) {
     switch (filter) {
-      case 'Tous': return 'home.filters.all'.tr();
-      case 'CDI': return 'home.filters.cdi'.tr();
-      case 'CDD': return 'home.filters.cdd'.tr();
-      case 'Stage académique': return 'home.filters.academic_internship'.tr();
-      case 'Stage pro': return 'home.filters.pro_internship'.tr();
-      default: return filter;
+      case 'Tous':
+        return 'home.filters.all'.tr();
+      case 'CDI':
+        return 'home.filters.cdi'.tr();
+      case 'CDD':
+        return 'home.filters.cdd'.tr();
+      case 'Stage académique':
+        return 'home.filters.academic_internship'.tr();
+      case 'Stage pro':
+        return 'home.filters.pro_internship'.tr();
+      default:
+        return filter;
     }
   }
 
@@ -126,40 +142,61 @@ class _SearchPageState extends State<SearchPage> {
                   height: size.height * 0.30,
                   child: Container(
                     decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [AppColorsLight.primary, Color(0xFF4A148C)],
-                      ),
+                      color: AppColorsLight.primary,
                     ),
                     child: SafeArea(
                       bottom: false,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.lg,
+                        ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const SizedBox(height: AppSpacing.md),
-                            Text(
-                              'search.title'.tr(), 
-                              style: AppTypography.displayMedium.copyWith(color: Colors.white),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              'search.subtitle'.tr(),
-                              style: AppTypography.bodySmall.copyWith(
-                                color: Colors.white.withOpacity(0.8),
-                              ),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'search.title'.tr(),
+                                        style: AppTypography.displayMedium.copyWith(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        'search.subtitle'.tr(),
+                                        style: AppTypography.bodySmall.copyWith(
+                                          color: Colors.white.withOpacity(0.8),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
                             const SizedBox(height: AppSpacing.lg),
 
                             // ── Barre de recherche ────────────────
                             Container(
-                              margin: const EdgeInsets.symmetric(vertical: AppSpacing.sm, horizontal: AppSpacing.sm),
+                              margin: const EdgeInsets.symmetric(
+                                vertical: AppSpacing.sm,
+                                horizontal: AppSpacing.sm,
+                              ),
                               decoration: BoxDecoration(
                                 color: Colors.white.withOpacity(0.15),
-                                borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-                                border: Border.all(color: Colors.white.withOpacity(0.4), width: 1.2),
+                                borderRadius: BorderRadius.circular(
+                                  AppSpacing.radiusLg,
+                                ),
+                                border: Border.all(
+                                  color: Colors.white.withOpacity(0.4),
+                                  width: 1.2,
+                                ),
                                 boxShadow: [
                                   BoxShadow(
                                     color: Colors.black.withOpacity(0.05),
@@ -173,7 +210,9 @@ class _SearchPageState extends State<SearchPage> {
                                   const SizedBox(width: AppSpacing.md),
                                   Icon(
                                     Icons.search_rounded,
-                                    color: hasQuery ? Colors.white : Colors.white.withOpacity(0.8),
+                                    color: hasQuery
+                                        ? Colors.white
+                                        : Colors.white.withOpacity(0.8),
                                     size: 22,
                                   ),
                                   const SizedBox(width: AppSpacing.sm),
@@ -181,19 +220,29 @@ class _SearchPageState extends State<SearchPage> {
                                     child: TextField(
                                       controller: _searchController,
                                       focusNode: _focusNode,
-                                      style: AppTypography.bodyLarge.copyWith(color: Colors.white),
+                                      style: AppTypography.bodyLarge.copyWith(
+                                        color: Colors.white,
+                                      ),
                                       cursorColor: Colors.white,
                                       decoration: InputDecoration(
                                         hintText: 'search.search_hint'.tr(),
-                                        hintStyle: AppTypography.bodyLarge.copyWith(color: Colors.white.withOpacity(0.7)),
-                                        border: InputBorder.none, 
+                                        hintStyle: AppTypography.bodyLarge
+                                            .copyWith(
+                                              color: Colors.white.withOpacity(
+                                                0.7,
+                                              ),
+                                            ),
+                                        border: InputBorder.none,
                                         focusedBorder: InputBorder.none,
                                         enabledBorder: InputBorder.none,
                                         errorBorder: InputBorder.none,
                                         disabledBorder: InputBorder.none,
-                                        filled: true, 
+                                        filled: true,
                                         fillColor: Colors.transparent,
-                                        contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                              vertical: 12,
+                                            ),
                                       ),
                                       onChanged: _onChanged,
                                       onSubmitted: (v) => _cubit.search(v),
@@ -231,7 +280,8 @@ class _SearchPageState extends State<SearchPage> {
                   top: size.height * 0.27,
                   child: ClipRRect(
                     borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(32)),
+                      top: Radius.circular(32),
+                    ),
                     child: BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 18.0, sigmaY: 18.0),
                       child: Container(
@@ -246,84 +296,126 @@ class _SearchPageState extends State<SearchPage> {
                         ),
                         child: ClipRRect(
                           borderRadius: const BorderRadius.vertical(
-                              top: Radius.circular(32)),
+                            top: Radius.circular(32),
+                          ),
                           child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: AppSpacing.lg),
-                        // Filtres s'affichent uniquement s'il y a des résultats
-                        if (state is SearchLoaded)
-                          Padding(
-                            padding: const EdgeInsets.only(left: AppSpacing.lg, bottom: AppSpacing.md),
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                children: List.generate(_filters.length, (i) {
-                                  final filter = _filters[i];
-                                  final icon = _filterIcons[i];
-                                  final isSelected = state.activeFilter == filter;
-                                  return Padding(
-                                    padding: const EdgeInsets.only(right: AppSpacing.sm),
-                                    child: GestureDetector(
-                                      onTap: () => _cubit.filterByType(filter),
-                                      child: AnimatedContainer(
-                                        duration: const Duration(milliseconds: 200),
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: AppSpacing.md,
-                                          vertical: AppSpacing.sm,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          gradient: isSelected
-                                              ? LinearGradient(colors: [
-                                                  AppColorsLight.primary,
-                                                  AppColorsLight.secondary,
-                                                ])
-                                              : null,
-                                          color: isSelected ? null : AppColorsLight.bgCard,
-                                          borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
-                                          border: Border.all(
-                                            color: isSelected ? Colors.transparent : AppColorsLight.bgSurface,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: AppSpacing.lg),
+                              // Filtres s'affichent uniquement s'il y a des résultats
+                              if (state is SearchLoaded)
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: AppSpacing.lg,
+                                    bottom: AppSpacing.md,
+                                  ),
+                                  child: SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Row(
+                                      children: List.generate(_filters.length, (
+                                        i,
+                                      ) {
+                                        final filter = _filters[i];
+                                        final icon = _filterIcons[i];
+                                        final isSelected =
+                                            state.activeFilter == filter;
+                                        return Padding(
+                                          padding: const EdgeInsets.only(
+                                            right: AppSpacing.sm,
                                           ),
-                                          boxShadow: isSelected
-                                              ? [
-                                                  BoxShadow(
-                                                    color: AppColorsLight.primary.withOpacity(0.25),
-                                                    blurRadius: 10,
-                                                    offset: const Offset(0, 4),
+                                          child: GestureDetector(
+                                            onTap: () =>
+                                                _cubit.filterByType(filter),
+                                            child: AnimatedContainer(
+                                              duration: const Duration(
+                                                milliseconds: 200,
+                                              ),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: AppSpacing.md,
+                                                    vertical: AppSpacing.sm,
                                                   ),
-                                                ]
-                                              : [],
-                                        ),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Icon(
-                                              icon,
-                                              size: 13,
-                                              color: isSelected ? Colors.white : AppColorsLight.textSecondary,
-                                            ),
-                                            const SizedBox(width: 5),
-                                            Text(
-                                              _translateFilter(filter),
-                                              style: AppTypography.labelSmall.copyWith(
-                                                color: isSelected ? Colors.white : AppColorsLight.textSecondary,
-                                                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                                              decoration: BoxDecoration(
+                                                gradient: isSelected
+                                                    ? LinearGradient(
+                                                        colors: [
+                                                          AppColorsLight
+                                                              .primary,
+                                                          AppColorsLight
+                                                              .secondary,
+                                                        ],
+                                                      )
+                                                    : null,
+                                                color: isSelected
+                                                    ? null
+                                                    : AppColorsLight.bgCard,
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                      AppSpacing.radiusFull,
+                                                    ),
+                                                border: Border.all(
+                                                  color: isSelected
+                                                      ? Colors.transparent
+                                                      : AppColorsLight
+                                                            .bgSurface,
+                                                ),
+                                                boxShadow: isSelected
+                                                    ? [
+                                                        BoxShadow(
+                                                          color: AppColorsLight
+                                                              .primary
+                                                              .withOpacity(
+                                                                0.25,
+                                                              ),
+                                                          blurRadius: 10,
+                                                          offset: const Offset(
+                                                            0,
+                                                            4,
+                                                          ),
+                                                        ),
+                                                      ]
+                                                    : [],
+                                              ),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Icon(
+                                                    icon,
+                                                    size: 13,
+                                                    color: isSelected
+                                                        ? Colors.white
+                                                        : AppColorsLight
+                                                              .textSecondary,
+                                                  ),
+                                                  const SizedBox(width: 5),
+                                                  Text(
+                                                    _translateFilter(filter),
+                                                    style: AppTypography
+                                                        .labelSmall
+                                                        .copyWith(
+                                                          color: isSelected
+                                                              ? Colors.white
+                                                              : AppColorsLight
+                                                                    .textSecondary,
+                                                          fontWeight: isSelected
+                                                              ? FontWeight.w600
+                                                              : FontWeight.w400,
+                                                        ),
+                                                  ),
+                                                ],
                                               ),
                                             ),
-                                          ],
-                                        ),
-                                      ),
+                                          ),
+                                        );
+                                      }),
                                     ),
-                                  );
-                                }),
-                              ),
-                            ),
+                                  ),
+                                ),
+
+                              // Contenu (Empty, Loading, Error, Results)
+                              Expanded(child: _buildBody(context, state)),
+                            ],
                           ),
-                        
-                        // Contenu (Empty, Loading, Error, Results)
-                        Expanded(child: _buildBody(context, state)),
-                      ],
-                    ),
                         ),
                       ),
                     ),
@@ -357,12 +449,7 @@ class _SearchPageState extends State<SearchPage> {
 
   Widget _buildEmptyState(List<String> recentSearches) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(
-        AppSpacing.lg,
-        0,
-        AppSpacing.lg,
-        120,
-      ),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.lg, 0, AppSpacing.lg, 120),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -372,12 +459,16 @@ class _SearchPageState extends State<SearchPage> {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.history_rounded,
-                        size: 16,
-                        color: AppColorsLight.textPrimary.withOpacity(0.6)),
+                    Icon(
+                      Icons.history_rounded,
+                      size: 16,
+                      color: AppColorsLight.textPrimary.withOpacity(0.6),
+                    ),
                     const SizedBox(width: 6),
-                    Text('search.recent_searches'.tr(),
-                        style: AppTypography.headingSmall),
+                    Text(
+                      'search.recent_searches'.tr(),
+                      style: AppTypography.headingSmall,
+                    ),
                   ],
                 ),
                 TextButton(
@@ -398,45 +489,47 @@ class _SearchPageState extends State<SearchPage> {
               ],
             ),
             const SizedBox(height: AppSpacing.sm),
-            ...recentSearches.map((search) => Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-                    onTap: () => _onTapSuggestion(search),
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.symmetric(vertical: AppSpacing.sm),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 36,
-                            height: 36,
-                            decoration: BoxDecoration(
-                              color: AppColorsLight.bgCard,
-                              shape: BoxShape.circle,
-                              border:
-                                  Border.all(color: AppColorsLight.bgSurface),
-                            ),
-                            child: const Icon(
-                              Icons.history_rounded,
-                              size: 16,
-                              color: AppColorsLight.textTertiary,
-                            ),
+            ...recentSearches.map(
+              (search) => Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                  onTap: () => _onTapSuggestion(search),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: AppSpacing.sm,
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 36,
+                          height: 36,
+                          decoration: BoxDecoration(
+                            color: AppColorsLight.bgCard,
+                            shape: BoxShape.circle,
+                            border: Border.all(color: AppColorsLight.bgSurface),
                           ),
-                          const SizedBox(width: AppSpacing.md),
-                          Expanded(
-                            child: Text(search, style: AppTypography.bodyMedium),
-                          ),
-                          Icon(
-                            Icons.north_west_rounded,
+                          child: const Icon(
+                            Icons.history_rounded,
                             size: 16,
                             color: AppColorsLight.textTertiary,
                           ),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(width: AppSpacing.md),
+                        Expanded(
+                          child: Text(search, style: AppTypography.bodyMedium),
+                        ),
+                        Icon(
+                          Icons.north_west_rounded,
+                          size: 16,
+                          color: AppColorsLight.textTertiary,
+                        ),
+                      ],
                     ),
                   ),
-                )),
+                ),
+              ),
+            ),
             const SizedBox(height: AppSpacing.lg),
             Container(height: 1, color: AppColorsLight.bgSurface),
             const SizedBox(height: AppSpacing.lg),
@@ -445,8 +538,11 @@ class _SearchPageState extends State<SearchPage> {
           // Tendances
           Row(
             children: [
-              Icon(Icons.local_fire_department_rounded,
-                  size: 16, color: AppColorsLight.bgDark.withOpacity(0.6)),
+              Icon(
+                Icons.local_fire_department_rounded,
+                size: 16,
+                color: AppColorsLight.bgDark.withOpacity(0.6),
+              ),
               const SizedBox(width: 6),
               Text('search.trending'.tr(), style: AppTypography.headingSmall),
             ],
@@ -524,40 +620,45 @@ class _SearchPageState extends State<SearchPage> {
   // ─── Aucun résultat ──────────────────────────────────────────────────────────
 
   Widget _buildNoResults(String query) {
-  return LayoutBuilder(
-    builder: (context, constraints) {
-      return SingleChildScrollView(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(minHeight: constraints.maxHeight),
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.xl),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.search_off_rounded,
-                      size: 56, color: AppColorsLight.textTertiary),
-                  const SizedBox(height: AppSpacing.md),
-                  Text('search.no_results_title'.tr(),
-                      style: AppTypography.headingSmall,
-                      textAlign: TextAlign.center),
-                  const SizedBox(height: AppSpacing.sm),
-                  Text(
-                    'search.no_results_subtitle'.tr(args: [query]),
-                    style: AppTypography.bodySmall.copyWith(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.xl),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.search_off_rounded,
+                      size: 56,
                       color: AppColorsLight.textTertiary,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
+                    const SizedBox(height: AppSpacing.md),
+                    Text(
+                      'search.no_results_title'.tr(),
+                      style: AppTypography.headingSmall,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    Text(
+                      'search.no_results_subtitle'.tr(args: [query]),
+                      style: AppTypography.bodySmall.copyWith(
+                        color: AppColorsLight.textTertiary,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      );
-    },
-  );
-}
+        );
+      },
+    );
+  }
 
   // ─── Erreur ──────────────────────────────────────────────────────────────────
 
@@ -568,21 +669,31 @@ class _SearchPageState extends State<SearchPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.wifi_off_rounded,
-                color: AppColorsLight.textTertiary, size: 48),
+            const Icon(
+              Icons.wifi_off_rounded,
+              color: AppColorsLight.textTertiary,
+              size: 48,
+            ),
             const SizedBox(height: AppSpacing.md),
-            Text('search.error_title'.tr(),
-                style: AppTypography.headingSmall, textAlign: TextAlign.center),
+            Text(
+              'search.error_title'.tr(),
+              style: AppTypography.headingSmall,
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: AppSpacing.sm),
-            Text(message,
-                style: AppTypography.bodySmall, textAlign: TextAlign.center),
+            Text(
+              message,
+              style: AppTypography.bodySmall,
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: AppSpacing.lg),
             ElevatedButton.icon(
               onPressed: () => _cubit.search(_searchController.text),
               icon: const Icon(Icons.refresh_rounded),
               label: Text('home.offers.retry'.tr()),
               style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColorsLight.primary),
+                backgroundColor: AppColorsLight.primary,
+              ),
             ),
           ],
         ),
@@ -593,7 +704,10 @@ class _SearchPageState extends State<SearchPage> {
   // ─── Résultats ───────────────────────────────────────────────────────────────
 
   Widget _buildResults(
-      BuildContext context, String query, List<SearchOfferItem> results) {
+    BuildContext context,
+    String query,
+    List<SearchOfferItem> results,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -603,8 +717,12 @@ class _SearchPageState extends State<SearchPage> {
             children: [
               Text(
                 results.length > 1
-                    ? 'search.results_count_plural'.tr(args: [results.length.toString()])
-                    : 'search.results_count_single'.tr(args: [results.length.toString()]),
+                    ? 'search.results_count_plural'.tr(
+                        args: [results.length.toString()],
+                      )
+                    : 'search.results_count_single'.tr(
+                        args: [results.length.toString()],
+                      ),
                 style: AppTypography.bodySmall.copyWith(
                   color: AppColorsLight.textTertiary,
                 ),
@@ -642,7 +760,8 @@ class _SearchPageState extends State<SearchPage> {
                   borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
                   clipBehavior: Clip.antiAlias,
                   child: InkWell(
-                    onTap: () => context.push('/student/offer/${offer.offerId}'),
+                    onTap: () =>
+                        context.push('/student/offer/${offer.offerId}'),
                     child: _SearchOfferCard(
                       offer: offer,
                       formatType: _formatOfferType,
@@ -658,15 +777,11 @@ class _SearchPageState extends State<SearchPage> {
   }
 }
 
-
 class _SearchOfferCard extends StatelessWidget {
   final SearchOfferItem offer;
   final String Function(String) formatType;
 
-  const _SearchOfferCard({
-    required this.offer,
-    required this.formatType,
-  });
+  const _SearchOfferCard({required this.offer, required this.formatType});
 
   static const _avatarGradients = [
     [Color(0xFF0052CC), Color(0xFF00D9FF)],
@@ -681,8 +796,8 @@ class _SearchOfferCard extends StatelessWidget {
     final scoreColor = offer.matchScore >= 75
         ? AppColorsLight.success
         : offer.matchScore >= 50
-            ? AppColorsLight.warning
-            : AppColorsLight.error;
+        ? AppColorsLight.warning
+        : AppColorsLight.error;
 
     final gradientIndex = offer.offerId.hashCode % _avatarGradients.length;
     final gradient = _avatarGradients[gradientIndex.abs()];
@@ -757,7 +872,10 @@ class _SearchOfferCard extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: AppColorsLight.primary.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
@@ -773,7 +891,10 @@ class _SearchOfferCard extends StatelessWidget {
               const Spacer(),
               if (offer.matchScore > 0)
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: scoreColor.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
@@ -781,7 +902,11 @@ class _SearchOfferCard extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.auto_awesome_rounded, size: 12, color: scoreColor),
+                      Icon(
+                        Icons.auto_awesome_rounded,
+                        size: 12,
+                        color: scoreColor,
+                      ),
                       const SizedBox(width: 4),
                       Text(
                         '${offer.matchScore}%',

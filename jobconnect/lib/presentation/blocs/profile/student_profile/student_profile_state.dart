@@ -56,12 +56,23 @@ class StudentProfileData extends Equatable {
 
   @override
   List<Object?> get props => [
-        fullName, email, profileScore, completionLabel,
-        photoUrl, cvUrl, cvFileName, educationLevel,
-        fieldOfStudy, targetOpportunity, location,
-        linkedinUrl, portfolioUrl, skills,
-        verificationStatus, isVerified,
-      ];
+    fullName,
+    email,
+    profileScore,
+    completionLabel,
+    photoUrl,
+    cvUrl,
+    cvFileName,
+    educationLevel,
+    fieldOfStudy,
+    targetOpportunity,
+    location,
+    linkedinUrl,
+    portfolioUrl,
+    skills,
+    verificationStatus,
+    isVerified,
+  ];
 }
 
 abstract class StudentProfileState extends Equatable {
@@ -132,10 +143,7 @@ class StudentProfileError extends StudentProfileState {
   final String message;
   final StudentProfileData? lastKnownProfile;
 
-  const StudentProfileError({
-    required this.message,
-    this.lastKnownProfile,
-  });
+  const StudentProfileError({required this.message, this.lastKnownProfile});
 
   @override
   List<Object?> get props => [message, lastKnownProfile];

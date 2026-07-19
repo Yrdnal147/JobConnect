@@ -57,10 +57,7 @@ class OfferDetailError extends OfferDetailState {
   final String message;
   final OfferItem? lastKnownOffer;
 
-  const OfferDetailError({
-    required this.message,
-    this.lastKnownOffer,
-  });
+  const OfferDetailError({required this.message, this.lastKnownOffer});
 
   @override
   List<Object?> get props => [message, lastKnownOffer];

@@ -7,8 +7,8 @@ class AllCandidatesCubit extends Cubit<AllCandidatesState> {
   String? _currentOfferId;
 
   AllCandidatesCubit({SupabaseClient? client})
-      : _client = client ?? Supabase.instance.client,
-        super(const AllCandidatesInitial());
+    : _client = client ?? Supabase.instance.client,
+      super(const AllCandidatesInitial());
 
   // ─── Charge les candidatures (toutes ou filtrées par offre) ──────────────
 
@@ -47,11 +47,11 @@ class AllCandidatesCubit extends Cubit<AllCandidatesState> {
       // Filtre par offre si spécifié
       final appsRes = offerId != null
           ? await _client
-              .from('applications')
-              .select('id, match_score, status, student_id, offer_id')
-              .eq('company_id', companyId)
-              .eq('offer_id', offerId)
-              .order('created_at', ascending: false)
+                .from('applications')
+                .select('id, match_score, status, student_id, offer_id')
+                .eq('company_id', companyId)
+                .eq('offer_id', offerId)
+                .order('created_at', ascending: false)
           : await query;
 
       final apps = appsRes as List;
@@ -84,16 +84,18 @@ class AllCandidatesCubit extends Cubit<AllCandidatesState> {
               .maybeSingle();
 
           if (profileRes != null) {
-            candidates.add(CandidateItem(
-              applicationId: app['id'] as String,
-              studentName: profileRes['full_name'] as String? ?? 'Candidat',
-              offerTitle: offerRes?['title'] as String? ?? 'Offre',
-              status: app['status'] as String? ?? 'pending',
-              matchScore: app['match_score'] as int? ?? 0,
-              photoUrl: profileRes['photo_url'] as String?,
-              educationLevel: profileRes['education_level'] as String? ?? '',
-              fieldOfStudy: profileRes['field_of_study'] as String? ?? '',
-            ));
+            candidates.add(
+              CandidateItem(
+                applicationId: app['id'] as String,
+                studentName: profileRes['full_name'] as String? ?? 'Candidat',
+                offerTitle: offerRes?['title'] as String? ?? 'Offre',
+                status: app['status'] as String? ?? 'pending',
+                matchScore: app['match_score'] as int? ?? 0,
+                photoUrl: profileRes['photo_url'] as String?,
+                educationLevel: profileRes['education_level'] as String? ?? '',
+                fieldOfStudy: profileRes['field_of_study'] as String? ?? '',
+              ),
+            );
           }
         } catch (_) {
           continue;

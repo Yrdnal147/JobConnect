@@ -71,16 +71,14 @@ class _ActiveOffersPageState extends State<ActiveOffersPage> {
                   height: size.height * 0.25,
                   child: Container(
                     decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [AppColorsLight.primary, Color(0xFF4A148C)],
-                      ),
+                      color: AppColorsLight.primary,
                     ),
                     child: SafeArea(
                       bottom: false,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.lg,
+                        ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -93,22 +91,37 @@ class _ActiveOffersPageState extends State<ActiveOffersPage> {
                                     IconButton(
                                       padding: EdgeInsets.zero,
                                       constraints: const BoxConstraints(),
-                                      icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.white),
-                                      onPressed: () => context.go('/company/dashboard'),
+                                      icon: const Icon(
+                                        Icons.arrow_back_ios_rounded,
+                                        color: Colors.white,
+                                      ),
+                                      onPressed: () =>
+                                          context.go('/company/dashboard'),
                                     ),
                                     const SizedBox(width: AppSpacing.md),
                                     Text(
                                       'Offres actives',
-                                      style: AppTypography.displayMedium.copyWith(color: Colors.white, fontSize: 26),
+                                      style: AppTypography.displayMedium
+                                          .copyWith(
+                                            color: Colors.white,
+                                            fontSize: 26,
+                                          ),
                                     ),
                                   ],
                                 ),
                                 if (state is OffersLoaded)
                                   Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                      vertical: 4,
+                                    ),
                                     decoration: BoxDecoration(
-                                      color: Colors.white.withValues(alpha: 0.15),
-                                      borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.15,
+                                      ),
+                                      borderRadius: BorderRadius.circular(
+                                        AppSpacing.radiusFull,
+                                      ),
                                     ),
                                     child: Text(
                                       '${state.activeCount}',
@@ -169,8 +182,11 @@ class _ActiveOffersPageState extends State<ActiveOffersPage> {
             floatingActionButton: FloatingActionButton.extended(
               onPressed: () => context.push('/company/offers/create'),
               backgroundColor: AppColorsLight.primary,
-              icon: const Icon(Icons.add_rounded, color: AppColorsLight.bgDark,),
-              label: const Text('Nouvelle offre', style: TextStyle( color: AppColorsLight.bgDark,),),
+              icon: const Icon(Icons.add_rounded, color: AppColorsLight.bgDark),
+              label: const Text(
+                'Nouvelle offre',
+                style: TextStyle(color: AppColorsLight.bgDark),
+              ),
             ),
           );
         },
@@ -220,9 +236,7 @@ class _ActiveOffersPageState extends State<ActiveOffersPage> {
       decoration: BoxDecoration(
         color: AppColorsLight.bgCard,
         borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-        border: Border.all(
-          color: AppColorsLight.primary.withOpacity(0.3),
-        ),
+        border: Border.all(color: AppColorsLight.primary.withOpacity(0.3)),
         boxShadow: [
           BoxShadow(
             color: AppColorsLight.primary.withOpacity(0.05),
@@ -247,8 +261,7 @@ class _ActiveOffersPageState extends State<ActiveOffersPage> {
                   height: 48,
                   decoration: BoxDecoration(
                     color: AppColorsLight.primary.withOpacity(0.15),
-                    borderRadius:
-                        BorderRadius.circular(AppSpacing.radiusMd),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                   ),
                   child: const Icon(
                     Icons.work_rounded,
@@ -271,8 +284,7 @@ class _ActiveOffersPageState extends State<ActiveOffersPage> {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        _formatOfferType(
-                            offer.offerType, offer.durationMonths),
+                        _formatOfferType(offer.offerType, offer.durationMonths),
                         style: AppTypography.bodySmall.copyWith(
                           color: AppColorsLight.primary,
                         ),
@@ -286,10 +298,7 @@ class _ActiveOffersPageState extends State<ActiveOffersPage> {
                             color: AppColorsLight.textTertiary,
                           ),
                           const SizedBox(width: 2),
-                          Text(
-                            offer.location,
-                            style: AppTypography.caption,
-                          ),
+                          Text(offer.location, style: AppTypography.caption),
                         ],
                       ),
                     ],
@@ -308,7 +317,8 @@ class _ActiveOffersPageState extends State<ActiveOffersPage> {
                       decoration: BoxDecoration(
                         color: AppColorsLight.primary.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(
-                            AppSpacing.radiusFull),
+                          AppSpacing.radiusFull,
+                        ),
                       ),
                       child: Text(
                         '${offer.applicationsCount} candidat${offer.applicationsCount > 1 ? 's' : ''}',
@@ -318,10 +328,7 @@ class _ActiveOffersPageState extends State<ActiveOffersPage> {
                       ),
                     ),
                     const SizedBox(height: 6),
-                    Text(
-                      offer.postedAt,
-                      style: AppTypography.caption,
-                    ),
+                    Text(offer.postedAt, style: AppTypography.caption),
                   ],
                 ),
               ],
@@ -344,8 +351,7 @@ class _ActiveOffersPageState extends State<ActiveOffersPage> {
         decoration: BoxDecoration(
           color: AppColorsLight.bgCard,
           borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-          border: Border.all(
-              color: AppColorsLight.primary.withOpacity(0.2)),
+          border: Border.all(color: AppColorsLight.primary.withOpacity(0.2)),
         ),
       ),
     );
@@ -395,8 +401,11 @@ class _ActiveOffersPageState extends State<ActiveOffersPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.wifi_off_rounded,
-                color: AppColorsLight.textTertiary, size: 48),
+            const Icon(
+              Icons.wifi_off_rounded,
+              color: AppColorsLight.textTertiary,
+              size: 48,
+            ),
             const SizedBox(height: AppSpacing.md),
             Text(
               'Impossible de charger les offres',

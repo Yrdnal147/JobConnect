@@ -47,13 +47,9 @@ Future<void> initDependencies() async {
     () => MastraRemoteDataSource(),
   );
 
-  sl.registerLazySingleton<IAuthDataSource>(
-    () => AuthDataSourceImpl(sl()),
-  );
+  sl.registerLazySingleton<IAuthDataSource>(() => AuthDataSourceImpl(sl()));
 
-  sl.registerLazySingleton<IAuthRepository>(
-    () => AuthRepositoryImpl(sl()),
-  );
+  sl.registerLazySingleton<IAuthRepository>(() => AuthRepositoryImpl(sl()));
 
   sl.registerLazySingleton(() => LoginUseCase(sl()));
   sl.registerLazySingleton(() => RegisterUseCase(sl()));
@@ -74,69 +70,47 @@ Future<void> initDependencies() async {
 
   sl.registerLazySingleton(() => CompanyDataSource());
 
-  sl.registerFactory(
-    () => CompanyProfileCubit(dataSource: sl()),
-  );
+  sl.registerFactory(() => CompanyProfileCubit(dataSource: sl()));
+
+  sl.registerFactory(() => DashboardCubit());
+
+  sl.registerFactory(() => AllCandidatesCubit());
+
+  sl.registerFactory(() => OffersCubit());
 
   sl.registerFactory(
-    () => DashboardCubit(),
+    () =>
+        CreateOfferCubit(mastraRemoteDataSource: sl<IMastraRemoteDataSource>()),
   );
 
-  sl.registerFactory(
-    () => AllCandidatesCubit(),
-  );
-
-  sl.registerFactory(
-    () => OffersCubit(),
-  );
-
-  sl.registerFactory(
-    () => CreateOfferCubit(mastraRemoteDataSource: sl<IMastraRemoteDataSource>()),
-  );
-
-  sl.registerFactory(
-    () => OfferDetailCubit(),
-  );
+  sl.registerFactory(() => OfferDetailCubit());
 
   // ===== STUDENT MODULE =====
 
-  sl.registerFactory(
-    () => FeedCubit(),
-  );
+  sl.registerFactory(() => FeedCubit());
 
-  sl.registerFactory(
-    () => OfferDetailStudentCubit(),
-  );
+  sl.registerFactory(() => OfferDetailStudentCubit());
 
-  sl.registerFactory(
-    () => CompanyDetailCubit(),
-  );
+  sl.registerFactory(() => CompanyDetailCubit());
 
-  sl.registerFactory(
-    () => StudentProfileCubit(mastraRemoteDataSource: sl()),
-  );
+  sl.registerFactory(() => StudentProfileCubit(mastraRemoteDataSource: sl()));
   // Candidate detail
-sl.registerFactory(() => CandidateDetailCubit());
+  sl.registerFactory(() => CandidateDetailCubit());
 
-  sl.registerFactory(
-    () => SuccessCubit(),
-  );
+  sl.registerFactory(() => SuccessCubit());
   // Applications
-sl.registerFactory(() => ApplicationsCubit());
+  sl.registerFactory(() => ApplicationsCubit());
 
   // ===== MESSAGING MODULE =====
 
-  sl.registerFactory(
-    () => MessagingCubit(mastraDataSource: sl()),
-  );
+  sl.registerFactory(() => MessagingCubit(mastraDataSource: sl()));
 
-  
-// recherche...
-sl.registerFactory(() => SearchCubit());
+  // recherche...
+  sl.registerFactory(() => SearchCubit());
 
-// Notifications
-sl.registerFactory(() => NotificationCubit(sl()));
-//agent de Matching
-//sl.registerLazySingleton(() => MatchingService());
-//sl.registerFactory(() => MatchingCubit(service: sl()));
+  // Notifications
+  sl.registerFactory(() => NotificationCubit(sl()));
+  //agent de Matching
+  //sl.registerLazySingleton(() => MatchingService());
+  //sl.registerFactory(() => MatchingCubit(service: sl()));
 }

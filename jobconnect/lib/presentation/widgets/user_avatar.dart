@@ -22,7 +22,11 @@ class UserAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final bgColor = backgroundColor ?? (gradientColors == null ? theme.colorScheme.primaryContainer.withOpacity(0.5) : null);
+    final bgColor =
+        backgroundColor ??
+        (gradientColors == null
+            ? theme.colorScheme.primaryContainer.withOpacity(0.5)
+            : null);
     final fgColor = iconColor ?? theme.colorScheme.primary;
 
     Widget buildPlaceholder() {
@@ -70,10 +74,7 @@ class UserAvatar extends StatelessWidget {
             child: SizedBox(
               width: radius,
               height: radius,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: fgColor,
-              ),
+              child: CircularProgressIndicator(strokeWidth: 2, color: fgColor),
             ),
           ),
         ),

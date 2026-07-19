@@ -9,8 +9,8 @@ class FeedCubit extends Cubit<FeedState> {
   late final StreamSubscription<AuthState> _authSubscription;
 
   FeedCubit({SupabaseClient? client})
-      : _client = client ?? Supabase.instance.client,
-        super(const FeedInitial()) {
+    : _client = client ?? Supabase.instance.client,
+      super(const FeedInitial()) {
     _authSubscription = _client.auth.onAuthStateChange.listen((data) {
       if (data.event == AuthChangeEvent.userUpdated && state is FeedLoaded) {
         loadFeed();
@@ -30,22 +30,24 @@ class FeedCubit extends Cubit<FeedState> {
         return;
       }
 
-      final userName =
-          user.userMetadata?['full_name'] as String? ?? 'Candidat';
+      final userName = user.userMetadata?['full_name'] as String? ?? 'Candidat';
 
       // Récupère le profil étudiant
       final profileRes = await _client
           .from('student_profiles')
-          .select('id, profile_score, field_of_study, education_level, photo_url')
+          .select(
+            'id, profile_score, field_of_study, education_level, photo_url',
+          )
           .eq('user_id', user.id)
           .maybeSingle();
 
-      final hasProfile = profileRes != null &&
+      final hasProfile =
+          profileRes != null &&
           (profileRes['field_of_study'] != null ||
               profileRes['education_level'] != null);
 
-      final profileScore     = profileRes?['profile_score'] as int? ?? 0;
-      final photoUrl         = profileRes?['photo_url'] as String?;
+      final profileScore = profileRes?['profile_score'] as int? ?? 0;
+      final photoUrl = profileRes?['photo_url'] as String?;
       final studentProfileId = profileRes?['id'] as String?;
 
       // ── Lecture du feed_cache Mastra ──────────────────────────────────────
@@ -62,7 +64,7 @@ class FeedCubit extends Cubit<FeedState> {
           if (cacheRes != null && cacheRes['cards'] != null) {
             final cards = cacheRes['cards'] as List;
             for (final card in cards) {
-              final offerId    = card['offerId'] as String?;
+              final offerId = card['offerId'] as String?;
               final matchScore = card['matchScore'] as int?;
               if (offerId != null && matchScore != null) {
                 mastraScores[offerId] = matchScore;
@@ -86,13 +88,15 @@ class FeedCubit extends Cubit<FeedState> {
       final offersRaw = offersRes as List;
 
       if (offersRaw.isEmpty) {
-        emit(FeedLoaded(
-          offers: [],
-          userName: userName,
-          photoUrl: photoUrl,
-          hasProfile: hasProfile,
-          profileScore: profileScore,
-        ));
+        emit(
+          FeedLoaded(
+            offers: [],
+            userName: userName,
+            photoUrl: photoUrl,
+            hasProfile: hasProfile,
+            profileScore: profileScore,
+          ),
+        );
         return;
       }
 
@@ -107,7 +111,7 @@ class FeedCubit extends Cubit<FeedState> {
 
           for (final app in applicationsRes as List) {
             final offerId = app['offer_id'] as String;
-            final score   = app['match_score'] as int? ?? 0;
+            final score = app['match_score'] as int? ?? 0;
             applicationScores[offerId] = score;
           }
         } catch (_) {}
@@ -120,14 +124,18 @@ class FeedCubit extends Cubit<FeedState> {
         final offerId = offer['id'] as String;
         final offerType = offer['offer_type'] as String? ?? '';
 
-        final matchScore = mastraScores[offerId]       // Score IA Mastra
-            ?? applicationScores[offerId]              // Score depuis candidature
-            ?? _simulateScore(offerType, profileScore); // Simulé en fallback
+        final matchScore =
+            mastraScores[offerId] // Score IA Mastra
+            ??
+            applicationScores[offerId] // Score depuis candidature
+            ??
+            _simulateScore(offerType, profileScore); // Simulé en fallback
 
         return FeedOffer(
           offerId: offerId,
           title: offer['title'] as String,
-          companyName: company['name'] as String? ?? 'profile.default_name'.tr(),
+          companyName:
+              company['name'] as String? ?? 'profile.default_name'.tr(),
           companyLogo: company['logo_url'] as String?,
           offerType: offerType,
           location: offer['location'] as String? ?? 'Douala',
@@ -142,17 +150,24 @@ class FeedCubit extends Cubit<FeedState> {
         offers.sort((a, b) => b.matchScore.compareTo(a.matchScore));
       }
 
-      // Filtrer les offres pour ne garder que celles qui sont au moins un minimum pertinentes (>= 30%)
-      final relevantOffers = offers.where((o) => o.matchScore >= 30).toList();
+      // Filtrer les offres : si on a une analyse IA, on filtre strictement. Sinon on montre tout.
+      List<FeedOffer> relevantOffers;
+      if (mastraScores.isNotEmpty) {
+        relevantOffers = offers.where((o) => o.matchScore >= 50).toList();
+      } else {
+        relevantOffers = offers;
+      }
 
       if (isClosed) return;
-      emit(FeedLoaded(
-        offers: relevantOffers,
-        userName: userName,
-        photoUrl: photoUrl,
-        hasProfile: hasProfile || mastraScores.isNotEmpty,
-        profileScore: profileScore,
-      ));
+      emit(
+        FeedLoaded(
+          offers: relevantOffers,
+          userName: userName,
+          photoUrl: photoUrl,
+          hasProfile: hasProfile || mastraScores.isNotEmpty,
+          profileScore: profileScore,
+        ),
+      );
     } catch (e) {
       if (isClosed) return;
       emit(FeedError(e.toString()));
@@ -191,15 +206,16 @@ class FeedCubit extends Cubit<FeedState> {
     if (isoDate == null) return '';
     try {
       final date = DateTime.parse(isoDate).toLocal();
-      final now  = DateTime.now();
+      final now = DateTime.now();
       final diff = now.difference(date);
 
       if (diff.inDays == 0) return 'time.today'.tr();
       if (diff.inDays == 1) return 'time.yesterday'.tr();
-      if (diff.inDays < 7)  return 'time.days'.tr(args: [diff.inDays.toString()]);
+      if (diff.inDays < 7)
+        return 'time.days'.tr(args: [diff.inDays.toString()]);
       if (diff.inDays < 30) {
         final weeks = (diff.inDays / 7).round();
-        return weeks > 1 
+        return weeks > 1
             ? 'time.weeks_plural'.tr(args: [weeks.toString()])
             : 'time.weeks_single'.tr(args: [weeks.toString()]);
       }

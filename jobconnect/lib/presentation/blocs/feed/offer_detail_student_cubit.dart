@@ -8,8 +8,8 @@ class OfferDetailStudentCubit extends Cubit<OfferDetailStudentState> {
   final SupabaseClient _client;
 
   OfferDetailStudentCubit({SupabaseClient? client})
-      : _client = client ?? Supabase.instance.client,
-        super(const OfferDetailStudentInitial());
+    : _client = client ?? Supabase.instance.client,
+      super(const OfferDetailStudentInitial());
 
   // ─── Charge les détails de l'offre ───────────────────────────────────────
 
@@ -19,7 +19,9 @@ class OfferDetailStudentCubit extends Cubit<OfferDetailStudentState> {
     try {
       final user = _client.auth.currentUser;
       if (user == null) {
-        emit(const OfferDetailStudentError(message: 'Utilisateur non connecté'));
+        emit(
+          const OfferDetailStudentError(message: 'Utilisateur non connecté'),
+        );
         return;
       }
 
@@ -42,7 +44,8 @@ class OfferDetailStudentCubit extends Cubit<OfferDetailStudentState> {
 
       final company = offerRes['companies'] as Map<String, dynamic>;
       final requiredSkills = List<String>.from(
-          offerRes['required_skills'] as List? ?? []);
+        offerRes['required_skills'] as List? ?? [],
+      );
 
       // Charge le profil étudiant pour comparer les compétences
       List<String> studentSkills = [];
@@ -58,7 +61,7 @@ class OfferDetailStudentCubit extends Cubit<OfferDetailStudentState> {
 
         if (profileRes != null) {
           studentProfileId = profileRes['id'] as String;
-          
+
           // Recherche du vrai matchScore dans le feed_cache
           try {
             final cacheRes = await _client
@@ -66,7 +69,7 @@ class OfferDetailStudentCubit extends Cubit<OfferDetailStudentState> {
                 .select('cards')
                 .eq('student_id', studentProfileId)
                 .maybeSingle();
-                
+
             if (cacheRes != null && cacheRes['cards'] != null) {
               final offersList = cacheRes['cards'] as List;
               for (final o in offersList) {
@@ -92,15 +95,19 @@ class OfferDetailStudentCubit extends Cubit<OfferDetailStudentState> {
 
       // Calcule les compétences matching et manquantes
       final matchingSkills = requiredSkills
-          .where((skill) => studentSkills.any(
-                (s) => s.toLowerCase() == skill.toLowerCase(),
-              ))
+          .where(
+            (skill) => studentSkills.any(
+              (s) => s.toLowerCase() == skill.toLowerCase(),
+            ),
+          )
           .toList();
 
       final missingSkills = requiredSkills
-          .where((skill) => !studentSkills.any(
-                (s) => s.toLowerCase() == skill.toLowerCase(),
-              ))
+          .where(
+            (skill) => !studentSkills.any(
+              (s) => s.toLowerCase() == skill.toLowerCase(),
+            ),
+          )
           .toList();
 
       // Vérifie si l'étudiant a déjà postulé
@@ -150,7 +157,7 @@ class OfferDetailStudentCubit extends Cubit<OfferDetailStudentState> {
   Future<void> fetchCoachingAdvice() async {
     final current = state;
     if (current is! OfferDetailStudentLoaded) return;
-    
+
     // Si on a déjà le résultat ou si on est déjà en chargement, on ignore
     if (current.isCoachingLoading || current.coachResult != null) return;
 
@@ -164,49 +171,55 @@ class OfferDetailStudentCubit extends Cubit<OfferDetailStudentState> {
       final response = await dio.post(
         '/api/agents/application-coach-agent/generate',
         data: {
-          'input': 'Fais un coaching pour l\'utilisateur ${user.id} sur l\'offre ${current.offer.offerId}'
+          'input':
+              'Fais un coaching pour l\'utilisateur ${user.id} sur l\'offre ${current.offer.offerId}',
         },
       );
 
       if (response.statusCode == 200 && response.data['success'] == true) {
         final result = response.data['response'];
-        
+
         // La réponse de l'IA (text) est une string JSON, il faut parfois la parser
         Map<String, dynamic>? parsedResult;
-        
+
         if (result is Map && result['text'] != null) {
-           final textStr = result['text'] as String;
-           try {
-             // Cherche le début du JSON (parfois l'IA met du markdown ```json)
-             final startIndex = textStr.indexOf('{');
-             final endIndex = textStr.lastIndexOf('}') + 1;
-             if (startIndex != -1 && endIndex != 0) {
-               final jsonStr = textStr.substring(startIndex, endIndex);
-               parsedResult = Map<String, dynamic>.from(
-                   // ignore: avoid_dynamic_calls
-                   const JsonDecoder().convert(jsonStr) as Map);
-             }
-           } catch (e) {
-             throw Exception('Impossible de lire la réponse du coach: $e');
-           }
+          final textStr = result['text'] as String;
+          try {
+            // Cherche le début du JSON (parfois l'IA met du markdown ```json)
+            final startIndex = textStr.indexOf('{');
+            final endIndex = textStr.lastIndexOf('}') + 1;
+            if (startIndex != -1 && endIndex != 0) {
+              final jsonStr = textStr.substring(startIndex, endIndex);
+              parsedResult = Map<String, dynamic>.from(
+                // ignore: avoid_dynamic_calls
+                const JsonDecoder().convert(jsonStr) as Map,
+              );
+            }
+          } catch (e) {
+            throw Exception('Impossible de lire la réponse du coach: $e');
+          }
         }
-        
+
         if (parsedResult != null) {
-          emit(current.copyWith(
-            isCoachingLoading: false,
-            coachResult: parsedResult,
-          ));
+          emit(
+            current.copyWith(
+              isCoachingLoading: false,
+              coachResult: parsedResult,
+            ),
+          );
         } else {
-           throw Exception('Format de réponse invalide');
+          throw Exception('Format de réponse invalide');
         }
       } else {
         throw Exception(response.data['error'] ?? 'Erreur serveur');
       }
     } catch (e) {
-      emit(current.copyWith(
-        isCoachingLoading: false,
-        coachError: 'Impossible d\'obtenir les conseils IA : ${e.toString()}',
-      ));
+      emit(
+        current.copyWith(
+          isCoachingLoading: false,
+          coachError: 'Impossible d\'obtenir les conseils IA : ${e.toString()}',
+        ),
+      );
     }
   }
 
@@ -228,10 +241,12 @@ class OfferDetailStudentCubit extends Cubit<OfferDetailStudentState> {
     final offer = current.offer;
 
     if (offer.hasAlreadyApplied) {
-      emit(OfferDetailStudentError(
-        message: 'Vous avez déjà postulé à cette offre.',
-        lastKnownOffer: offer,
-      ));
+      emit(
+        OfferDetailStudentError(
+          message: 'Vous avez déjà postulé à cette offre.',
+          lastKnownOffer: offer,
+        ),
+      );
       _restoreLoaded(current);
       return;
     }
@@ -241,8 +256,9 @@ class OfferDetailStudentCubit extends Cubit<OfferDetailStudentState> {
     try {
       final user = _client.auth.currentUser;
       if (user == null) {
-        emit(const OfferDetailStudentError(
-            message: 'Utilisateur non connecté'));
+        emit(
+          const OfferDetailStudentError(message: 'Utilisateur non connecté'),
+        );
         return;
       }
 
@@ -254,11 +270,12 @@ class OfferDetailStudentCubit extends Cubit<OfferDetailStudentState> {
           .maybeSingle();
 
       if (profileRes == null) {
-        emit(OfferDetailStudentError(
-          message:
-              'Complétez votre profil avant de postuler.',
-          lastKnownOffer: offer,
-        ));
+        emit(
+          OfferDetailStudentError(
+            message: 'Complétez votre profil avant de postuler.',
+            lastKnownOffer: offer,
+          ),
+        );
         _restoreLoaded(current);
         return;
       }
@@ -266,30 +283,36 @@ class OfferDetailStudentCubit extends Cubit<OfferDetailStudentState> {
       final studentId = profileRes['id'] as String;
 
       // Insère la candidature
-      final appRes = await _client.from('applications').insert({
-        'student_id': studentId,
-        'offer_id': offer.offerId,
-        'company_id': offer.companyId,
-        'status': 'pending',
-        'match_score': offer.matchScore,
-        'created_at': DateTime.now().toIso8601String(),
-        'updated_at': DateTime.now().toIso8601String(),
-      }).select('id').single();
+      final appRes = await _client
+          .from('applications')
+          .insert({
+            'student_id': studentId,
+            'offer_id': offer.offerId,
+            'company_id': offer.companyId,
+            'status': 'pending',
+            'match_score': offer.matchScore,
+            'created_at': DateTime.now().toIso8601String(),
+            'updated_at': DateTime.now().toIso8601String(),
+          })
+          .select('id')
+          .single();
 
       final applicationId = appRes['id'] as String;
 
       // Déclenche l'agent IA de statut en asynchrone (non bloquant)
-      DioClient.instance.post(
-        '/api/workflows/application-status-handler/start',
-        data: {
-          'input': {
-            'applicationId': applicationId,
-            'studentId': studentId,
-            'offerId': offer.offerId,
-            'status': 'pending',
-          }
-        },
-      ).catchError((_) {}); // Erreurs ignorées pour ne pas bloquer l'UI
+      DioClient.instance
+          .post(
+            '/api/workflows/application-status-handler/start',
+            data: {
+              'input': {
+                'applicationId': applicationId,
+                'studentId': studentId,
+                'offerId': offer.offerId,
+                'status': 'pending',
+              },
+            },
+          )
+          .catchError((_) {}); // Erreurs ignorées pour ne pas bloquer l'UI
 
       // Met à jour l'offre pour marquer comme déjà postulé
       final updatedOffer = StudentOfferDetail(
@@ -318,16 +341,20 @@ class OfferDetailStudentCubit extends Cubit<OfferDetailStudentState> {
       // Retourne à l'état loaded après succès
       await Future.delayed(const Duration(seconds: 1));
       if (!isClosed) {
-        emit(OfferDetailStudentLoaded(
-          offer: updatedOffer,
-          isSaved: current.isSaved,
-        ));
+        emit(
+          OfferDetailStudentLoaded(
+            offer: updatedOffer,
+            isSaved: current.isSaved,
+          ),
+        );
       }
     } catch (e) {
-      emit(OfferDetailStudentError(
-        message: 'Impossible de postuler : ${e.toString()}',
-        lastKnownOffer: offer,
-      ));
+      emit(
+        OfferDetailStudentError(
+          message: 'Impossible de postuler : ${e.toString()}',
+          lastKnownOffer: offer,
+        ),
+      );
       _restoreLoaded(current);
     }
   }

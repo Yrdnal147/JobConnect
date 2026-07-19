@@ -23,15 +23,15 @@ class CandidateItem extends Equatable {
 
   @override
   List<Object?> get props => [
-        applicationId,
-        studentName,
-        offerTitle,
-        status,
-        matchScore,
-        photoUrl,
-        educationLevel,
-        fieldOfStudy,
-      ];
+    applicationId,
+    studentName,
+    offerTitle,
+    status,
+    matchScore,
+    photoUrl,
+    educationLevel,
+    fieldOfStudy,
+  ];
 }
 
 abstract class AllCandidatesState extends Equatable {
@@ -61,9 +61,7 @@ class AllCandidatesLoaded extends AllCandidatesState {
   // Retourne les candidats filtrés selon le statut sélectionné
   List<CandidateItem> get filteredCandidates {
     if (filterStatus == 'all') return candidates;
-    return candidates
-        .where((c) => c.status == filterStatus)
-        .toList();
+    return candidates.where((c) => c.status == filterStatus).toList();
   }
 
   AllCandidatesLoaded copyWith({

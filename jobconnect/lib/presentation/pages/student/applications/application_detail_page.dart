@@ -40,27 +40,38 @@ class _ApplicationDetailPageState extends State<ApplicationDetailPage> {
 
   String _formatOfferType(String type) {
     switch (type) {
-      case 'cdi':                 return 'home.filters.cdi'.tr();
-      case 'cdd':                 return 'home.filters.cdd'.tr();
-      case 'stage_academique':    return 'home.filters.academic_internship'.tr();
-      case 'stage_professionnel': return 'home.filters.pro_internship'.tr();
-      default:                    return type.toUpperCase();
+      case 'cdi':
+        return 'home.filters.cdi'.tr();
+      case 'cdd':
+        return 'home.filters.cdd'.tr();
+      case 'stage_academique':
+        return 'home.filters.academic_internship'.tr();
+      case 'stage_professionnel':
+        return 'home.filters.pro_internship'.tr();
+      default:
+        return type.toUpperCase();
     }
   }
 
   Color _statusColor(String status) {
     switch (status) {
-      case 'retained': return AppColorsLight.primary;
-      case 'refused':  return AppColorsLight.textTertiary;
-      default:         return AppColorsLight.textSecondary;
+      case 'retained':
+        return AppColorsLight.primary;
+      case 'refused':
+        return AppColorsLight.textTertiary;
+      default:
+        return AppColorsLight.textSecondary;
     }
   }
 
   String _statusLabel(String status) {
     switch (status) {
-      case 'retained': return 'applications.status.retained'.tr();
-      case 'refused':  return 'applications.status.refused'.tr();
-      default:         return 'applications.status.pending'.tr();
+      case 'retained':
+        return 'applications.status.retained'.tr();
+      case 'refused':
+        return 'applications.status.refused'.tr();
+      default:
+        return 'applications.status.pending'.tr();
     }
   }
 
@@ -84,11 +95,7 @@ class _ApplicationDetailPageState extends State<ApplicationDetailPage> {
                   height: size.height * 0.22,
                   child: Container(
                     decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [AppColorsLight.primary, Color(0xFF4A148C)],
-                      ),
+                      color: AppColorsLight.primary,
                     ),
                     child: SafeArea(
                       bottom: false,
@@ -98,7 +105,10 @@ class _ApplicationDetailPageState extends State<ApplicationDetailPage> {
                           Row(
                             children: [
                               IconButton(
-                                icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+                                icon: const Icon(
+                                  Icons.arrow_back_ios_new_rounded,
+                                  color: Colors.white,
+                                ),
                                 onPressed: () {
                                   if (Navigator.of(context).canPop()) {
                                     Navigator.of(context).pop();
@@ -110,7 +120,9 @@ class _ApplicationDetailPageState extends State<ApplicationDetailPage> {
                               const SizedBox(width: AppSpacing.sm),
                               Text(
                                 'applications.detail.title'.tr(),
-                                style: AppTypography.headingMedium.copyWith(color: Colors.white),
+                                style: AppTypography.headingMedium.copyWith(
+                                  color: Colors.white,
+                                ),
                               ),
                             ],
                           ),
@@ -173,20 +185,26 @@ class _ApplicationDetailPageState extends State<ApplicationDetailPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.error_outline_rounded,
-                  color: AppColorsLight.error, size: 48),
+              const Icon(
+                Icons.error_outline_rounded,
+                color: AppColorsLight.error,
+                size: 48,
+              ),
               const SizedBox(height: AppSpacing.md),
-              Text(state.message,
-                  style: AppTypography.bodyMedium,
-                  textAlign: TextAlign.center),
+              Text(
+                state.message,
+                style: AppTypography.bodyMedium,
+                textAlign: TextAlign.center,
+              ),
               const SizedBox(height: AppSpacing.lg),
               ElevatedButton.icon(
-                onPressed: () => _cubit
-                    .loadApplicationDetail(widget.applicationId),
+                onPressed: () =>
+                    _cubit.loadApplicationDetail(widget.applicationId),
                 icon: const Icon(Icons.refresh_rounded),
                 label: const Text('Réessayer'),
                 style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColorsLight.primary),
+                  backgroundColor: AppColorsLight.primary,
+                ),
               ),
             ],
           ),
@@ -217,8 +235,8 @@ class _ApplicationDetailPageState extends State<ApplicationDetailPage> {
                     color: detail.matchScore >= 75
                         ? AppColorsLight.success
                         : detail.matchScore >= 50
-                            ? AppColorsLight.warning
-                            : AppColorsLight.error,
+                        ? AppColorsLight.warning
+                        : AppColorsLight.error,
                     customValue: Padding(
                       padding: const EdgeInsets.only(top: 4.0),
                       child: MatchScoreBadge(score: detail.matchScore),
@@ -292,7 +310,8 @@ class _ApplicationDetailPageState extends State<ApplicationDetailPage> {
   // ─── Section IA selon statut ───────────────────────────────────────────────
 
   Widget _buildAiSection(BuildContext context, ApplicationDetail detail) {
-    if (detail.statusExplanation != null && detail.statusExplanation!.isNotEmpty) {
+    if (detail.statusExplanation != null &&
+        detail.statusExplanation!.isNotEmpty) {
       try {
         final dynamic decoded = jsonDecode(detail.statusExplanation!);
         if (decoded is Map<String, dynamic>) {
@@ -353,10 +372,11 @@ class _InfoCard extends StatelessWidget {
         children: [
           Text(label, style: AppTypography.bodySmall),
           const SizedBox(height: 4),
-          customValue ?? Text(
-            value ?? '',
-            style: AppTypography.headingLarge.copyWith(color: color),
-          ),
+          customValue ??
+              Text(
+                value ?? '',
+                style: AppTypography.headingLarge.copyWith(color: color),
+              ),
         ],
       ),
     );
@@ -383,15 +403,22 @@ class _RefusedAiCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.auto_awesome_rounded,
-                  color: AppColorsLight.primary),
+              const Icon(
+                Icons.auto_awesome_rounded,
+                color: AppColorsLight.primary,
+              ),
               const SizedBox(width: AppSpacing.sm),
-              Text('applications.detail.ai_analysis'.tr(), style: AppTypography.headingSmall),
+              Text(
+                'applications.detail.ai_analysis'.tr(),
+                style: AppTypography.headingSmall,
+              ),
             ],
           ),
           const SizedBox(height: AppSpacing.md),
           Text(
-            'applications.detail.ai_score_text'.tr(args: [detail.matchScore.toString()]),
+            'applications.detail.ai_score_text'.tr(
+              args: [detail.matchScore.toString()],
+            ),
             style: AppTypography.bodyMedium,
           ),
           if (detail.missingSkills.isNotEmpty) ...[
@@ -413,12 +440,9 @@ class _RefusedAiCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.sm),
-          _ActionItem(
-              number: 1, text: 'applications.detail.tip_1'.tr()),
-          _ActionItem(
-              number: 2, text: 'applications.detail.tip_2'.tr()),
-          _ActionItem(
-              number: 3, text: 'applications.detail.tip_3'.tr()),
+          _ActionItem(number: 1, text: 'applications.detail.tip_1'.tr()),
+          _ActionItem(number: 2, text: 'applications.detail.tip_2'.tr()),
+          _ActionItem(number: 3, text: 'applications.detail.tip_3'.tr()),
         ],
       ),
     );
@@ -433,11 +457,16 @@ class _PendingAiCard extends StatelessWidget {
 
   String _formatOfferType(String type) {
     switch (type) {
-      case 'cdi':                 return 'home.filters.cdi'.tr();
-      case 'cdd':                 return 'home.filters.cdd'.tr();
-      case 'stage_academique':    return 'home.filters.academic_internship'.tr();
-      case 'stage_professionnel': return 'home.filters.pro_internship'.tr();
-      default:                    return type.toUpperCase();
+      case 'cdi':
+        return 'home.filters.cdi'.tr();
+      case 'cdd':
+        return 'home.filters.cdd'.tr();
+      case 'stage_academique':
+        return 'home.filters.academic_internship'.tr();
+      case 'stage_professionnel':
+        return 'home.filters.pro_internship'.tr();
+      default:
+        return type.toUpperCase();
     }
   }
 
@@ -455,10 +484,15 @@ class _PendingAiCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.auto_awesome_rounded,
-                  color: AppColorsLight.primary),
+              const Icon(
+                Icons.auto_awesome_rounded,
+                color: AppColorsLight.primary,
+              ),
               const SizedBox(width: AppSpacing.sm),
-              Text('applications.detail.ai_analysis'.tr(), style: AppTypography.headingSmall),
+              Text(
+                'applications.detail.ai_analysis'.tr(),
+                style: AppTypography.headingSmall,
+              ),
             ],
           ),
           const SizedBox(height: AppSpacing.md),
@@ -470,10 +504,10 @@ class _PendingAiCard extends StatelessWidget {
           ),
           if (detail.similarOffers.isNotEmpty) ...[
             const SizedBox(height: AppSpacing.md),
-            ...detail.similarOffers.map((offer) => _SimilarOfferTile(
-                  offer: offer,
-                  formatType: _formatOfferType,
-                )),
+            ...detail.similarOffers.map(
+              (offer) =>
+                  _SimilarOfferTile(offer: offer, formatType: _formatOfferType),
+            ),
           ],
         ],
       ),
@@ -501,19 +535,24 @@ class _RetainedAiCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.celebration_rounded,
-                  color: AppColorsLight.success),
+              const Icon(
+                Icons.celebration_rounded,
+                color: AppColorsLight.success,
+              ),
               const SizedBox(width: AppSpacing.sm),
               Text(
                 'applications.detail.congrats'.tr(),
-                style: AppTypography.headingSmall
-                    .copyWith(color: AppColorsLight.success),
+                style: AppTypography.headingSmall.copyWith(
+                  color: AppColorsLight.success,
+                ),
               ),
             ],
           ),
           const SizedBox(height: AppSpacing.md),
           Text(
-            'applications.detail.retained_message'.tr(args: [detail.companyName]),
+            'applications.detail.retained_message'.tr(
+              args: [detail.companyName],
+            ),
             style: AppTypography.bodyMedium,
           ),
           const SizedBox(height: AppSpacing.sm),
@@ -526,8 +565,8 @@ class _RetainedAiCard extends StatelessWidget {
           const SizedBox(height: AppSpacing.md),
           ElevatedButton(
             onPressed: detail.conversationId != null
-                ? () => context
-                    .push('/student/messages/${detail.conversationId}')
+                ? () =>
+                      context.push('/student/messages/${detail.conversationId}')
                 : () => context.go('/student/messages'),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColorsLight.success,
@@ -554,8 +593,11 @@ class _GapItem extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
       child: Row(
         children: [
-          const Icon(Icons.close_rounded,
-              size: 16, color: AppColorsLight.error),
+          const Icon(
+            Icons.close_rounded,
+            size: 16,
+            color: AppColorsLight.error,
+          ),
           const SizedBox(width: AppSpacing.sm),
           Expanded(child: Text(text, style: AppTypography.bodySmall)),
         ],
@@ -602,10 +644,7 @@ class _SimilarOfferTile extends StatelessWidget {
   final SimilarOffer offer;
   final String Function(String) formatType;
 
-  const _SimilarOfferTile({
-    required this.offer,
-    required this.formatType,
-  });
+  const _SimilarOfferTile({required this.offer, required this.formatType});
 
   @override
   Widget build(BuildContext context) {
@@ -659,8 +698,11 @@ class _SimilarOfferTile extends StatelessWidget {
                   ],
                 ),
               ),
-              const Icon(Icons.arrow_forward_ios_rounded,
-                  size: 14, color: AppColorsLight.textTertiary),
+              const Icon(
+                Icons.arrow_forward_ios_rounded,
+                size: 14,
+                color: AppColorsLight.textTertiary,
+              ),
             ],
           ),
         ),
@@ -678,17 +720,23 @@ class _CustomAiCard extends StatelessWidget {
 
   Color _getColor() {
     switch (detail.status) {
-      case 'refused':  return AppColorsLight.textTertiary;
-      case 'retained': return AppColorsLight.primary;
-      default:         return AppColorsLight.textSecondary;
+      case 'refused':
+        return AppColorsLight.textTertiary;
+      case 'retained':
+        return AppColorsLight.primary;
+      default:
+        return AppColorsLight.textSecondary;
     }
   }
 
   IconData _getIcon() {
     switch (detail.status) {
-      case 'refused':  return Icons.insights_rounded;
-      case 'retained': return Icons.celebration_rounded;
-      default:         return Icons.auto_awesome_rounded;
+      case 'refused':
+        return Icons.insights_rounded;
+      case 'retained':
+        return Icons.celebration_rounded;
+      default:
+        return Icons.auto_awesome_rounded;
     }
   }
 
@@ -703,8 +751,8 @@ class _CustomAiCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
-        color: detail.status == 'retained' 
-            ? color.withOpacity(0.08) 
+        color: detail.status == 'retained'
+            ? color.withOpacity(0.08)
             : AppColorsLight.bgCard,
         borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
         border: Border.all(color: color.withOpacity(0.3)),
@@ -717,7 +765,9 @@ class _CustomAiCard extends StatelessWidget {
               Icon(_getIcon(), color: color),
               const SizedBox(width: AppSpacing.sm),
               Text(
-                detail.status == 'retained' ? 'applications.detail.congrats'.tr() : 'applications.detail.ai_analysis'.tr(),
+                detail.status == 'retained'
+                    ? 'applications.detail.congrats'.tr()
+                    : 'applications.detail.ai_analysis'.tr(),
                 style: AppTypography.headingSmall.copyWith(
                   color: detail.status == 'retained' ? color : null,
                 ),
@@ -726,7 +776,7 @@ class _CustomAiCard extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.md),
           Text(message, style: AppTypography.bodyMedium),
-          
+
           if (actions.isNotEmpty) ...[
             const SizedBox(height: AppSpacing.md),
             Text(
@@ -739,13 +789,11 @@ class _CustomAiCard extends StatelessWidget {
             ...actions.asMap().entries.map((entry) {
               final actionData = entry.value;
               String actionText = actionData.toString();
-              if (actionData is Map<String, dynamic> && actionData.containsKey('message')) {
+              if (actionData is Map<String, dynamic> &&
+                  actionData.containsKey('message')) {
                 actionText = actionData['message'].toString();
               }
-              return _ActionItem(
-                number: entry.key + 1,
-                text: actionText,
-              );
+              return _ActionItem(number: entry.key + 1, text: actionText);
             }),
           ],
 
@@ -761,34 +809,41 @@ class _CustomAiCard extends StatelessWidget {
             ...similarOffers.map((o) => _GapItem(text: o.toString())),
           ],
 
-          if (nextStep != null && nextStep.isNotEmpty && detail.status != 'pending') ...[
-             const SizedBox(height: AppSpacing.md),
-             Container(
-               padding: const EdgeInsets.all(AppSpacing.sm),
-               decoration: BoxDecoration(
-                 color: color.withOpacity(0.1),
-                 borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-               ),
-               child: Row(
-                 children: [
-                   Icon(Icons.arrow_forward_rounded, size: 16, color: color),
-                   const SizedBox(width: AppSpacing.sm),
-                   Expanded(
-                     child: Text(
-                       nextStep,
-                       style: AppTypography.bodySmall.copyWith(color: color, fontWeight: FontWeight.w600),
-                     ),
-                   ),
-                 ],
-               ),
-             ),
+          if (nextStep != null &&
+              nextStep.isNotEmpty &&
+              detail.status != 'pending') ...[
+            const SizedBox(height: AppSpacing.md),
+            Container(
+              padding: const EdgeInsets.all(AppSpacing.sm),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.arrow_forward_rounded, size: 16, color: color),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: Text(
+                      nextStep,
+                      style: AppTypography.bodySmall.copyWith(
+                        color: color,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
-          
+
           if (detail.status == 'retained') ...[
             const SizedBox(height: AppSpacing.md),
             ElevatedButton(
               onPressed: detail.conversationId != null
-                  ? () => context.push('/student/messages/${detail.conversationId}')
+                  ? () => context.push(
+                      '/student/messages/${detail.conversationId}',
+                    )
                   : () => context.go('/student/messages'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: color,
@@ -799,7 +854,7 @@ class _CustomAiCard extends StatelessWidget {
               ),
               child: Text('applications.detail.go_to_messages'.tr()),
             ),
-          ]
+          ],
         ],
       ),
     );

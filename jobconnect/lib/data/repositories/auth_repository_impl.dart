@@ -52,9 +52,15 @@ class AuthRepositoryImpl implements IAuthRepository {
   }
 
   @override
-  Future<Either<Failure, void>> changePassword(String oldPassword, String newPassword) async {
+  Future<Either<Failure, void>> changePassword(
+    String oldPassword,
+    String newPassword,
+  ) async {
     try {
-      await dataSource.changePassword(oldPassword: oldPassword, newPassword: newPassword);
+      await dataSource.changePassword(
+        oldPassword: oldPassword,
+        newPassword: newPassword,
+      );
       return const Right(null);
     } on app_exceptions.AuthException catch (e) {
       return Left(AuthFailure(e.message));

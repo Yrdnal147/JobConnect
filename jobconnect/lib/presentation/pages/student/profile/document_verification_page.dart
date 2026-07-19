@@ -63,8 +63,10 @@ class _DocumentVerificationPageState extends State<DocumentVerificationPage> {
                   children: [
                     Row(
                       children: [
-                        const Icon(Icons.info_outline_rounded,
-                            color: AppColorsLight.primary),
+                        const Icon(
+                          Icons.info_outline_rounded,
+                          color: AppColorsLight.primary,
+                        ),
                         const SizedBox(width: AppSpacing.sm),
                         Text(
                           'profile.verification.accepted_docs'.tr(),
@@ -106,10 +108,7 @@ class _DocumentVerificationPageState extends State<DocumentVerificationPage> {
         decoration: BoxDecoration(
           color: AppColorsLight.bgCard,
           borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
-          border: Border.all(
-            color: AppColorsLight.bgSurface,
-            width: 2,
-          ),
+          border: Border.all(color: AppColorsLight.bgSurface, width: 2),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -176,8 +175,11 @@ class _DocumentVerificationPageState extends State<DocumentVerificationPage> {
       ),
       child: Column(
         children: [
-          const Icon(Icons.hourglass_top_rounded,
-              color: AppColorsLight.warning, size: 48),
+          const Icon(
+            Icons.hourglass_top_rounded,
+            color: AppColorsLight.warning,
+            size: 48,
+          ),
           const SizedBox(height: AppSpacing.md),
           Text(
             'profile.verification.in_review'.tr(),
@@ -206,8 +208,11 @@ class _DocumentVerificationPageState extends State<DocumentVerificationPage> {
       ),
       child: Column(
         children: [
-          const Icon(Icons.verified_rounded,
-              color: AppColorsLight.success, size: 48),
+          const Icon(
+            Icons.verified_rounded,
+            color: AppColorsLight.success,
+            size: 48,
+          ),
           const SizedBox(height: AppSpacing.md),
           Text(
             'profile.verification.verified_success'.tr(),
@@ -236,8 +241,11 @@ class _DocumentVerificationPageState extends State<DocumentVerificationPage> {
       ),
       child: Column(
         children: [
-          const Icon(Icons.cancel_rounded,
-              color: AppColorsLight.error, size: 48),
+          const Icon(
+            Icons.cancel_rounded,
+            color: AppColorsLight.error,
+            size: 48,
+          ),
           const SizedBox(height: AppSpacing.md),
           Text(
             'profile.verification.rejected_title'.tr(),

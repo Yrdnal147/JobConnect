@@ -9,6 +9,7 @@ class SuccessConnection extends Equatable {
   final String position;
   final String confirmedAt;
   final List<String> studentSkills;
+  final int matchScore;
 
   const SuccessConnection({
     required this.connectionId,
@@ -19,19 +20,21 @@ class SuccessConnection extends Equatable {
     required this.position,
     required this.confirmedAt,
     this.studentSkills = const [],
+    this.matchScore = 0,
   });
 
   @override
   List<Object?> get props => [
-        connectionId,
-        studentName,
-        studentPhotoUrl,
-        companyName,
-        companyLogoUrl,
-        position,
-        confirmedAt,
-        studentSkills,
-      ];
+    connectionId,
+    studentName,
+    studentPhotoUrl,
+    companyName,
+    companyLogoUrl,
+    position,
+    confirmedAt,
+    studentSkills,
+    matchScore,
+  ];
 }
 
 abstract class SuccessState extends Equatable {

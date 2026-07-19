@@ -26,22 +26,30 @@ class NotificationCubit extends Cubit<NotificationState> {
         .eq('user_id', userId)
         .order('created_at', ascending: false)
         .listen(
-      (data) {
-        try {
-          final notifications = data.map((e) => NotificationModel.fromJson(e)).toList();
-          final unreadCount = notifications.where((n) => !n.isRead).length;
-          emit(NotificationLoaded(
-            notifications: notifications,
-            unreadCount: unreadCount,
-          ));
-        } catch (e) {
-          emit(NotificationError('Erreur lors du traitement des notifications: $e'));
-        }
-      },
-      onError: (e) {
-        emit(NotificationError('Erreur de chargement: $e'));
-      },
-    );
+          (data) {
+            try {
+              final notifications = data
+                  .map((e) => NotificationModel.fromJson(e))
+                  .toList();
+              final unreadCount = notifications.where((n) => !n.isRead).length;
+              emit(
+                NotificationLoaded(
+                  notifications: notifications,
+                  unreadCount: unreadCount,
+                ),
+              );
+            } catch (e) {
+              emit(
+                NotificationError(
+                  'Erreur lors du traitement des notifications: $e',
+                ),
+              );
+            }
+          },
+          onError: (e) {
+            emit(NotificationError('Erreur de chargement: $e'));
+          },
+        );
   }
 
   Future<void> markAsRead(String id) async {
@@ -57,12 +65,16 @@ class NotificationCubit extends Cubit<NotificationState> {
         return n;
       }).toList();
 
-      final newUnreadCount = updatedNotifications.where((n) => !n.isRead).length;
+      final newUnreadCount = updatedNotifications
+          .where((n) => !n.isRead)
+          .length;
 
-      emit(NotificationLoaded(
-        notifications: updatedNotifications,
-        unreadCount: newUnreadCount,
-      ));
+      emit(
+        NotificationLoaded(
+          notifications: updatedNotifications,
+          unreadCount: newUnreadCount,
+        ),
+      );
 
       await _supabase
           .from('notifications')
@@ -83,8 +95,12 @@ class NotificationCubit extends Cubit<NotificationState> {
     if (userId == null) return;
 
     try {
-      final updatedNotifications = current.notifications.map((n) => n.copyWith(isRead: true)).toList();
-      emit(NotificationLoaded(notifications: updatedNotifications, unreadCount: 0));
+      final updatedNotifications = current.notifications
+          .map((n) => n.copyWith(isRead: true))
+          .toList();
+      emit(
+        NotificationLoaded(notifications: updatedNotifications, unreadCount: 0),
+      );
 
       await _supabase
           .from('notifications')

@@ -11,6 +11,7 @@ import '../../../../injection_container.dart';
 import '../../../../presentation/widgets/user_avatar.dart';
 import '../../../blocs/feed/success_cubit.dart';
 import '../../../blocs/feed/success_state.dart';
+import '../../../../core/supabase/supabase_client.dart';
 
 class SuccessPage extends StatefulWidget {
   const SuccessPage({super.key});
@@ -35,8 +36,7 @@ class _SuccessPageState extends State<SuccessPage> {
     super.dispose();
   }
 
-  void _showInspireDialog(
-      BuildContext context, SuccessConnection connection) {
+  void _showInspireDialog(BuildContext context, SuccessConnection connection) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -77,10 +77,12 @@ class _SuccessPageState extends State<SuccessPage> {
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [
-                      AppColorsLight.primary,
-                      AppColorsLight.secondary,
-                    ]),
+                    gradient: LinearGradient(
+                      colors: [
+                        AppColorsLight.primary,
+                        AppColorsLight.secondary,
+                      ],
+                    ),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
@@ -90,21 +92,25 @@ class _SuccessPageState extends State<SuccessPage> {
                   ),
                 ),
                 const SizedBox(width: AppSpacing.sm),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'success.dialog.skills_title'.tr(),
-                      style: AppTypography.caption.copyWith(
-                        color: AppColorsLight.primary,
-                        fontWeight: FontWeight.w700,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'success.dialog.skills_title'.tr(),
+                        style: AppTypography.caption.copyWith(
+                          color: AppColorsLight.primary,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
-                    ),
-                    Text(
-                      'success.dialog.position_title'.tr(args: [connection.position]),
-                      style: AppTypography.headingSmall,
-                    ),
-                  ],
+                      Text(
+                        'success.dialog.position_title'.tr(
+                          args: [connection.position],
+                        ),
+                        style: AppTypography.headingSmall,
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -130,10 +136,10 @@ class _SuccessPageState extends State<SuccessPage> {
                         decoration: BoxDecoration(
                           color: AppColorsLight.primary.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(
-                              AppSpacing.radiusFull),
+                            AppSpacing.radiusFull,
+                          ),
                           border: Border.all(
-                            color:
-                                AppColorsLight.primary.withOpacity(0.25),
+                            color: AppColorsLight.primary.withOpacity(0.25),
                           ),
                         ),
                         child: Text(
@@ -153,17 +159,14 @@ class _SuccessPageState extends State<SuccessPage> {
               width: double.infinity,
               height: 48,
               decoration: BoxDecoration(
-                borderRadius:
-                    BorderRadius.circular(AppSpacing.radiusMd),
-                gradient: LinearGradient(colors: [
-                  AppColorsLight.primary,
-                  AppColorsLight.secondary,
-                ]),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                gradient: LinearGradient(
+                  colors: [AppColorsLight.primary, AppColorsLight.secondary],
+                ),
               ),
               child: Material(
                 color: Colors.transparent,
-                borderRadius:
-                    BorderRadius.circular(AppSpacing.radiusMd),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                 clipBehavior: Clip.antiAlias,
                 child: InkWell(
                   onTap: () {
@@ -207,22 +210,34 @@ class _SuccessPageState extends State<SuccessPage> {
                   height: size.height * 0.22,
                   child: Container(
                     decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [AppColorsLight.primary, Color(0xFF4A148C)],
-                      ),
+                      color: AppColorsLight.primary,
                     ),
                     child: SafeArea(
                       bottom: false,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.sm),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.sm,
+                          vertical: AppSpacing.sm,
+                        ),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             IconButton(
-                              icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
-                              onPressed: () => context.go('/student/profile'),
+                              icon: const Icon(
+                                Icons.arrow_back_ios_new_rounded,
+                                color: Colors.white,
+                              ),
+                              onPressed: () {
+                                if (context.canPop()) {
+                                  context.pop();
+                                } else {
+                                  if (SupabaseClientHelper.userRole == 'company') {
+                                    context.go('/company/dashboard');
+                                  } else {
+                                    context.go('/student/home');
+                                  }
+                                }
+                              },
                             ),
                             const SizedBox(width: AppSpacing.sm),
                             Expanded(
@@ -230,37 +245,13 @@ class _SuccessPageState extends State<SuccessPage> {
                                 padding: const EdgeInsets.only(top: 8.0),
                                 child: Text(
                                   'success.title'.tr(),
-                                  style: AppTypography.headingMedium.copyWith(color: Colors.white),
-                                ),
-                              ),
-                            ),
-                            if (state is SuccessLoaded)
-                              Padding(
-                                padding: const EdgeInsets.only(right: AppSpacing.md, top: 8.0),
-                                child: Center(
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 4),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white.withOpacity(0.2),
-                                      borderRadius: BorderRadius.circular(
-                                          AppSpacing.radiusFull),
-                                      border: Border.all(
-                                        color: Colors.white.withOpacity(0.4),
-                                      ),
-                                    ),
-                                    child: Text(
-                                      state.connections.length > 1
-                                          ? 'success.connections_count_plural'.tr(args: [state.connections.length.toString()])
-                                          : 'success.connections_count_single'.tr(args: [state.connections.length.toString()]),
-                                      style: AppTypography.caption.copyWith(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
+                                  style: AppTypography.headingMedium.copyWith(
+                                    color: Colors.white,
                                   ),
                                 ),
                               ),
+                            ),
+                              // Connection count moved to body
                           ],
                         ),
                       ),
@@ -331,12 +322,29 @@ class _SuccessPageState extends State<SuccessPage> {
         onRefresh: _cubit.refresh,
         child: ListView.builder(
           padding: const EdgeInsets.all(AppSpacing.lg),
-          itemCount: state.connections.length,
+          itemCount: state.connections.length + 1,
           itemBuilder: (context, index) {
+            if (index == 0) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: AppSpacing.lg),
+                child: Text(
+                  state.connections.length > 1
+                      ? 'success.connections_count_plural'.tr(
+                          args: [state.connections.length.toString()],
+                        )
+                      : 'success.connections_count_single'.tr(
+                          args: [state.connections.length.toString()],
+                        ),
+                  style: AppTypography.headingSmall.copyWith(
+                    color: AppColorsLight.textPrimary,
+                  ),
+                ),
+              );
+            }
+            final connection = state.connections[index - 1];
             return _SuccessCard(
-              connection: state.connections[index],
-              onInspire: () => _showInspireDialog(
-                  context, state.connections[index]),
+              connection: connection,
+              onInspire: () => _showInspireDialog(context, connection),
             );
           },
         ),
@@ -392,7 +400,17 @@ class _SuccessPageState extends State<SuccessPage> {
             ),
             const SizedBox(height: AppSpacing.md),
             TextButton(
-              onPressed: () => context.push('/student/home'),
+              onPressed: () {
+                if (context.canPop()) {
+                  context.pop();
+                } else {
+                  if (SupabaseClientHelper.userRole == 'company') {
+                    context.go('/company/dashboard');
+                  } else {
+                    context.go('/student/home');
+                  }
+                }
+              },
               child: Text(
                 'success.empty.action'.tr(),
                 style: AppTypography.bodySmall.copyWith(
@@ -414,16 +432,23 @@ class _SuccessPageState extends State<SuccessPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.wifi_off_rounded,
-                color: AppColorsLight.textTertiary, size: 48),
+            const Icon(
+              Icons.wifi_off_rounded,
+              color: AppColorsLight.textTertiary,
+              size: 48,
+            ),
             const SizedBox(height: AppSpacing.md),
-            Text('success.error.title'.tr(),
-                style: AppTypography.headingSmall,
-                textAlign: TextAlign.center),
+            Text(
+              'success.error.title'.tr(),
+              style: AppTypography.headingSmall,
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: AppSpacing.sm),
-            Text(message,
-                style: AppTypography.bodySmall,
-                textAlign: TextAlign.center),
+            Text(
+              message,
+              style: AppTypography.bodySmall,
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: AppSpacing.lg),
             ElevatedButton.icon(
               onPressed: _cubit.loadConnections,
@@ -446,10 +471,7 @@ class _SuccessCard extends StatelessWidget {
   final SuccessConnection connection;
   final VoidCallback onInspire;
 
-  const _SuccessCard({
-    required this.connection,
-    required this.onInspire,
-  });
+  const _SuccessCard({required this.connection, required this.onInspire});
 
   @override
   Widget build(BuildContext context) {
@@ -457,16 +479,13 @@ class _SuccessCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: AppSpacing.md),
       padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
-        color: AppColorsLight.bgCard,
+        color: AppColorsLight.primary.withOpacity(0.05),
         borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
-        border: Border.all(color: AppColorsLight.bgSurface),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 3),
-          ),
-        ],
+        border: Border.all(
+          color: connection.matchScore >= 75
+              ? AppColorsLight.success.withOpacity(0.4)
+              : AppColorsLight.primary.withOpacity(0.2),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -506,28 +525,63 @@ class _SuccessCard extends StatelessWidget {
 
           // ── Infos ─────────────────────────────────────────────────────
           Text(
-            'success.card.joined'.tr(args: [connection.studentName, connection.companyName]),
+            'success.card.joined'.tr(
+              args: [connection.studentName, connection.companyName],
+            ),
             style: AppTypography.headingSmall,
           ),
           const SizedBox(height: 4),
           Row(
             children: [
-              Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.sm, vertical: 3),
-                decoration: BoxDecoration(
-                  color: AppColorsLight.primary.withOpacity(0.1),
-                  borderRadius:
-                      BorderRadius.circular(AppSpacing.radiusFull),
-                ),
-                child: Text(
-                  connection.position,
-                  style: AppTypography.caption.copyWith(
-                    color: AppColorsLight.primary,
-                    fontWeight: FontWeight.w600,
+              Flexible(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.sm,
+                    vertical: 3,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColorsLight.primary.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
+                  ),
+                  child: Text(
+                    connection.position,
+                    style: AppTypography.caption.copyWith(
+                      color: AppColorsLight.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ),
+              const SizedBox(width: AppSpacing.sm),
+              if (connection.matchScore > 0)
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.sm,
+                    vertical: 3,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColorsLight.success.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.auto_graph_rounded,
+                        size: 12,
+                        color: AppColorsLight.success,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        '${connection.matchScore}% Match',
+                        style: AppTypography.caption.copyWith(
+                          color: AppColorsLight.success,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
             ],
           ),
           const SizedBox(height: AppSpacing.sm),
@@ -538,14 +592,13 @@ class _SuccessCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  const Icon(Icons.schedule_rounded,
-                      size: 13,
-                      color: AppColorsLight.textTertiary),
-                  const SizedBox(width: 4),
-                  Text(
-                    connection.confirmedAt,
-                    style: AppTypography.caption,
+                  const Icon(
+                    Icons.schedule_rounded,
+                    size: 13,
+                    color: AppColorsLight.textTertiary,
                   ),
+                  const SizedBox(width: 4),
+                  Text(connection.confirmedAt, style: AppTypography.caption),
                 ],
               ),
               TextButton(
@@ -589,11 +642,7 @@ class _Avatar extends StatelessWidget {
   final String name;
   final double size;
 
-  const _Avatar({
-    this.photoUrl,
-    required this.name,
-    required this.size,
-  });
+  const _Avatar({this.photoUrl, required this.name, required this.size});
 
   @override
   Widget build(BuildContext context) {
@@ -614,11 +663,7 @@ class _CompanyAvatar extends StatelessWidget {
   final String name;
   final double size;
 
-  const _CompanyAvatar({
-    this.logoUrl,
-    required this.name,
-    required this.size,
-  });
+  const _CompanyAvatar({this.logoUrl, required this.name, required this.size});
 
   @override
   Widget build(BuildContext context) {

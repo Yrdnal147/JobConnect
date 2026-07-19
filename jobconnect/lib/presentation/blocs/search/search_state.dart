@@ -23,9 +23,15 @@ class SearchOfferItem extends Equatable {
 
   @override
   List<Object?> get props => [
-        offerId, title, companyName, companyLogo,
-        offerType, location, matchScore, requiredSkills,
-      ];
+    offerId,
+    title,
+    companyName,
+    companyLogo,
+    offerType,
+    location,
+    matchScore,
+    requiredSkills,
+  ];
 }
 
 abstract class SearchState extends Equatable {
@@ -50,7 +56,8 @@ class SearchLoading extends SearchState {
 class SearchLoaded extends SearchState {
   final List<SearchOfferItem> results;
   final String query;
-  final String activeFilter; // 'Tous', 'CDI', 'CDD', 'Stage académique', 'Stage pro'
+  final String
+  activeFilter; // 'Tous', 'CDI', 'CDD', 'Stage académique', 'Stage pro'
 
   const SearchLoaded({
     required this.results,

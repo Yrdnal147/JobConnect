@@ -10,10 +10,12 @@ class StudentProfileCubit extends Cubit<StudentProfileState> {
   final SupabaseClient _client;
   final IMastraRemoteDataSource? _mastraRemoteDataSource;
 
-  StudentProfileCubit({SupabaseClient? client, IMastraRemoteDataSource? mastraRemoteDataSource})
-      : _client = client ?? Supabase.instance.client,
-        _mastraRemoteDataSource = mastraRemoteDataSource,
-        super(const StudentProfileInitial());
+  StudentProfileCubit({
+    SupabaseClient? client,
+    IMastraRemoteDataSource? mastraRemoteDataSource,
+  }) : _client = client ?? Supabase.instance.client,
+       _mastraRemoteDataSource = mastraRemoteDataSource,
+       super(const StudentProfileInitial());
 
   // ─── Charge le profil ─────────────────────────────────────────────────────
 
@@ -27,7 +29,7 @@ class StudentProfileCubit extends Cubit<StudentProfileState> {
         return;
       }
 
-      final email    = user.email ?? '';
+      final email = user.email ?? '';
       final fullName = user.userMetadata?['full_name'] as String? ?? 'Candidat';
 
       final profileRes = await _client
@@ -55,12 +57,11 @@ class StudentProfileCubit extends Cubit<StudentProfileState> {
       }
 
       if (profileRes == null) {
-        emit(StudentProfileLoaded(
-          profile: StudentProfileData(
-            fullName: fullName,
-            email: email,
+        emit(
+          StudentProfileLoaded(
+            profile: StudentProfileData(fullName: fullName, email: email),
           ),
-        ));
+        );
         return;
       }
 
@@ -100,19 +101,22 @@ class StudentProfileCubit extends Cubit<StudentProfileState> {
     emit(StudentPhotoUploading(profile: profile));
 
     try {
-      final user     = _client.auth.currentUser!;
-      final ext      = imageFile.path.split('.').last;
+      final user = _client.auth.currentUser!;
+      final ext = imageFile.path.split('.').last;
       final ts = DateTime.now().millisecondsSinceEpoch;
       final fileName = '${user.id}/avatar_$ts.$ext';
 
-      await _client.storage.from('profile-photos').upload(
+      await _client.storage
+          .from('profile-photos')
+          .upload(
             fileName,
             imageFile,
             fileOptions: const FileOptions(upsert: true),
           );
 
-      final photoUrl =
-          _client.storage.from('profile-photos').getPublicUrl(fileName);
+      final photoUrl = _client.storage
+          .from('profile-photos')
+          .getPublicUrl(fileName);
 
       await _ensureProfileExists(user.id, profile.fullName);
       await _client
@@ -120,30 +124,34 @@ class StudentProfileCubit extends Cubit<StudentProfileState> {
           .update({'photo_url': photoUrl})
           .eq('user_id', user.id);
 
-      emit(StudentProfileLoaded(
-        profile: StudentProfileData(
-          fullName: profile.fullName,
-          email: profile.email,
-          profileScore: profile.profileScore,
-          completionLabel: profile.completionLabel,
-          photoUrl: photoUrl,
-          cvUrl: profile.cvUrl,
-          educationLevel: profile.educationLevel,
-          fieldOfStudy: profile.fieldOfStudy,
-          targetOpportunity: profile.targetOpportunity,
-          location: profile.location,
-          linkedinUrl: profile.linkedinUrl,
-          portfolioUrl: profile.portfolioUrl,
-          skills: profile.skills,
-          verificationStatus: profile.verificationStatus,
-          isVerified: profile.isVerified,
+      emit(
+        StudentProfileLoaded(
+          profile: StudentProfileData(
+            fullName: profile.fullName,
+            email: profile.email,
+            profileScore: profile.profileScore,
+            completionLabel: profile.completionLabel,
+            photoUrl: photoUrl,
+            cvUrl: profile.cvUrl,
+            educationLevel: profile.educationLevel,
+            fieldOfStudy: profile.fieldOfStudy,
+            targetOpportunity: profile.targetOpportunity,
+            location: profile.location,
+            linkedinUrl: profile.linkedinUrl,
+            portfolioUrl: profile.portfolioUrl,
+            skills: profile.skills,
+            verificationStatus: profile.verificationStatus,
+            isVerified: profile.isVerified,
+          ),
         ),
-      ));
+      );
     } catch (e) {
-      emit(StudentProfileError(
-        message: 'Erreur upload photo : ${e.toString()}',
-        lastKnownProfile: profile,
-      ));
+      emit(
+        StudentProfileError(
+          message: 'Erreur upload photo : ${e.toString()}',
+          lastKnownProfile: profile,
+        ),
+      );
       _restoreLoaded(profile);
     }
   }
@@ -158,19 +166,21 @@ class StudentProfileCubit extends Cubit<StudentProfileState> {
     emit(StudentCvUploading(profile: profile));
 
     try {
-      final user        = _client.auth.currentUser!;
+      final user = _client.auth.currentUser!;
       final ts = DateTime.now().millisecondsSinceEpoch;
       final storagePath = '${user.id}/cv_$ts.pdf';
 
-      await _client.storage.from('cv-documents').upload(
+      await _client.storage
+          .from('cv-documents')
+          .upload(
             storagePath,
             cvFile,
             fileOptions: const FileOptions(upsert: true),
           );
 
       final cvUrl = await _client.storage
-    .from('cv-documents')
-    .createSignedUrl(storagePath, 60 * 60 * 24 * 365);
+          .from('cv-documents')
+          .createSignedUrl(storagePath, 60 * 60 * 24 * 365);
 
       await _ensureProfileExists(user.id, profile.fullName);
       await _client
@@ -180,53 +190,57 @@ class StudentProfileCubit extends Cubit<StudentProfileState> {
 
       if (_mastraRemoteDataSource != null) {
         emit(StudentCvAnalyzing(profile: profile.copyWithCv(cvUrl, fileName)));
-        
-       await _mastraRemoteDataSource.startWorkflow(
-  ApiEndpoints.cvPipeline,
-  {
-    'cvUrl': cvUrl,
-    'userId': user.id,
-    'targetOpportunity': profile.targetOpportunity.isEmpty
-        ? 'full-time'
-        : profile.targetOpportunity,
-  },
-);
+
+        await _mastraRemoteDataSource.startWorkflow(ApiEndpoints.cvPipeline, {
+          'cvUrl': cvUrl,
+          'userId': user.id,
+          'targetOpportunity': profile.targetOpportunity.isEmpty
+              ? 'full-time'
+              : profile.targetOpportunity,
+        });
         // Recharge le profil depuis Supabase pour afficher les nouvelles données
         await loadProfile();
       } else {
         final newScore = _calculateScore(profile.copyWithCv(cvUrl, fileName));
 
-        await _client.from('student_profiles').update({
-          'profile_score': newScore,
-          'completion_label': _getCompletionLabel(newScore),
-        }).eq('user_id', user.id);
+        await _client
+            .from('student_profiles')
+            .update({
+              'profile_score': newScore,
+              'completion_label': _getCompletionLabel(newScore),
+            })
+            .eq('user_id', user.id);
 
-        emit(StudentProfileLoaded(
-          profile: StudentProfileData(
-            fullName: profile.fullName,
-            email: profile.email,
-            profileScore: newScore,
-            completionLabel: _getCompletionLabel(newScore),
-            photoUrl: profile.photoUrl,
-            cvUrl: cvUrl,
-            cvFileName: fileName,
-            educationLevel: profile.educationLevel,
-            fieldOfStudy: profile.fieldOfStudy,
-            targetOpportunity: profile.targetOpportunity,
-            location: profile.location,
-            linkedinUrl: profile.linkedinUrl,
-            portfolioUrl: profile.portfolioUrl,
-            skills: profile.skills,
-            verificationStatus: profile.verificationStatus,
-            isVerified: profile.isVerified,
+        emit(
+          StudentProfileLoaded(
+            profile: StudentProfileData(
+              fullName: profile.fullName,
+              email: profile.email,
+              profileScore: newScore,
+              completionLabel: _getCompletionLabel(newScore),
+              photoUrl: profile.photoUrl,
+              cvUrl: cvUrl,
+              cvFileName: fileName,
+              educationLevel: profile.educationLevel,
+              fieldOfStudy: profile.fieldOfStudy,
+              targetOpportunity: profile.targetOpportunity,
+              location: profile.location,
+              linkedinUrl: profile.linkedinUrl,
+              portfolioUrl: profile.portfolioUrl,
+              skills: profile.skills,
+              verificationStatus: profile.verificationStatus,
+              isVerified: profile.isVerified,
+            ),
           ),
-        ));
+        );
       }
     } catch (e) {
-      emit(StudentProfileError(
-        message: 'Erreur upload CV : ${e.toString()}',
-        lastKnownProfile: profile,
-      ));
+      emit(
+        StudentProfileError(
+          message: 'Erreur upload CV : ${e.toString()}',
+          lastKnownProfile: profile,
+        ),
+      );
       _restoreLoaded(profile);
     }
   }
@@ -242,7 +256,8 @@ class StudentProfileCubit extends Cubit<StudentProfileState> {
     final profile = current.profile;
 
     if (profile.skills.any(
-        (s) => s.name.toLowerCase() == skillName.trim().toLowerCase())) {
+      (s) => s.name.toLowerCase() == skillName.trim().toLowerCase(),
+    )) {
       return;
     }
 
@@ -250,14 +265,18 @@ class StudentProfileCubit extends Cubit<StudentProfileState> {
       final user = _client.auth.currentUser!;
 
       final profileRow = await _ensureProfileExists(user.id, profile.fullName);
-      final studentId  = profileRow['id'] as String;
+      final studentId = profileRow['id'] as String;
 
-      final skillRes = await _client.from('skills').insert({
-        'id': const Uuid().v4(),
-        'student_id': studentId,
-        'name': skillName.trim(),
-        'skill_type': skillType,
-      }).select().single();
+      final skillRes = await _client
+          .from('skills')
+          .insert({
+            'id': const Uuid().v4(),
+            'student_id': studentId,
+            'name': skillName.trim(),
+            'skill_type': skillType,
+          })
+          .select()
+          .single();
 
       final newSkill = SkillItem(
         id: skillRes['id'] as String,
@@ -266,38 +285,45 @@ class StudentProfileCubit extends Cubit<StudentProfileState> {
       );
 
       final updatedSkills = [...profile.skills, newSkill];
-      final newScore      = _calculateScore(profile.copyWithSkills(updatedSkills));
+      final newScore = _calculateScore(profile.copyWithSkills(updatedSkills));
 
-      await _client.from('student_profiles').update({
-        'profile_score': newScore,
-        'completion_label': _getCompletionLabel(newScore),
-      }).eq('user_id', user.id);
+      await _client
+          .from('student_profiles')
+          .update({
+            'profile_score': newScore,
+            'completion_label': _getCompletionLabel(newScore),
+          })
+          .eq('user_id', user.id);
 
-      emit(StudentProfileLoaded(
-        profile: StudentProfileData(
-          fullName: profile.fullName,
-          email: profile.email,
-          profileScore: newScore,
-          completionLabel: _getCompletionLabel(newScore),
-          photoUrl: profile.photoUrl,
-          cvUrl: profile.cvUrl,
-          cvFileName: profile.cvFileName,
-          educationLevel: profile.educationLevel,
-          fieldOfStudy: profile.fieldOfStudy,
-          targetOpportunity: profile.targetOpportunity,
-          location: profile.location,
-          linkedinUrl: profile.linkedinUrl,
-          portfolioUrl: profile.portfolioUrl,
-          skills: updatedSkills,
-          verificationStatus: profile.verificationStatus,
-          isVerified: profile.isVerified,
+      emit(
+        StudentProfileLoaded(
+          profile: StudentProfileData(
+            fullName: profile.fullName,
+            email: profile.email,
+            profileScore: newScore,
+            completionLabel: _getCompletionLabel(newScore),
+            photoUrl: profile.photoUrl,
+            cvUrl: profile.cvUrl,
+            cvFileName: profile.cvFileName,
+            educationLevel: profile.educationLevel,
+            fieldOfStudy: profile.fieldOfStudy,
+            targetOpportunity: profile.targetOpportunity,
+            location: profile.location,
+            linkedinUrl: profile.linkedinUrl,
+            portfolioUrl: profile.portfolioUrl,
+            skills: updatedSkills,
+            verificationStatus: profile.verificationStatus,
+            isVerified: profile.isVerified,
+          ),
         ),
-      ));
+      );
     } catch (e) {
-      emit(StudentProfileError(
-        message: 'Erreur ajout compétence : ${e.toString()}',
-        lastKnownProfile: profile,
-      ));
+      emit(
+        StudentProfileError(
+          message: 'Erreur ajout compétence : ${e.toString()}',
+          lastKnownProfile: profile,
+        ),
+      );
       _restoreLoaded(profile);
     }
   }
@@ -315,39 +341,48 @@ class StudentProfileCubit extends Cubit<StudentProfileState> {
 
       await _client.from('skills').delete().eq('id', skillId);
 
-      final updatedSkills = profile.skills.where((s) => s.id != skillId).toList();
-      final newScore      = _calculateScore(profile.copyWithSkills(updatedSkills));
+      final updatedSkills = profile.skills
+          .where((s) => s.id != skillId)
+          .toList();
+      final newScore = _calculateScore(profile.copyWithSkills(updatedSkills));
 
-      await _client.from('student_profiles').update({
-        'profile_score': newScore,
-        'completion_label': _getCompletionLabel(newScore),
-      }).eq('user_id', user.id);
+      await _client
+          .from('student_profiles')
+          .update({
+            'profile_score': newScore,
+            'completion_label': _getCompletionLabel(newScore),
+          })
+          .eq('user_id', user.id);
 
-      emit(StudentProfileLoaded(
-        profile: StudentProfileData(
-          fullName: profile.fullName,
-          email: profile.email,
-          profileScore: newScore,
-          completionLabel: _getCompletionLabel(newScore),
-          photoUrl: profile.photoUrl,
-          cvUrl: profile.cvUrl,
-          cvFileName: profile.cvFileName,
-          educationLevel: profile.educationLevel,
-          fieldOfStudy: profile.fieldOfStudy,
-          targetOpportunity: profile.targetOpportunity,
-          location: profile.location,
-          linkedinUrl: profile.linkedinUrl,
-          portfolioUrl: profile.portfolioUrl,
-          skills: updatedSkills,
-          verificationStatus: profile.verificationStatus,
-          isVerified: profile.isVerified,
+      emit(
+        StudentProfileLoaded(
+          profile: StudentProfileData(
+            fullName: profile.fullName,
+            email: profile.email,
+            profileScore: newScore,
+            completionLabel: _getCompletionLabel(newScore),
+            photoUrl: profile.photoUrl,
+            cvUrl: profile.cvUrl,
+            cvFileName: profile.cvFileName,
+            educationLevel: profile.educationLevel,
+            fieldOfStudy: profile.fieldOfStudy,
+            targetOpportunity: profile.targetOpportunity,
+            location: profile.location,
+            linkedinUrl: profile.linkedinUrl,
+            portfolioUrl: profile.portfolioUrl,
+            skills: updatedSkills,
+            verificationStatus: profile.verificationStatus,
+            isVerified: profile.isVerified,
+          ),
         ),
-      ));
+      );
     } catch (e) {
-      emit(StudentProfileError(
-        message: 'Erreur suppression : ${e.toString()}',
-        lastKnownProfile: profile,
-      ));
+      emit(
+        StudentProfileError(
+          message: 'Erreur suppression : ${e.toString()}',
+          lastKnownProfile: profile,
+        ),
+      );
       _restoreLoaded(profile);
     }
   }
@@ -357,34 +392,34 @@ class StudentProfileCubit extends Cubit<StudentProfileState> {
   Future<void> updateFullName(String newName) async {
     final current = state;
     if (current is! StudentProfileLoaded) return;
-    
+
     final cleanName = newName.trim();
     if (cleanName.isEmpty) return;
 
     final profile = current.profile;
-    
+
     try {
       final user = _client.auth.currentUser!;
       await _ensureProfileExists(user.id, profile.fullName);
-      
+
       await _client
           .from('student_profiles')
           .update({'full_name': cleanName})
           .eq('user_id', user.id);
-          
-      // Mise à jour globale dans Supabase Auth (pour que le nom soit disponible instantanément sur les autres pages)
-      await _client.auth.updateUser(UserAttributes(
-        data: {'full_name': cleanName},
-      ));
 
-      emit(StudentProfileLoaded(
-        profile: profile.copyWithFullName(cleanName),
-      ));
+      // Mise à jour globale dans Supabase Auth (pour que le nom soit disponible instantanément sur les autres pages)
+      await _client.auth.updateUser(
+        UserAttributes(data: {'full_name': cleanName}),
+      );
+
+      emit(StudentProfileLoaded(profile: profile.copyWithFullName(cleanName)));
     } catch (e) {
-      emit(StudentProfileError(
-        message: 'Erreur mise à jour du nom : ${e.toString()}',
-        lastKnownProfile: profile,
-      ));
+      emit(
+        StudentProfileError(
+          message: 'Erreur mise à jour du nom : ${e.toString()}',
+          lastKnownProfile: profile,
+        ),
+      );
       _restoreLoaded(profile);
     }
   }
@@ -392,7 +427,9 @@ class StudentProfileCubit extends Cubit<StudentProfileState> {
   // ─── Helpers ──────────────────────────────────────────────────────────────
 
   Future<Map<String, dynamic>> _ensureProfileExists(
-      String userId, String fullName) async {
+    String userId,
+    String fullName,
+  ) async {
     final existing = await _client
         .from('student_profiles')
         .select('id')
@@ -401,15 +438,19 @@ class StudentProfileCubit extends Cubit<StudentProfileState> {
 
     if (existing != null) return existing;
 
-    final created = await _client.from('student_profiles').insert({
-      'user_id': userId,
-      'full_name': fullName,
-      'location': 'Douala',
-      'profile_score': 0,
-      'completion_label': 'Faible',
-      'verification_status': 'none',
-      'is_verified': false,
-    }).select().single();
+    final created = await _client
+        .from('student_profiles')
+        .insert({
+          'user_id': userId,
+          'full_name': fullName,
+          'location': 'Douala',
+          'profile_score': 0,
+          'completion_label': 'Faible',
+          'verification_status': 'none',
+          'is_verified': false,
+        })
+        .select()
+        .single();
 
     return created;
   }
@@ -434,10 +475,14 @@ class StudentProfileCubit extends Cubit<StudentProfileState> {
 
   StudentVerificationStatus _parseVerificationStatus(String? raw) {
     switch (raw) {
-      case 'pending':  return StudentVerificationStatus.pending;
-      case 'verified': return StudentVerificationStatus.verified;
-      case 'rejected': return StudentVerificationStatus.rejected;
-      default:         return StudentVerificationStatus.none;
+      case 'pending':
+        return StudentVerificationStatus.pending;
+      case 'verified':
+        return StudentVerificationStatus.verified;
+      case 'rejected':
+        return StudentVerificationStatus.rejected;
+      default:
+        return StudentVerificationStatus.none;
     }
   }
 

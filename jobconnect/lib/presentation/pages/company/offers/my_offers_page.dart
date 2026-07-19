@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:go_router/go_router.dart';
@@ -51,14 +52,12 @@ class _MyOffersPageState extends State<MyOffersPage> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    
+
     return BlocProvider.value(
       value: _cubit,
       child: BlocBuilder<OffersCubit, OffersState>(
         builder: (context, state) {
-          final activeCount = state is OffersLoaded
-              ? state.activeCount
-              : 0;
+          final activeCount = state is OffersLoaded ? state.activeCount : 0;
 
           return Scaffold(
             backgroundColor: AppColorsLight.bgDark,
@@ -72,16 +71,14 @@ class _MyOffersPageState extends State<MyOffersPage> {
                   height: size.height * 0.25,
                   child: Container(
                     decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [AppColorsLight.primary, Color(0xFF4A148C)],
-                      ),
+                      color: AppColorsLight.primary,
                     ),
                     child: SafeArea(
                       bottom: false,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.lg,
+                        ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -90,17 +87,24 @@ class _MyOffersPageState extends State<MyOffersPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Text('company.offers.my_offers'.tr(),
-                                          style: AppTypography.displayMedium.copyWith(color: Colors.white)),
+                                      Text(
+                                        'company.offers.my_offers'.tr(),
+                                        style: AppTypography.displayMedium
+                                            .copyWith(color: Colors.white),
+                                      ),
                                       const SizedBox(height: 2),
                                       Text(
                                         'company.offers.manage_desc'.tr(),
                                         style: AppTypography.bodySmall.copyWith(
-                                          color: Colors.white.withValues(alpha: 0.8),
+                                          color: Colors.white.withValues(
+                                            alpha: 0.8,
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -115,9 +119,13 @@ class _MyOffersPageState extends State<MyOffersPage> {
                                   ),
                                   decoration: BoxDecoration(
                                     color: Colors.white.withValues(alpha: 0.2),
-                                    borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
+                                    borderRadius: BorderRadius.circular(
+                                      AppSpacing.radiusFull,
+                                    ),
                                     border: Border.all(
-                                      color: Colors.white.withValues(alpha: 0.4),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.4,
+                                      ),
                                     ),
                                   ),
                                   child: Row(
@@ -130,11 +138,18 @@ class _MyOffersPageState extends State<MyOffersPage> {
                                       ),
                                       const SizedBox(width: 4),
                                       Text(
-                                        activeCount > 1 ? 'company.offers.active_plural'.tr(args: [activeCount.toString()]) : 'company.offers.active_single'.tr(args: [activeCount.toString()]),
-                                        style: AppTypography.labelSmall.copyWith(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                                        activeCount > 1
+                                            ? 'company.offers.active_plural'.tr(
+                                                args: [activeCount.toString()],
+                                              )
+                                            : 'company.offers.active_single'.tr(
+                                                args: [activeCount.toString()],
+                                              ),
+                                        style: AppTypography.labelSmall
+                                            .copyWith(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w600,
+                                            ),
                                       ),
                                     ],
                                   ),
@@ -182,7 +197,9 @@ class _MyOffersPageState extends State<MyOffersPage> {
                                   width: double.infinity,
                                   height: 52,
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                                    borderRadius: BorderRadius.circular(
+                                      AppSpacing.radiusMd,
+                                    ),
                                     gradient: LinearGradient(
                                       colors: [
                                         AppColorsLight.textPrimary,
@@ -191,7 +208,8 @@ class _MyOffersPageState extends State<MyOffersPage> {
                                     ),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: AppColorsLight.primary.withValues(alpha: 0.3),
+                                        color: AppColorsLight.primary
+                                            .withValues(alpha: 0.3),
                                         blurRadius: 16,
                                         offset: const Offset(0, 6),
                                       ),
@@ -199,25 +217,34 @@ class _MyOffersPageState extends State<MyOffersPage> {
                                   ),
                                   child: Material(
                                     color: Colors.transparent,
-                                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                                    borderRadius: BorderRadius.circular(
+                                      AppSpacing.radiusMd,
+                                    ),
                                     clipBehavior: Clip.antiAlias,
                                     child: InkWell(
-                                      onTap: () => context.push('/company/offers/create'),
+                                      onTap: () => context.push(
+                                        '/company/offers/create',
+                                      ),
                                       child: Center(
                                         child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
                                             const Icon(
                                               Icons.add_rounded,
                                               color: Colors.white,
                                             ),
-                                            const SizedBox(width: AppSpacing.sm),
+                                            const SizedBox(
+                                              width: AppSpacing.sm,
+                                            ),
                                             Text(
-                                              'company.offers.publish_offer'.tr(),
-                                              style: AppTypography.labelLarge.copyWith(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w600,
-                                              ),
+                                              'company.offers.publish_offer'
+                                                  .tr(),
+                                              style: AppTypography.labelLarge
+                                                  .copyWith(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
                                             ),
                                           ],
                                         ),
@@ -227,9 +254,7 @@ class _MyOffersPageState extends State<MyOffersPage> {
                                 ),
                               ),
                               // ── Liste des offres ──────────────────────────────────
-                              Expanded(
-                                child: _buildOffersList(context, state),
-                              ),
+                              Expanded(child: _buildOffersList(context, state)),
                             ],
                           ),
                         ),
@@ -261,9 +286,7 @@ class _MyOffersPageState extends State<MyOffersPage> {
           ? state.offers
           : (state as OfferToggling).offers;
 
-      final togglingId = state is OfferToggling
-          ? state.togglingOfferId
-          : null;
+      final togglingId = state is OfferToggling ? state.togglingOfferId : null;
 
       if (offers.isEmpty) {
         return _buildEmptyState();
@@ -273,27 +296,26 @@ class _MyOffersPageState extends State<MyOffersPage> {
         color: AppColorsLight.primary,
         onRefresh: _cubit.refresh,
         child: ListView.builder(
-          padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.lg),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
           itemCount: offers.length,
           itemBuilder: (context, index) {
             final offer = offers[index];
             final isToggling = togglingId == offer.offerId;
             return Padding(
-  padding: const EdgeInsets.only(bottom: AppSpacing.md),
-  child: GestureDetector(
-    onTap: () => context.push('/company/offers/${offer.offerId}'),
-    child: _OfferManagementCard(
-      offer: offer,
-      isToggling: isToggling,
-      formatType: _formatOfferType,
-      onToggle: (value) =>
-          _cubit.toggleOfferStatus(offer.offerId, value),
-      onViewCandidates: () =>
-          context.push('/company/offers/${offer.offerId}'),
-    ),
-  ),
-);
+              padding: const EdgeInsets.only(bottom: AppSpacing.md),
+              child: GestureDetector(
+                onTap: () => context.push('/company/offers/${offer.offerId}'),
+                child: _OfferManagementCard(
+                  offer: offer,
+                  isToggling: isToggling,
+                  formatType: _formatOfferType,
+                  onToggle: (value) =>
+                      _cubit.toggleOfferStatus(offer.offerId, value),
+                  onViewCandidates: () =>
+                      context.push('/company/offers/${offer.offerId}'),
+                ),
+              ),
+            );
           },
         ),
       );
@@ -339,8 +361,10 @@ class _MyOffersPageState extends State<MyOffersPage> {
             ),
           ),
           const SizedBox(height: AppSpacing.md),
-          Text('company.offers.empty_title'.tr(),
-              style: AppTypography.headingSmall),
+          Text(
+            'company.offers.empty_title'.tr(),
+            style: AppTypography.headingSmall,
+          ),
           const SizedBox(height: 4),
           Text(
             'company.offers.empty_subtitle'.tr(),
@@ -350,8 +374,7 @@ class _MyOffersPageState extends State<MyOffersPage> {
           ),
           const SizedBox(height: AppSpacing.md),
           TextButton(
-            onPressed: () =>
-                context.push('/company/offers/create'),
+            onPressed: () => context.push('/company/offers/create'),
             child: Text(
               'company.offers.publish_first'.tr(),
               style: AppTypography.bodySmall.copyWith(
@@ -372,16 +395,23 @@ class _MyOffersPageState extends State<MyOffersPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.wifi_off_rounded,
-                color: AppColorsLight.textTertiary, size: 48),
+            const Icon(
+              Icons.wifi_off_rounded,
+              color: AppColorsLight.textTertiary,
+              size: 48,
+            ),
             const SizedBox(height: AppSpacing.md),
-            Text('company.offers.error_loading'.tr(),
-                style: AppTypography.headingSmall,
-                textAlign: TextAlign.center),
+            Text(
+              'company.offers.error_loading'.tr(),
+              style: AppTypography.headingSmall,
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: AppSpacing.sm),
-            Text(message,
-                style: AppTypography.bodySmall,
-                textAlign: TextAlign.center),
+            Text(
+              message,
+              style: AppTypography.bodySmall,
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: AppSpacing.lg),
             ElevatedButton.icon(
               onPressed: _cubit.loadOffers,
@@ -456,8 +486,7 @@ class _OfferManagementCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
                           child: Text(
@@ -493,17 +522,19 @@ class _OfferManagementCard extends StatelessWidget {
                             vertical: 3,
                           ),
                           decoration: BoxDecoration(
-                            color: AppColorsLight.primary
-                                .withOpacity(0.1),
+                            color: AppColorsLight.primary.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(
-                                AppSpacing.radiusFull),
+                              AppSpacing.radiusFull,
+                            ),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(_typeIcon,
-                                  size: 11,
-                                  color: AppColorsLight.primary),
+                              Icon(
+                                _typeIcon,
+                                size: 11,
+                                color: AppColorsLight.primary,
+                              ),
                               const SizedBox(width: 3),
                               Text(
                                 formatType(offer.offerType),
@@ -522,19 +553,18 @@ class _OfferManagementCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 2),
                         Text(
-                          'company.offers.published_at'.tr(args: [offer.postedAt]),
+                          'company.offers.published_at'.tr(
+                            args: [offer.postedAt],
+                          ),
                           style: AppTypography.caption,
                         ),
                       ],
                     ),
                     const SizedBox(height: AppSpacing.md),
-                    Container(
-                        height: 1,
-                        color: AppColorsLight.bgSurface),
+                    Container(height: 1, color: AppColorsLight.bgSurface),
                     const SizedBox(height: AppSpacing.sm),
                     Row(
-                      mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(
                           children: [
@@ -542,8 +572,9 @@ class _OfferManagementCard extends StatelessWidget {
                               width: 26,
                               height: 26,
                               decoration: BoxDecoration(
-                                color: AppColorsLight.secondary
-                                    .withOpacity(0.12),
+                                color: AppColorsLight.secondary.withOpacity(
+                                  0.12,
+                                ),
                                 shape: BoxShape.circle,
                               ),
                               child: const Icon(
@@ -554,7 +585,17 @@ class _OfferManagementCard extends StatelessWidget {
                             ),
                             const SizedBox(width: 6),
                             Text(
-                              offer.applicationsCount > 1 ? 'company.offers.application_plural'.tr(args: [offer.applicationsCount.toString()]) : 'company.offers.application_single'.tr(args: [offer.applicationsCount.toString()]),
+                              offer.applicationsCount > 1
+                                  ? 'company.offers.application_plural'.tr(
+                                      args: [
+                                        offer.applicationsCount.toString(),
+                                      ],
+                                    )
+                                  : 'company.offers.application_single'.tr(
+                                      args: [
+                                        offer.applicationsCount.toString(),
+                                      ],
+                                    ),
                               style: AppTypography.bodySmall,
                             ),
                           ],
@@ -564,16 +605,14 @@ class _OfferManagementCard extends StatelessWidget {
                           style: TextButton.styleFrom(
                             padding: EdgeInsets.zero,
                             minimumSize: const Size(0, 0),
-                            tapTargetSize:
-                                MaterialTapTargetSize.shrinkWrap,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
                                 'company.offers.view_candidates'.tr(),
-                                style: AppTypography.bodySmall
-                                    .copyWith(
+                                style: AppTypography.bodySmall.copyWith(
                                   color: AppColorsLight.primary,
                                   fontWeight: FontWeight.w600,
                                 ),

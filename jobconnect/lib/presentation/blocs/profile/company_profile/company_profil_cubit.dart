@@ -8,8 +8,8 @@ class CompanyProfileCubit extends Cubit<CompanyProfileState> {
   final CompanyDataSource _dataSource;
 
   CompanyProfileCubit({CompanyDataSource? dataSource})
-      : _dataSource = dataSource ?? CompanyDataSource(),
-        super(const CompanyProfileInitial());
+    : _dataSource = dataSource ?? CompanyDataSource(),
+      super(const CompanyProfileInitial());
 
   // ─── Load ────────────────────────────────────────────────────────────────
 
@@ -25,13 +25,12 @@ class CompanyProfileCubit extends Cubit<CompanyProfileState> {
       final data = await _dataSource.fetchCompanyProfile();
 
       if (data == null) {
-        emit(CompanyProfileLoaded(
-          profile: CompanyProfileData(
-            name: metaName,
-            email: email,
+        emit(
+          CompanyProfileLoaded(
+            profile: CompanyProfileData(name: metaName, email: email),
+            isDirty: false,
           ),
-          isDirty: false,
-        ));
+        );
         return;
       }
 
@@ -59,12 +58,10 @@ class CompanyProfileCubit extends Cubit<CompanyProfileState> {
 
   // ─── Field updates ────────────────────────────────────────────────────────
 
-  void updateName(String value) =>
-      _updateField((p) => p.copyWith(name: value));
+  void updateName(String value) => _updateField((p) => p.copyWith(name: value));
   void updateSector(String value) =>
       _updateField((p) => p.copyWith(sector: value));
-  void updateSize(String value) =>
-      _updateField((p) => p.copyWith(size: value));
+  void updateSize(String value) => _updateField((p) => p.copyWith(size: value));
   void updateDescription(String value) =>
       _updateField((p) => p.copyWith(description: value));
   void updateCeoName(String value) =>
@@ -74,14 +71,10 @@ class CompanyProfileCubit extends Cubit<CompanyProfileState> {
   void updateLocation(String value) =>
       _updateField((p) => p.copyWith(location: value));
 
-  void _updateField(
-      CompanyProfileData Function(CompanyProfileData) updater) {
+  void _updateField(CompanyProfileData Function(CompanyProfileData) updater) {
     final current = state;
     if (current is CompanyProfileLoaded) {
-      emit(current.copyWith(
-        profile: updater(current.profile),
-        isDirty: true,
-      ));
+      emit(current.copyWith(profile: updater(current.profile), isDirty: true));
     }
   }
 
@@ -94,10 +87,12 @@ class CompanyProfileCubit extends Cubit<CompanyProfileState> {
     final profile = current.profile;
 
     if (profile.name.trim().isEmpty) {
-      emit(CompanyProfileError(
-        message: 'Le nom de l\'entreprise est obligatoire.',
-        lastKnownProfile: profile,
-      ));
+      emit(
+        CompanyProfileError(
+          message: 'Le nom de l\'entreprise est obligatoire.',
+          lastKnownProfile: profile,
+        ),
+      );
       _restoreLoaded(profile);
       return;
     }
@@ -132,10 +127,12 @@ class CompanyProfileCubit extends Cubit<CompanyProfileState> {
         emit(CompanyProfileLoaded(profile: updatedProfile, isDirty: false));
       }
     } catch (e) {
-      emit(CompanyProfileError(
-        message: 'Impossible d\'enregistrer : ${e.toString()}',
-        lastKnownProfile: profile,
-      ));
+      emit(
+        CompanyProfileError(
+          message: 'Impossible d\'enregistrer : ${e.toString()}',
+          lastKnownProfile: profile,
+        ),
+      );
       _restoreLoaded(profile);
     }
   }
@@ -166,10 +163,12 @@ class CompanyProfileCubit extends Cubit<CompanyProfileState> {
       final updatedProfile = profile.copyWith(logoUrl: url);
       emit(CompanyProfileLoaded(profile: updatedProfile, isDirty: false));
     } catch (e) {
-      emit(CompanyProfileError(
-        message: 'Erreur lors du téléchargement : ${e.toString()}',
-        lastKnownProfile: profile,
-      ));
+      emit(
+        CompanyProfileError(
+          message: 'Erreur lors du téléchargement : ${e.toString()}',
+          lastKnownProfile: profile,
+        ),
+      );
       _restoreLoaded(profile);
     }
   }

@@ -7,8 +7,8 @@ class ApplicationsCubit extends Cubit<ApplicationsState> {
   final SupabaseClient _client;
 
   ApplicationsCubit({SupabaseClient? client})
-      : _client = client ?? Supabase.instance.client,
-        super(const ApplicationsInitial());
+    : _client = client ?? Supabase.instance.client,
+      super(const ApplicationsInitial());
 
   // ─── Charge toutes les candidatures ──────────────────────────────────────
 
@@ -44,12 +44,12 @@ class ApplicationsCubit extends Cubit<ApplicationsState> {
             .select('cards')
             .eq('student_id', studentId)
             .maybeSingle();
-            
+
         if (cacheRes != null && cacheRes['cards'] != null) {
           for (final c in cacheRes['cards'] as List) {
-             if (c['offerId'] != null && c['matchScore'] != null) {
-                latestScores[c['offerId'] as String] = c['matchScore'] as int;
-             }
+            if (c['offerId'] != null && c['matchScore'] != null) {
+              latestScores[c['offerId'] as String] = c['matchScore'] as int;
+            }
           }
         }
       } catch (_) {}
@@ -77,7 +77,7 @@ class ApplicationsCubit extends Cubit<ApplicationsState> {
 
       for (final app in appsRaw) {
         try {
-          final offer   = app['offers']    as Map<String, dynamic>;
+          final offer = app['offers'] as Map<String, dynamic>;
           final company = app['companies'] as Map<String, dynamic>;
 
           // Vérifie si une conversation existe
@@ -91,18 +91,22 @@ class ApplicationsCubit extends Cubit<ApplicationsState> {
             conversationId = convRes?['id'] as String?;
           } catch (_) {}
 
-          applications.add(ApplicationItem(
-            applicationId: app['id'] as String,
-            offerId:       app['offer_id'] as String,
-            offerTitle:    offer['title'] as String,
-            companyName:   company['name'] as String? ?? 'Entreprise',
-            companyLogoUrl: company['logo_url'] as String?,
-            companyId:     app['company_id'] as String,
-            status:        app['status'] as String? ?? 'pending',
-            matchScore:    latestScores[app['offer_id'] as String] ?? (app['match_score'] as int? ?? 0),
-            appliedAt:     _formatDate(app['created_at'] as String?),
-            conversationId: conversationId,
-          ));
+          applications.add(
+            ApplicationItem(
+              applicationId: app['id'] as String,
+              offerId: app['offer_id'] as String,
+              offerTitle: offer['title'] as String,
+              companyName: company['name'] as String? ?? 'Entreprise',
+              companyLogoUrl: company['logo_url'] as String?,
+              companyId: app['company_id'] as String,
+              status: app['status'] as String? ?? 'pending',
+              matchScore:
+                  latestScores[app['offer_id'] as String] ??
+                  (app['match_score'] as int? ?? 0),
+              appliedAt: _formatDate(app['created_at'] as String?),
+              conversationId: conversationId,
+            ),
+          );
         } catch (_) {
           continue;
         }
@@ -152,9 +156,9 @@ class ApplicationsCubit extends Cubit<ApplicationsState> {
         return;
       }
 
-      final offer   = appRes['offers']    as Map<String, dynamic>;
+      final offer = appRes['offers'] as Map<String, dynamic>;
       final company = appRes['companies'] as Map<String, dynamic>;
-      final status  = appRes['status'] as String? ?? 'pending';
+      final status = appRes['status'] as String? ?? 'pending';
 
       // Récupère le score en temps réel
       int matchScore = appRes['match_score'] as int? ?? 0;
@@ -166,10 +170,10 @@ class ApplicationsCubit extends Cubit<ApplicationsState> {
             .maybeSingle();
         if (cacheRes != null && cacheRes['cards'] != null) {
           for (final c in cacheRes['cards'] as List) {
-             if (c['offerId'] == appRes['offer_id']) {
-                matchScore = c['matchScore'] as int;
-                break;
-             }
+            if (c['offerId'] == appRes['offer_id']) {
+              matchScore = c['matchScore'] as int;
+              break;
+            }
           }
         }
       } catch (_) {}
@@ -179,7 +183,8 @@ class ApplicationsCubit extends Cubit<ApplicationsState> {
       if (status == 'refused') {
         try {
           final requiredSkills = List<String>.from(
-              offer['required_skills'] as List? ?? []);
+            offer['required_skills'] as List? ?? [],
+          );
 
           final skillsRes = await _client
               .from('skills')
@@ -211,10 +216,10 @@ class ApplicationsCubit extends Cubit<ApplicationsState> {
           similarOffers = (similarRes as List).map((o) {
             final c = o['companies'] as Map<String, dynamic>;
             return SimilarOffer(
-              offerId:     o['id'] as String,
-              title:       o['title'] as String,
+              offerId: o['id'] as String,
+              title: o['title'] as String,
               companyName: c['name'] as String? ?? 'Entreprise',
-              offerType:   o['offer_type'] as String? ?? '',
+              offerType: o['offer_type'] as String? ?? '',
             );
           }).toList();
         } catch (_) {}
@@ -239,22 +244,24 @@ class ApplicationsCubit extends Cubit<ApplicationsState> {
         explanationStr = val is String ? val : jsonEncode(val);
       }
 
-      emit(ApplicationDetailLoaded(
-        detail: ApplicationDetail(
-          applicationId:  appRes['id'] as String,
-          offerTitle:     offer['title'] as String,
-          offerType:      offer['offer_type'] as String? ?? '',
-          companyName:    company['name'] as String? ?? 'Entreprise',
-          companyLogoUrl: company['logo_url'] as String?,
-          status:         status,
-          matchScore:     matchScore,
-          appliedAt:      _formatDate(appRes['created_at'] as String?),
-          conversationId: conversationId,
-          missingSkills:  missingSkills,
-          similarOffers:  similarOffers,
-          statusExplanation: explanationStr,
+      emit(
+        ApplicationDetailLoaded(
+          detail: ApplicationDetail(
+            applicationId: appRes['id'] as String,
+            offerTitle: offer['title'] as String,
+            offerType: offer['offer_type'] as String? ?? '',
+            companyName: company['name'] as String? ?? 'Entreprise',
+            companyLogoUrl: company['logo_url'] as String?,
+            status: status,
+            matchScore: matchScore,
+            appliedAt: _formatDate(appRes['created_at'] as String?),
+            conversationId: conversationId,
+            missingSkills: missingSkills,
+            similarOffers: similarOffers,
+            statusExplanation: explanationStr,
+          ),
         ),
-      ));
+      );
     } catch (e) {
       emit(ApplicationDetailError(e.toString()));
     }
@@ -271,8 +278,18 @@ class ApplicationsCubit extends Cubit<ApplicationsState> {
     try {
       final date = DateTime.parse(isoDate).toLocal();
       const months = [
-        'Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun',
-        'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'
+        'Jan',
+        'Fév',
+        'Mar',
+        'Avr',
+        'Mai',
+        'Jun',
+        'Jul',
+        'Aoû',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Déc',
       ];
       return '${date.day} ${months[date.month - 1]} ${date.year}';
     } catch (_) {

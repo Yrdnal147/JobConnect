@@ -7,10 +7,12 @@ class CreateOfferCubit extends Cubit<CreateOfferState> {
   final SupabaseClient _client;
   final IMastraRemoteDataSource? _mastraRemoteDataSource;
 
-  CreateOfferCubit({SupabaseClient? client, IMastraRemoteDataSource? mastraRemoteDataSource})
-      : _client = client ?? Supabase.instance.client,
-        _mastraRemoteDataSource = mastraRemoteDataSource,
-        super(const CreateOfferInitial());
+  CreateOfferCubit({
+    SupabaseClient? client,
+    IMastraRemoteDataSource? mastraRemoteDataSource,
+  }) : _client = client ?? Supabase.instance.client,
+       _mastraRemoteDataSource = mastraRemoteDataSource,
+       super(const CreateOfferInitial());
 
   // ─── Publication de l'offre ───────────────────────────────────────────────
 
@@ -37,8 +39,7 @@ class CreateOfferCubit extends Cubit<CreateOfferState> {
       return;
     }
     if (requiredSkills.isEmpty) {
-      emit(const CreateOfferError(
-          'Ajoutez au moins une compétence requise.'));
+      emit(const CreateOfferError('Ajoutez au moins une compétence requise.'));
       _resetAfterError();
       return;
     }
@@ -60,8 +61,11 @@ class CreateOfferCubit extends Cubit<CreateOfferState> {
           .maybeSingle();
 
       if (companyRow == null) {
-        emit(const CreateOfferError(
-            'Profil entreprise introuvable. Complétez votre profil d\'abord.'));
+        emit(
+          const CreateOfferError(
+            'Profil entreprise introuvable. Complétez votre profil d\'abord.',
+          ),
+        );
         return;
       }
 
@@ -90,9 +94,10 @@ class CreateOfferCubit extends Cubit<CreateOfferState> {
 
       // Met à jour le compteur d'offres actives
       try {
-        await _client.rpc('increment_active_offers', params: {
-          'company_id_param': companyId,
-        });
+        await _client.rpc(
+          'increment_active_offers',
+          params: {'company_id_param': companyId},
+        );
       } catch (_) {
         // Non bloquant si la fonction RPC n'existe pas
       }
@@ -108,14 +113,17 @@ class CreateOfferCubit extends Cubit<CreateOfferState> {
           );
         } catch (e) {
           // Non bloquant si l'embedding échoue
-          print('Erreur lors de la génération de l\'embedding pour l\'offre : $e');
+          print(
+            'Erreur lors de la génération de l\'embedding pour l\'offre : $e',
+          );
         }
       }
 
       emit(CreateOfferSuccess(offerId: offerId));
     } catch (e) {
-      emit(CreateOfferError(
-          'Impossible de publier l\'offre : ${e.toString()}'));
+      emit(
+        CreateOfferError('Impossible de publier l\'offre : ${e.toString()}'),
+      );
     }
   }
 

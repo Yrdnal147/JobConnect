@@ -12,8 +12,8 @@ class SearchCubit extends Cubit<SearchState> {
   static const _maxRecentSearches = 5;
 
   SearchCubit({SupabaseClient? client})
-      : _client = client ?? Supabase.instance.client,
-        super(const SearchInitial()) {
+    : _client = client ?? Supabase.instance.client,
+      super(const SearchInitial()) {
     _loadRecentSearches();
   }
 
@@ -101,12 +101,13 @@ class SearchCubit extends Cubit<SearchState> {
               .select('cards')
               .eq('student_id', profileId)
               .maybeSingle();
-          
+
           if (feedCacheRes != null && feedCacheRes['cards'] != null) {
             final cards = feedCacheRes['cards'] as List;
             for (var card in cards) {
               if (card['offerId'] != null && card['matchScore'] != null) {
-                exactScores[card['offerId'] as String] = card['matchScore'] as int;
+                exactScores[card['offerId'] as String] =
+                    card['matchScore'] as int;
               }
             }
           }
@@ -160,7 +161,9 @@ class SearchCubit extends Cubit<SearchState> {
       final results = merged.values.map((offer) {
         final company = offer['companies'] as Map<String, dynamic>;
         final offerType = offer['offer_type'] as String? ?? '';
-        final skills = List<String>.from(offer['required_skills'] as List? ?? []);
+        final skills = List<String>.from(
+          offer['required_skills'] as List? ?? [],
+        );
 
         return SearchOfferItem(
           offerId: offer['id'] as String,

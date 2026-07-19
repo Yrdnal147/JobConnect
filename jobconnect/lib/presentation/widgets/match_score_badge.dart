@@ -22,10 +22,10 @@ class MatchScoreBadge extends StatelessWidget {
     final scoreColor = onDarkBackground
         ? Colors.white
         : (score >= 75
-            ? AppColorsLight.success
-            : score >= 50
-                ? AppColorsLight.warning
-                : AppColorsLight.error);
+              ? AppColorsLight.success
+              : score >= 50
+              ? AppColorsLight.warning
+              : AppColorsLight.error);
 
     return Container(
       padding: const EdgeInsets.symmetric(

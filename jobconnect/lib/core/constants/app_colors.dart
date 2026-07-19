@@ -4,7 +4,7 @@ class AppColors {
   AppColors._();
 
   // Primary palette
-  static const Color primary = Color(0xFF1D4A81);
+  static const Color primary = Color(0xFF11296B);
   static const Color secondary = Color(0xFF00D9FF);
   static const Color accentRed = Color(0xFFFF6B6B);
   static const Color success = Color(0xFF36B37E);
@@ -22,12 +22,10 @@ class AppColors {
   static const Color textTertiary = Color(0xFF6B7280);
 }
 
-
-
 class AppColorsLight {
   AppColorsLight._();
 
-  static const Color primary = Color(0xFF1D4A81);
+  static const Color primary = Color(0xFF11296B);
   //static const Color primary = Color(0xFF3A0CA3);
   static const Color secondary = Color(0xFF00D9FF);
   static const Color accentRed = Color(0xFFFF6B6B);

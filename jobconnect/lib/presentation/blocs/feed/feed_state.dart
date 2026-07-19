@@ -25,9 +25,16 @@ class FeedOffer extends Equatable {
 
   @override
   List<Object?> get props => [
-        offerId, title, companyName, companyLogo,
-        offerType, location, matchScore, postedAt, isHighMatch,
-      ];
+    offerId,
+    title,
+    companyName,
+    companyLogo,
+    offerType,
+    location,
+    matchScore,
+    postedAt,
+    isHighMatch,
+  ];
 }
 
 abstract class FeedState extends Equatable {
@@ -99,8 +106,13 @@ class FeedLoaded extends FeedState {
 
   @override
   List<Object?> get props => [
-        offers, activeFilter, hasProfile, userName, photoUrl, profileScore,
-      ];
+    offers,
+    activeFilter,
+    hasProfile,
+    userName,
+    photoUrl,
+    profileScore,
+  ];
 }
 
 class FeedError extends FeedState {

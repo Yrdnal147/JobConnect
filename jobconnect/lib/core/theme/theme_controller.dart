@@ -4,8 +4,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ThemeController {
   static const _key = 'theme_mode';
 
-  final ValueNotifier<ThemeMode> themeModeNotifier =
-      ValueNotifier(ThemeMode.dark);
+  final ValueNotifier<ThemeMode> themeModeNotifier = ValueNotifier(
+    ThemeMode.dark,
+  );
 
   ThemeMode get themeMode => themeModeNotifier.value;
 
@@ -33,8 +34,9 @@ class ThemeController {
   }
 
   Future<void> toggleTheme() async {
-    final newMode =
-        themeModeNotifier.value == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
+    final newMode = themeModeNotifier.value == ThemeMode.dark
+        ? ThemeMode.light
+        : ThemeMode.dark;
     await setTheme(newMode);
   }
 

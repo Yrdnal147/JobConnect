@@ -16,8 +16,7 @@ class RetainedCandidatesPage extends StatefulWidget {
   const RetainedCandidatesPage({super.key});
 
   @override
-  State<RetainedCandidatesPage> createState() =>
-      _RetainedCandidatesPageState();
+  State<RetainedCandidatesPage> createState() => _RetainedCandidatesPageState();
 }
 
 class _RetainedCandidatesPageState extends State<RetainedCandidatesPage> {
@@ -43,8 +42,7 @@ class _RetainedCandidatesPageState extends State<RetainedCandidatesPage> {
     if (name.isEmpty) return '?';
     final parts = name.trim().split(RegExp(r'\s+'));
     final first = parts.first.isNotEmpty ? parts.first[0] : '';
-    final second =
-        parts.length > 1 && parts[1].isNotEmpty ? parts[1][0] : '';
+    final second = parts.length > 1 && parts[1].isNotEmpty ? parts[1][0] : '';
     return (first + second).toUpperCase();
   }
 
@@ -53,8 +51,18 @@ class _RetainedCandidatesPageState extends State<RetainedCandidatesPage> {
     try {
       final date = DateTime.parse(isoDate);
       const months = [
-        'Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun',
-        'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'
+        'Jan',
+        'Fév',
+        'Mar',
+        'Avr',
+        'Mai',
+        'Jun',
+        'Jul',
+        'Aoû',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Déc',
       ];
       return '${date.day} ${months[date.month - 1]} ${date.year}';
     } catch (_) {
@@ -82,16 +90,14 @@ class _RetainedCandidatesPageState extends State<RetainedCandidatesPage> {
                   height: size.height * 0.25,
                   child: Container(
                     decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [AppColorsLight.primary, Color(0xFF4A148C)],
-                      ),
+                      color: AppColorsLight.primary,
                     ),
                     child: SafeArea(
                       bottom: false,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.lg,
+                        ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -104,7 +110,10 @@ class _RetainedCandidatesPageState extends State<RetainedCandidatesPage> {
                                     IconButton(
                                       padding: EdgeInsets.zero,
                                       constraints: const BoxConstraints(),
-                                      icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.white),
+                                      icon: const Icon(
+                                        Icons.arrow_back_ios_rounded,
+                                        color: Colors.white,
+                                      ),
                                       onPressed: () {
                                         if (Navigator.of(context).canPop()) {
                                           Navigator.of(context).pop();
@@ -116,16 +125,27 @@ class _RetainedCandidatesPageState extends State<RetainedCandidatesPage> {
                                     const SizedBox(width: AppSpacing.md),
                                     Text(
                                       'company.candidates.retained_title'.tr(),
-                                      style: AppTypography.displayMedium.copyWith(color: Colors.white, fontSize: 26),
+                                      style: AppTypography.displayMedium
+                                          .copyWith(
+                                            color: Colors.white,
+                                            fontSize: 26,
+                                          ),
                                     ),
                                   ],
                                 ),
                                 if (state is AllCandidatesLoaded)
                                   Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                      vertical: 4,
+                                    ),
                                     decoration: BoxDecoration(
-                                      color: Colors.white.withValues(alpha: 0.15),
-                                      borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.15,
+                                      ),
+                                      borderRadius: BorderRadius.circular(
+                                        AppSpacing.radiusFull,
+                                      ),
                                     ),
                                     child: Text(
                                       '${state.filteredCandidates.length}',
@@ -227,16 +247,13 @@ class _RetainedCandidatesPageState extends State<RetainedCandidatesPage> {
 
   // ─── Carte candidat retenu ────────────────────────────────────────────────
 
-  Widget _buildCandidateCard(
-      BuildContext context, CandidateItem candidate) {
+  Widget _buildCandidateCard(BuildContext context, CandidateItem candidate) {
     return Container(
       margin: const EdgeInsets.only(bottom: AppSpacing.md),
       decoration: BoxDecoration(
         color: AppColorsLight.bgCard,
         borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-        border: Border.all(
-          color: AppColorsLight.success.withOpacity(0.3),
-        ),
+        border: Border.all(color: AppColorsLight.success.withOpacity(0.3)),
         boxShadow: [
           BoxShadow(
             color: AppColorsLight.success.withOpacity(0.05),
@@ -250,8 +267,8 @@ class _RetainedCandidatesPageState extends State<RetainedCandidatesPage> {
         borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
-          onTap: () => context
-              .push('/company/candidates/${candidate.applicationId}'),
+          onTap: () =>
+              context.push('/company/candidates/${candidate.applicationId}'),
           child: Padding(
             padding: const EdgeInsets.all(AppSpacing.md),
             child: Row(
@@ -357,8 +374,7 @@ class _RetainedCandidatesPageState extends State<RetainedCandidatesPage> {
         decoration: BoxDecoration(
           color: AppColorsLight.bgCard,
           borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-          border: Border.all(
-              color: AppColorsLight.success.withOpacity(0.2)),
+          border: Border.all(color: AppColorsLight.success.withOpacity(0.2)),
         ),
       ),
     );
@@ -416,8 +432,11 @@ class _RetainedCandidatesPageState extends State<RetainedCandidatesPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.wifi_off_rounded,
-                color: AppColorsLight.textTertiary, size: 48),
+            const Icon(
+              Icons.wifi_off_rounded,
+              color: AppColorsLight.textTertiary,
+              size: 48,
+            ),
             const SizedBox(height: AppSpacing.md),
             Text(
               'Impossible de charger les candidats retenus',

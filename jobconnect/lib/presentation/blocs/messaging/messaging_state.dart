@@ -23,15 +23,15 @@ class ConversationItem extends Equatable {
 
   @override
   List<Object?> get props => [
-        conversationId,
-        otherPartyName,
-        otherPartySubtitle,
-        otherPartyPhotoUrl,
-        lastMessage,
-        lastMessageAt,
-        unreadCount,
-        isOnline,
-      ];
+    conversationId,
+    otherPartyName,
+    otherPartySubtitle,
+    otherPartyPhotoUrl,
+    lastMessage,
+    lastMessageAt,
+    unreadCount,
+    isOnline,
+  ];
 }
 
 class MessageItem extends Equatable {
@@ -74,7 +74,16 @@ class MessageItem extends Equatable {
   }
 
   @override
-  List<Object?> get props => [messageId, content, isMe, createdAt, rawCreatedAt, isRead, isEdited, isDeleted];
+  List<Object?> get props => [
+    messageId,
+    content,
+    isMe,
+    createdAt,
+    rawCreatedAt,
+    isRead,
+    isEdited,
+    isDeleted,
+  ];
 }
 
 // ─── États ────────────────────────────────────────────────────────────────────
@@ -131,13 +140,13 @@ class ConversationsLoaded extends MessagingState {
 
   @override
   List<Object?> get props => [
-        conversations,
-        filterType,
-        searchQuery,
-        hasReachedMax,
-        currentPage,
-        isLoadingMore,
-      ];
+    conversations,
+    filterType,
+    searchQuery,
+    hasReachedMax,
+    currentPage,
+    isLoadingMore,
+  ];
 }
 
 class ConversationsError extends MessagingState {
@@ -162,6 +171,7 @@ class ChatLoaded extends MessagingState {
   final bool showSuggestions;
   final bool isSending;
   final bool isStudent;
+  final List<String> jobDetails;
 
   const ChatLoaded({
     required this.conversationId,
@@ -173,6 +183,7 @@ class ChatLoaded extends MessagingState {
     this.showSuggestions = true,
     this.isSending = false,
     this.isStudent = false,
+    this.jobDetails = const [],
   });
 
   ChatLoaded copyWith({
@@ -180,6 +191,7 @@ class ChatLoaded extends MessagingState {
     List<String>? suggestions,
     bool? showSuggestions,
     bool? isSending,
+    List<String>? jobDetails,
   }) {
     return ChatLoaded(
       conversationId: conversationId,
@@ -191,21 +203,23 @@ class ChatLoaded extends MessagingState {
       showSuggestions: showSuggestions ?? this.showSuggestions,
       isSending: isSending ?? this.isSending,
       isStudent: isStudent,
+      jobDetails: jobDetails ?? this.jobDetails,
     );
   }
 
   @override
   List<Object?> get props => [
-        conversationId,
-        otherPartyName,
-        otherPartySubtitle,
-        otherPartyPhotoUrl,
-        messages,
-        suggestions,
-        showSuggestions,
-        isSending,
-        isStudent,
-      ];
+    conversationId,
+    otherPartyName,
+    otherPartySubtitle,
+    otherPartyPhotoUrl,
+    messages,
+    suggestions,
+    showSuggestions,
+    isSending,
+    isStudent,
+    jobDetails,
+  ];
 }
 
 class ChatError extends MessagingState {

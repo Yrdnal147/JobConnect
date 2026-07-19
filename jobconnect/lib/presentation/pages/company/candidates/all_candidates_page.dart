@@ -33,8 +33,7 @@ class _AllCandidatesPageState extends State<AllCandidatesPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Récupère l'offerId depuis les query parameters GoRouter
-    final newOfferId =
-        GoRouterState.of(context).uri.queryParameters['offerId'];
+    final newOfferId = GoRouterState.of(context).uri.queryParameters['offerId'];
     if (newOfferId != _offerId) {
       _offerId = newOfferId;
       _cubit.loadCandidates(offerId: _offerId);
@@ -51,32 +50,41 @@ class _AllCandidatesPageState extends State<AllCandidatesPage> {
 
   Color _statusColor(String status) {
     switch (status) {
-      case 'retained': return AppColorsLight.success;
-      case 'refused':  return AppColorsLight.error;
-      default:         return AppColorsLight.warning;
+      case 'retained':
+        return AppColorsLight.success;
+      case 'refused':
+        return AppColorsLight.error;
+      default:
+        return AppColorsLight.warning;
     }
   }
 
   String _statusLabel(String status) {
     switch (status) {
-      case 'retained': return 'Retenu';
-      case 'refused':  return 'Refusé';
-      default:         return 'En attente';
+      case 'retained':
+        return 'Retenu';
+      case 'refused':
+        return 'Refusé';
+      default:
+        return 'En attente';
     }
   }
 
   IconData _statusIcon(String status) {
     switch (status) {
-      case 'retained': return Icons.check_circle_rounded;
-      case 'refused':  return Icons.cancel_rounded;
-      default:         return Icons.hourglass_top_rounded;
+      case 'retained':
+        return Icons.check_circle_rounded;
+      case 'refused':
+        return Icons.cancel_rounded;
+      default:
+        return Icons.hourglass_top_rounded;
     }
   }
 
   String _getInitials(String name) {
     if (name.isEmpty) return '?';
-    final parts  = name.trim().split(RegExp(r'\s+'));
-    final first  = parts.first.isNotEmpty ? parts.first[0] : '';
+    final parts = name.trim().split(RegExp(r'\s+'));
+    final first = parts.first.isNotEmpty ? parts.first[0] : '';
     final second = parts.length > 1 && parts[1].isNotEmpty ? parts[1][0] : '';
     return (first + second).toUpperCase();
   }
@@ -90,7 +98,7 @@ class _AllCandidatesPageState extends State<AllCandidatesPage> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    
+
     return BlocProvider.value(
       value: _cubit,
       child: BlocBuilder<AllCandidatesCubit, AllCandidatesState>(
@@ -112,11 +120,7 @@ class _AllCandidatesPageState extends State<AllCandidatesPage> {
                   height: size.height * 0.25,
                   child: Container(
                     decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [AppColorsLight.primary, Color(0xFF4A148C)],
-                      ),
+                      color: AppColorsLight.primary,
                     ),
                     child: SafeArea(
                       bottom: false,
@@ -126,7 +130,10 @@ class _AllCandidatesPageState extends State<AllCandidatesPage> {
                           Row(
                             children: [
                               IconButton(
-                                icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.white),
+                                icon: const Icon(
+                                  Icons.arrow_back_ios_rounded,
+                                  color: Colors.white,
+                                ),
                                 onPressed: () {
                                   if (Navigator.of(context).canPop()) {
                                     Navigator.of(context).pop();
@@ -137,23 +144,36 @@ class _AllCandidatesPageState extends State<AllCandidatesPage> {
                               ),
                               Expanded(
                                 child: Text(
-                                  title, 
-                                  style: AppTypography.headingMedium.copyWith(color: Colors.white),
+                                  title,
+                                  style: AppTypography.headingMedium.copyWith(
+                                    color: Colors.white,
+                                  ),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                               if (state is AllCandidatesLoaded)
                                 Padding(
-                                  padding: const EdgeInsets.only(right: AppSpacing.md),
+                                  padding: const EdgeInsets.only(
+                                    right: AppSpacing.md,
+                                  ),
                                   child: Center(
                                     child: Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                        vertical: 4,
+                                      ),
                                       decoration: BoxDecoration(
-                                        color: Colors.white.withValues(alpha: 0.2),
-                                        borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
+                                        color: Colors.white.withValues(
+                                          alpha: 0.2,
+                                        ),
+                                        borderRadius: BorderRadius.circular(
+                                          AppSpacing.radiusFull,
+                                        ),
                                         border: Border.all(
-                                          color: Colors.white.withValues(alpha: 0.4),
+                                          color: Colors.white.withValues(
+                                            alpha: 0.4,
+                                          ),
                                         ),
                                       ),
                                       child: Text(
@@ -224,26 +244,22 @@ class _AllCandidatesPageState extends State<AllCandidatesPage> {
 
   Widget _buildFilters(String currentFilter) {
     final filters = [
-      {'key': 'all',      'label': 'Tous'},
-      {'key': 'pending',  'label': 'En attente'},
+      {'key': 'all', 'label': 'Tous'},
+      {'key': 'pending', 'label': 'En attente'},
       {'key': 'retained', 'label': 'Retenus'},
-      {'key': 'refused',  'label': 'Refusés'},
+      {'key': 'refused', 'label': 'Refusés'},
     ];
 
     return Container(
       height: 48,
-      padding:
-          const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-      decoration: const BoxDecoration(
-        color: Colors.transparent,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+      decoration: const BoxDecoration(color: Colors.transparent),
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: filters.length,
-        separatorBuilder: (_, __) =>
-            const SizedBox(width: AppSpacing.sm),
+        separatorBuilder: (_, __) => const SizedBox(width: AppSpacing.sm),
         itemBuilder: (context, index) {
-          final filter   = filters[index];
+          final filter = filters[index];
           final isActive = currentFilter == filter['key'];
 
           return GestureDetector(
@@ -251,13 +267,14 @@ class _AllCandidatesPageState extends State<AllCandidatesPage> {
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.md, vertical: 6),
+                horizontal: AppSpacing.md,
+                vertical: 6,
+              ),
               decoration: BoxDecoration(
                 color: isActive
                     ? AppColorsLight.primary
                     : Colors.white.withValues(alpha: 0.5),
-                borderRadius:
-                    BorderRadius.circular(AppSpacing.radiusFull),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
                 border: Border.all(
                   color: isActive
                       ? AppColorsLight.primary
@@ -267,12 +284,8 @@ class _AllCandidatesPageState extends State<AllCandidatesPage> {
               child: Text(
                 filter['label']!,
                 style: AppTypography.labelSmall.copyWith(
-                  color: isActive
-                      ? Colors.white
-                      : AppColorsLight.textPrimary,
-                  fontWeight: isActive
-                      ? FontWeight.w600
-                      : FontWeight.normal,
+                  color: isActive ? Colors.white : AppColorsLight.textPrimary,
+                  fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
                 ),
               ),
             ),
@@ -286,7 +299,7 @@ class _AllCandidatesPageState extends State<AllCandidatesPage> {
 
   Widget _buildBody(BuildContext context, AllCandidatesState state) {
     if (state is AllCandidatesLoading) return _buildLoadingList();
-    if (state is AllCandidatesError)   return _buildErrorState(state.message);
+    if (state is AllCandidatesError) return _buildErrorState(state.message);
 
     if (state is AllCandidatesLoaded) {
       final candidates = state.filteredCandidates;
@@ -309,9 +322,8 @@ class _AllCandidatesPageState extends State<AllCandidatesPage> {
 
   // ─── Carte candidat ───────────────────────────────────────────────────────
 
-  Widget _buildCandidateCard(
-      BuildContext context, CandidateItem candidate) {
-    final scoreColor  = _scoreColor(candidate.matchScore);
+  Widget _buildCandidateCard(BuildContext context, CandidateItem candidate) {
+    final scoreColor = _scoreColor(candidate.matchScore);
     final statusColor = _statusColor(candidate.status);
 
     return Container(
@@ -333,8 +345,8 @@ class _AllCandidatesPageState extends State<AllCandidatesPage> {
         borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
-          onTap: () => context
-              .push('/company/candidates/${candidate.applicationId}'),
+          onTap: () =>
+              context.push('/company/candidates/${candidate.applicationId}'),
           child: Padding(
             padding: const EdgeInsets.all(AppSpacing.md),
             child: Row(
@@ -373,19 +385,26 @@ class _AllCandidatesPageState extends State<AllCandidatesPage> {
                       const SizedBox(height: AppSpacing.sm),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: AppSpacing.sm, vertical: 2),
+                          horizontal: AppSpacing.sm,
+                          vertical: 2,
+                        ),
                         decoration: BoxDecoration(
                           color: statusColor.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(
-                              AppSpacing.radiusFull),
+                            AppSpacing.radiusFull,
+                          ),
                           border: Border.all(
-                              color: statusColor.withOpacity(0.3)),
+                            color: statusColor.withOpacity(0.3),
+                          ),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(_statusIcon(candidate.status),
-                                size: 10, color: statusColor),
+                            Icon(
+                              _statusIcon(candidate.status),
+                              size: 10,
+                              color: statusColor,
+                            ),
                             const SizedBox(width: 3),
                             Text(
                               _statusLabel(candidate.status),
@@ -440,20 +459,23 @@ class _AllCandidatesPageState extends State<AllCandidatesPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.people_outline_rounded,
-                size: 64, color: AppColorsLight.textTertiary),
+            const Icon(
+              Icons.people_outline_rounded,
+              size: 64,
+              color: AppColorsLight.textTertiary,
+            ),
             const SizedBox(height: AppSpacing.md),
             Text(
               message,
-              style: AppTypography.bodyMedium
-                  .copyWith(color: AppColorsLight.textTertiary),
+              style: AppTypography.bodyMedium.copyWith(
+                color: AppColorsLight.textTertiary,
+              ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: AppSpacing.md),
             if (filterStatus == 'all')
               TextButton(
-                onPressed: () =>
-                    context.push('/company/offers/create'),
+                onPressed: () => context.push('/company/offers/create'),
                 child: Text(
                   'Publier une offre pour recevoir des candidatures',
                   style: AppTypography.bodySmall.copyWith(
@@ -476,24 +498,31 @@ class _AllCandidatesPageState extends State<AllCandidatesPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.wifi_off_rounded,
-                color: AppColorsLight.textTertiary, size: 48),
+            const Icon(
+              Icons.wifi_off_rounded,
+              color: AppColorsLight.textTertiary,
+              size: 48,
+            ),
             const SizedBox(height: AppSpacing.md),
-            Text('Impossible de charger les candidatures',
-                style: AppTypography.headingSmall,
-                textAlign: TextAlign.center),
+            Text(
+              'Impossible de charger les candidatures',
+              style: AppTypography.headingSmall,
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: AppSpacing.sm),
-            Text(message,
-                style: AppTypography.bodySmall,
-                textAlign: TextAlign.center),
+            Text(
+              message,
+              style: AppTypography.bodySmall,
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: AppSpacing.lg),
             ElevatedButton.icon(
-              onPressed: () =>
-                  _cubit.loadCandidates(offerId: _offerId),
+              onPressed: () => _cubit.loadCandidates(offerId: _offerId),
               icon: const Icon(Icons.refresh_rounded),
               label: const Text('Réessayer'),
               style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColorsLight.primary),
+                backgroundColor: AppColorsLight.primary,
+              ),
             ),
           ],
         ),

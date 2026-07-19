@@ -21,7 +21,7 @@ class CompanyChatPage extends StatefulWidget {
 
 class _CompanyChatPageState extends State<CompanyChatPage> {
   final _messageController = TextEditingController();
-  final _scrollController  = ScrollController();
+  final _scrollController = ScrollController();
   late final MessagingCubit _cubit;
 
   @override
@@ -70,9 +70,12 @@ class _CompanyChatPageState extends State<CompanyChatPage> {
           if (state is ChatLoaded) _scrollToBottom();
         },
         builder: (context, state) {
-          final name     = state is ChatLoaded ? state.otherPartyName     : '...';
+          final name = state is ChatLoaded ? state.otherPartyName : '...';
           final subtitle = state is ChatLoaded ? state.otherPartySubtitle : '';
-          final photoUrl = state is ChatLoaded ? state.otherPartyPhotoUrl : null;
+          final photoUrl = state is ChatLoaded
+              ? state.otherPartyPhotoUrl
+              : null;
+          final jobDetails = state is ChatLoaded ? state.jobDetails : <String>[];
 
           return Scaffold(
             backgroundColor: AppColorsLight.bgDark,
@@ -86,21 +89,23 @@ class _CompanyChatPageState extends State<CompanyChatPage> {
                   height: size.height * 0.25,
                   child: Container(
                     decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [AppColorsLight.primary, Color(0xFF4A148C)],
-                      ),
+                      color: AppColorsLight.primary,
                     ),
                     child: SafeArea(
                       bottom: false,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.sm),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.sm,
+                          vertical: AppSpacing.sm,
+                        ),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             IconButton(
-                              icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.white),
+                              icon: const Icon(
+                                Icons.arrow_back_ios_rounded,
+                                color: Colors.white,
+                              ),
                               onPressed: () {
                                 if (Navigator.of(context).canPop()) {
                                   Navigator.of(context).pop();
@@ -115,7 +120,9 @@ class _CompanyChatPageState extends State<CompanyChatPage> {
                               imageUrl: photoUrl,
                               radius: 20,
                               defaultIcon: Icons.person_rounded,
-                              backgroundColor: Colors.white.withValues(alpha: 0.2),
+                              backgroundColor: Colors.white.withValues(
+                                alpha: 0.2,
+                              ),
                               iconColor: Colors.white,
                             ),
                             const SizedBox(width: AppSpacing.md),
@@ -126,14 +133,51 @@ class _CompanyChatPageState extends State<CompanyChatPage> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   const SizedBox(height: 2),
-                                  Text(name, style: AppTypography.headingSmall.copyWith(color: Colors.white)),
+                                  Text(
+                                    name,
+                                    style: AppTypography.headingSmall.copyWith(
+                                      color: Colors.white,
+                                    ),
+                                  ),
                                   if (subtitle.isNotEmpty)
                                     Text(
                                       subtitle,
-                                      style: AppTypography.caption.copyWith(color: Colors.white.withValues(alpha: 0.8)),
+                                      style: AppTypography.caption.copyWith(
+                                        color: Colors.white.withValues(
+                                          alpha: 0.8,
+                                        ),
+                                      ),
                                     ),
                                 ],
                               ),
+                            ),
+                            IconButton(
+                              icon: Icon(
+                                Icons.call_rounded,
+                                color: Colors.white.withValues(alpha: 0.8),
+                              ),
+                              onPressed: () {
+                                context.push('/call', extra: {
+                                  'name': name,
+                                  'photoUrl': photoUrl,
+                                  'subtitle': subtitle,
+                                  'jobDetails': jobDetails,
+                                });
+                              },
+                            ),
+                            IconButton(
+                              icon: Icon(
+                                Icons.videocam_rounded,
+                                color: Colors.white.withValues(alpha: 0.8),
+                              ),
+                              onPressed: () {
+                                context.push('/video-call', extra: {
+                                  'name': name,
+                                  'photoUrl': photoUrl,
+                                  'subtitle': subtitle,
+                                  'jobDetails': jobDetails,
+                                });
+                              },
                             ),
                           ],
                         ),
@@ -209,19 +253,25 @@ class _CompanyChatPageState extends State<CompanyChatPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.wifi_off_rounded,
-                  color: AppColorsLight.textTertiary, size: 48),
+              const Icon(
+                Icons.wifi_off_rounded,
+                color: AppColorsLight.textTertiary,
+                size: 48,
+              ),
               const SizedBox(height: AppSpacing.md),
-              Text('company.messages.chat_error_loading'.tr(),
-                  style: AppTypography.headingSmall,
-                  textAlign: TextAlign.center),
+              Text(
+                'company.messages.chat_error_loading'.tr(),
+                style: AppTypography.headingSmall,
+                textAlign: TextAlign.center,
+              ),
               const SizedBox(height: AppSpacing.lg),
               ElevatedButton.icon(
                 onPressed: () => _cubit.openChat(widget.conversationId),
                 icon: const Icon(Icons.refresh_rounded),
                 label: Text('company.messages.retry'.tr()),
                 style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColorsLight.primary),
+                  backgroundColor: AppColorsLight.primary,
+                ),
               ),
             ],
           ),
@@ -239,11 +289,11 @@ class _CompanyChatPageState extends State<CompanyChatPage> {
                     controller: _scrollController,
                     padding: const EdgeInsets.all(AppSpacing.lg),
                     itemCount: state.messages.length,
-                    itemBuilder: (context, index) =>
-                        _MessageBubble(
-                          message: state.messages[index],
-                          onLongPress: (msg) => _handleMessageLongPress(context, msg),
-                        ),
+                    itemBuilder: (context, index) => _MessageBubble(
+                      message: state.messages[index],
+                      onLongPress: (msg) =>
+                          _handleMessageLongPress(context, msg),
+                    ),
                   ),
           ),
           if (state.showSuggestions && state.suggestions.isNotEmpty)
@@ -285,16 +335,28 @@ class _CompanyChatPageState extends State<CompanyChatPage> {
               const SizedBox(height: AppSpacing.md),
               if (canEdit)
                 ListTile(
-                leading: const Icon(Icons.edit_rounded, color: AppColorsLight.textPrimary),
-                title: const Text('Modifier', style: TextStyle(color: AppColorsLight.textPrimary)),
-                onTap: () {
-                  Navigator.pop(bottomSheetContext);
-                  _showEditDialog(message);
-                },
-              ),
+                  leading: const Icon(
+                    Icons.edit_rounded,
+                    color: AppColorsLight.textPrimary,
+                  ),
+                  title: const Text(
+                    'Modifier',
+                    style: TextStyle(color: AppColorsLight.textPrimary),
+                  ),
+                  onTap: () {
+                    Navigator.pop(bottomSheetContext);
+                    _showEditDialog(message);
+                  },
+                ),
               ListTile(
-                leading: const Icon(Icons.delete_outline_rounded, color: AppColorsLight.error),
-                title: const Text('Supprimer', style: TextStyle(color: AppColorsLight.error)),
+                leading: const Icon(
+                  Icons.delete_outline_rounded,
+                  color: AppColorsLight.error,
+                ),
+                title: const Text(
+                  'Supprimer',
+                  style: TextStyle(color: AppColorsLight.error),
+                ),
                 onTap: () {
                   Navigator.pop(bottomSheetContext);
                   _showDeleteConfirmDialog(message);
@@ -315,13 +377,22 @@ class _CompanyChatPageState extends State<CompanyChatPage> {
       builder: (dialogContext) {
         return AlertDialog(
           backgroundColor: AppColorsLight.bgCard,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusLg)),
-          title: Text('Modifier le message', style: AppTypography.headingSmall.copyWith(color: AppColorsLight.textPrimary)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+          ),
+          title: Text(
+            'Modifier le message',
+            style: AppTypography.headingSmall.copyWith(
+              color: AppColorsLight.textPrimary,
+            ),
+          ),
           content: TextField(
             controller: editController,
             maxLines: null,
             autofocus: true,
-            style: AppTypography.bodyMedium.copyWith(color: AppColorsLight.textPrimary),
+            style: AppTypography.bodyMedium.copyWith(
+              color: AppColorsLight.textPrimary,
+            ),
             decoration: InputDecoration(
               filled: true,
               fillColor: AppColorsLight.bgSurface.withOpacity(0.5),
@@ -331,14 +402,20 @@ class _CompanyChatPageState extends State<CompanyChatPage> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-                borderSide: const BorderSide(color: AppColorsLight.primary, width: 2),
+                borderSide: const BorderSide(
+                  color: AppColorsLight.primary,
+                  width: 2,
+                ),
               ),
             ),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(dialogContext),
-              child: const Text('Annuler', style: TextStyle(color: AppColorsLight.textSecondary)),
+              child: const Text(
+                'Annuler',
+                style: TextStyle(color: AppColorsLight.textSecondary),
+              ),
             ),
             ElevatedButton(
               onPressed: () {
@@ -348,8 +425,13 @@ class _CompanyChatPageState extends State<CompanyChatPage> {
                 }
                 Navigator.pop(dialogContext);
               },
-              style: ElevatedButton.styleFrom(backgroundColor: AppColorsLight.primary),
-              child: const Text('Enregistrer', style: TextStyle(color: Colors.white)),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColorsLight.primary,
+              ),
+              child: const Text(
+                'Enregistrer',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
         );
@@ -363,21 +445,39 @@ class _CompanyChatPageState extends State<CompanyChatPage> {
       builder: (dialogContext) {
         return AlertDialog(
           backgroundColor: AppColorsLight.bgCard,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusLg)),
-          title: Text('Supprimer', style: AppTypography.headingSmall.copyWith(color: AppColorsLight.error)),
-          content: Text('Voulez-vous vraiment supprimer ce message ? Cette action est irréversible pour vous et votre interlocuteur.', style: AppTypography.bodyMedium),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+          ),
+          title: Text(
+            'Supprimer',
+            style: AppTypography.headingSmall.copyWith(
+              color: AppColorsLight.error,
+            ),
+          ),
+          content: Text(
+            'Voulez-vous vraiment supprimer ce message ? Cette action est irréversible pour vous et votre interlocuteur.',
+            style: AppTypography.bodyMedium,
+          ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(dialogContext),
-              child: const Text('Annuler', style: TextStyle(color: AppColorsLight.textSecondary)),
+              child: const Text(
+                'Annuler',
+                style: TextStyle(color: AppColorsLight.textSecondary),
+              ),
             ),
             ElevatedButton(
               onPressed: () {
                 _cubit.deleteMessage(message.messageId);
                 Navigator.pop(dialogContext);
               },
-              style: ElevatedButton.styleFrom(backgroundColor: AppColorsLight.error),
-              child: const Text('Supprimer', style: TextStyle(color: Colors.white)),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColorsLight.error,
+              ),
+              child: const Text(
+                'Supprimer',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
         );
@@ -390,14 +490,21 @@ class _CompanyChatPageState extends State<CompanyChatPage> {
   Widget _buildSuggestions(List<String> suggestions) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(
-          AppSpacing.lg, 0, AppSpacing.lg, AppSpacing.sm),
+        AppSpacing.lg,
+        0,
+        AppSpacing.lg,
+        AppSpacing.sm,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(Icons.auto_awesome_rounded,
-                  size: 12, color: AppColorsLight.primary),
+              const Icon(
+                Icons.auto_awesome_rounded,
+                size: 12,
+                color: AppColorsLight.primary,
+              ),
               const SizedBox(width: 4),
               Text(
                 'company.messages.ai_suggestions'.tr(),
@@ -418,8 +525,7 @@ class _CompanyChatPageState extends State<CompanyChatPage> {
                   child: GestureDetector(
                     onTap: () {
                       _messageController.text = suggestion;
-                      _messageController.selection =
-                          TextSelection.fromPosition(
+                      _messageController.selection = TextSelection.fromPosition(
                         TextPosition(offset: suggestion.length),
                       );
                     },
@@ -430,8 +536,9 @@ class _CompanyChatPageState extends State<CompanyChatPage> {
                       ),
                       decoration: BoxDecoration(
                         color: AppColorsLight.primary.withOpacity(0.1),
-                        borderRadius:
-                            BorderRadius.circular(AppSpacing.radiusFull),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusFull,
+                        ),
                         border: Border.all(
                           color: AppColorsLight.primary.withOpacity(0.3),
                         ),
@@ -439,16 +546,19 @@ class _CompanyChatPageState extends State<CompanyChatPage> {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(Icons.auto_awesome_rounded,
-                              size: 11, color: AppColorsLight.primary),
+                          const Icon(
+                            Icons.auto_awesome_rounded,
+                            size: 11,
+                            color: AppColorsLight.primary,
+                          ),
                           const SizedBox(width: 4),
                           ConstrainedBox(
-                            constraints:
-                                const BoxConstraints(maxWidth: 200),
+                            constraints: const BoxConstraints(maxWidth: 200),
                             child: Text(
                               suggestion,
-                              style: AppTypography.bodySmall
-                                  .copyWith(color: AppColorsLight.primary),
+                              style: AppTypography.bodySmall.copyWith(
+                                color: AppColorsLight.primary,
+                              ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -470,7 +580,12 @@ class _CompanyChatPageState extends State<CompanyChatPage> {
 
   Widget _buildInput(bool isSending) {
     return Container(
-      padding: EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.sm, AppSpacing.lg, MediaQuery.of(context).padding.bottom + AppSpacing.sm),
+      padding: EdgeInsets.fromLTRB(
+        AppSpacing.lg,
+        AppSpacing.sm,
+        AppSpacing.lg,
+        MediaQuery.of(context).padding.bottom + AppSpacing.sm,
+      ),
       decoration: BoxDecoration(
         color: Colors.transparent,
         border: Border(top: BorderSide(color: AppColorsLight.bgSurface)),
@@ -481,8 +596,7 @@ class _CompanyChatPageState extends State<CompanyChatPage> {
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius:
-                    BorderRadius.circular(AppSpacing.radiusFull),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
                 border: Border.all(color: AppColorsLight.bgSurface),
               ),
               child: TextField(
@@ -507,14 +621,18 @@ class _CompanyChatPageState extends State<CompanyChatPage> {
           Container(
             decoration: BoxDecoration(
               gradient: isSending
-                  ? LinearGradient(colors: [
-                      AppColorsLight.primary.withOpacity(0.5),
-                      AppColorsLight.secondary.withOpacity(0.5),
-                    ])
-                  : LinearGradient(colors: [
-                      AppColorsLight.textPrimary,
-                      AppColorsLight.primary,
-                    ]),
+                  ? LinearGradient(
+                      colors: [
+                        AppColorsLight.primary.withOpacity(0.5),
+                        AppColorsLight.secondary.withOpacity(0.5),
+                      ],
+                    )
+                  : LinearGradient(
+                      colors: [
+                        AppColorsLight.textPrimary,
+                        AppColorsLight.primary,
+                      ],
+                    ),
               shape: BoxShape.circle,
               boxShadow: isSending
                   ? []
@@ -532,7 +650,9 @@ class _CompanyChatPageState extends State<CompanyChatPage> {
                       width: 18,
                       height: 18,
                       child: CircularProgressIndicator(
-                          color: Colors.white, strokeWidth: 2),
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
                     )
                   : const Icon(Icons.send_rounded, color: Colors.white),
               onPressed: isSending ? null : () => _sendMessage(),
@@ -543,7 +663,7 @@ class _CompanyChatPageState extends State<CompanyChatPage> {
     );
   }
 
-  // ─── Chat vide 
+  // ─── Chat vide
 
   Widget _buildEmptyChat() {
     return Center(
@@ -552,17 +672,23 @@ class _CompanyChatPageState extends State<CompanyChatPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.chat_bubble_outline_rounded,
-                size: 48, color: AppColorsLight.textTertiary),
+            const Icon(
+              Icons.chat_bubble_outline_rounded,
+              size: 48,
+              color: AppColorsLight.textTertiary,
+            ),
             const SizedBox(height: AppSpacing.md),
-            Text('company.messages.start_chat'.tr(),
-                style: AppTypography.headingSmall,
-                textAlign: TextAlign.center),
+            Text(
+              'company.messages.start_chat'.tr(),
+              style: AppTypography.headingSmall,
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: AppSpacing.sm),
             Text(
               'company.messages.start_chat_desc'.tr(),
-              style: AppTypography.bodySmall
-                  .copyWith(color: AppColorsLight.textTertiary),
+              style: AppTypography.bodySmall.copyWith(
+                color: AppColorsLight.textTertiary,
+              ),
               textAlign: TextAlign.center,
             ),
           ],
@@ -572,7 +698,7 @@ class _CompanyChatPageState extends State<CompanyChatPage> {
   }
 }
 
-//  Bulle message 
+//  Bulle message
 
 class _MessageBubble extends StatelessWidget {
   final MessageItem message;
@@ -585,102 +711,115 @@ class _MessageBubble extends StatelessWidget {
     return GestureDetector(
       onLongPress: () => onLongPress(message),
       child: Align(
-      alignment:
-          message.isMe ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: AppSpacing.md),
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.md,
-          vertical: AppSpacing.sm,
-        ),
-        constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width * 0.75,
-        ),
-        decoration: BoxDecoration(
-          color: message.isDeleted
-              ? AppColorsLight.bgSurface.withOpacity(0.5)
-              : (message.isMe ? AppColorsLight.primary : AppColorsLight.bgCard),
-          borderRadius: BorderRadius.only(
-            topLeft: const Radius.circular(AppSpacing.radiusLg),
-            topRight: const Radius.circular(AppSpacing.radiusLg),
-            bottomLeft:
-                Radius.circular(message.isMe ? AppSpacing.radiusLg : 4),
-            bottomRight:
-                Radius.circular(message.isMe ? 4 : AppSpacing.radiusLg),
+        alignment: message.isMe ? Alignment.centerRight : Alignment.centerLeft,
+        child: Container(
+          margin: const EdgeInsets.only(bottom: AppSpacing.md),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.md,
+            vertical: AppSpacing.sm,
           ),
-          border: (message.isMe && !message.isDeleted)
-              ? null
-              : Border.all(color: AppColorsLight.bgSurface),
-          boxShadow: [
-            BoxShadow(
-              color: message.isMe && !message.isDeleted
-                  ? AppColorsLight.primary.withOpacity(0.18)
-                  : Colors.black.withOpacity(0.03),
-              blurRadius: 8,
-              offset: const Offset(0, 3),
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width * 0.75,
+          ),
+          decoration: BoxDecoration(
+            color: message.isDeleted
+                ? AppColorsLight.bgSurface.withOpacity(0.5)
+                : (message.isMe
+                      ? AppColorsLight.primary
+                      : AppColorsLight.bgCard),
+            borderRadius: BorderRadius.only(
+              topLeft: const Radius.circular(AppSpacing.radiusLg),
+              topRight: const Radius.circular(AppSpacing.radiusLg),
+              bottomLeft: Radius.circular(
+                message.isMe ? AppSpacing.radiusLg : 4,
+              ),
+              bottomRight: Radius.circular(
+                message.isMe ? 4 : AppSpacing.radiusLg,
+              ),
             ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: message.isMe
-              ? CrossAxisAlignment.end
-              : CrossAxisAlignment.start,
-          children: [
-            if (message.isDeleted)
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Icon(Icons.dangerous_rounded, size: 16, color: AppColorsLight.textTertiary),
-                  const SizedBox(width: 4),
-                  Flexible(
-                    child: Text(
-                      message.content.replaceAll('🚫 ', ''),
-                      style: AppTypography.bodyMedium.copyWith(
-                        color: AppColorsLight.textTertiary,
-                        fontStyle: FontStyle.italic,
+            border: (message.isMe && !message.isDeleted)
+                ? null
+                : Border.all(color: AppColorsLight.bgSurface),
+            boxShadow: [
+              BoxShadow(
+                color: message.isMe && !message.isDeleted
+                    ? AppColorsLight.primary.withOpacity(0.18)
+                    : Colors.black.withOpacity(0.03),
+                blurRadius: 8,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: message.isMe
+                ? CrossAxisAlignment.end
+                : CrossAxisAlignment.start,
+            children: [
+              if (message.isDeleted)
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.dangerous_rounded,
+                      size: 16,
+                      color: AppColorsLight.textTertiary,
+                    ),
+                    const SizedBox(width: 4),
+                    Flexible(
+                      child: Text(
+                        message.content.replaceAll('🚫 ', ''),
+                        style: AppTypography.bodyMedium.copyWith(
+                          color: AppColorsLight.textTertiary,
+                          fontStyle: FontStyle.italic,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              )
-            else
-              Text(
-                message.content,
-                style: AppTypography.bodyMedium.copyWith(
-                  color: message.isMe ? Colors.white : AppColorsLight.textPrimary,
-                ),
-              ),
-            const SizedBox(height: 4),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
+                  ],
+                )
+              else
                 Text(
-                  message.isEdited && !message.isDeleted ? '${message.createdAt} (modifié)' : message.createdAt,
-                  style: AppTypography.caption.copyWith(
-                    color: message.isDeleted 
-                        ? AppColorsLight.textTertiary 
-                        : (message.isMe ? Colors.white.withOpacity(0.7) : AppColorsLight.textTertiary),
+                  message.content,
+                  style: AppTypography.bodyMedium.copyWith(
+                    color: message.isMe
+                        ? Colors.white
+                        : AppColorsLight.textPrimary,
                   ),
                 ),
-                if (message.isMe) ...[
-                  const SizedBox(width: 4),
-                  Icon(
-                    message.isRead
-                        ? Icons.done_all_rounded
-                        : Icons.done_rounded,
-                    size: 13,
-                    color: message.isRead
-                        ? Colors.white
-                        : Colors.white.withOpacity(0.7),
+              const SizedBox(height: 4),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    message.isEdited && !message.isDeleted
+                        ? '${message.createdAt} (modifié)'
+                        : message.createdAt,
+                    style: AppTypography.caption.copyWith(
+                      color: message.isDeleted
+                          ? AppColorsLight.textTertiary
+                          : (message.isMe
+                                ? Colors.white.withOpacity(0.7)
+                                : AppColorsLight.textTertiary),
+                    ),
                   ),
+                  if (message.isMe) ...[
+                    const SizedBox(width: 4),
+                    Icon(
+                      message.isRead
+                          ? Icons.done_all_rounded
+                          : Icons.done_rounded,
+                      size: 13,
+                      color: message.isRead
+                          ? Colors.white
+                          : Colors.white.withOpacity(0.7),
+                    ),
+                  ],
                 ],
-              ],
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
-    )
     );
   }
 }

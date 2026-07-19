@@ -27,10 +27,17 @@ class ApplicationItem extends Equatable {
 
   @override
   List<Object?> get props => [
-        applicationId, offerId, offerTitle,
-        companyName, companyLogoUrl, companyId,
-        status, matchScore, appliedAt, conversationId,
-      ];
+    applicationId,
+    offerId,
+    offerTitle,
+    companyName,
+    companyLogoUrl,
+    companyId,
+    status,
+    matchScore,
+    appliedAt,
+    conversationId,
+  ];
 }
 
 class ApplicationDetail extends Equatable {
@@ -64,19 +71,19 @@ class ApplicationDetail extends Equatable {
 
   @override
   List<Object?> get props => [
-        applicationId,
-        offerTitle,
-        offerType,
-        companyName,
-        companyLogoUrl,
-        status,
-        matchScore,
-        appliedAt,
-        conversationId,
-        missingSkills,
-        similarOffers,
-        statusExplanation,
-      ];
+    applicationId,
+    offerTitle,
+    offerType,
+    companyName,
+    companyLogoUrl,
+    status,
+    matchScore,
+    appliedAt,
+    conversationId,
+    missingSkills,
+    similarOffers,
+    statusExplanation,
+  ];
 }
 
 class SimilarOffer extends Equatable {
@@ -126,12 +133,10 @@ class ApplicationsLoaded extends ApplicationsState {
     if (activeFilter == 'Tous') return applications;
     final map = {
       'En attente': 'pending',
-      'Retenu':     'retained',
-      'Refusé':     'refused',
+      'Retenu': 'retained',
+      'Refusé': 'refused',
     };
-    return applications
-        .where((a) => a.status == map[activeFilter])
-        .toList();
+    return applications.where((a) => a.status == map[activeFilter]).toList();
   }
 
   int countByStatus(String status) =>

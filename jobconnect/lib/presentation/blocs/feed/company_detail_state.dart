@@ -48,10 +48,19 @@ class CompanyDetailData extends Equatable {
 
   @override
   List<Object?> get props => [
-        companyId, name, sector, size, description,
-        ceoName, website, location, logoUrl,
-        isVerified, activeOffersCount, activeOffers,
-      ];
+    companyId,
+    name,
+    sector,
+    size,
+    description,
+    ceoName,
+    website,
+    location,
+    logoUrl,
+    isVerified,
+    activeOffersCount,
+    activeOffers,
+  ];
 }
 
 abstract class CompanyDetailState extends Equatable {

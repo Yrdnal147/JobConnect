@@ -15,11 +15,11 @@ class DashboardMetrics extends Equatable {
 
   @override
   List<Object?> get props => [
-        activeOffers,
-        totalApplications,
-        retainedCandidates,
-        unreadMessages,
-      ];
+    activeOffers,
+    totalApplications,
+    retainedCandidates,
+    unreadMessages,
+  ];
 }
 
 class RecentApplication extends Equatable {
@@ -41,13 +41,13 @@ class RecentApplication extends Equatable {
 
   @override
   List<Object?> get props => [
-        applicationId,
-        studentName,
-        fieldOfStudy,
-        educationLevel,
-        matchScore,
-        photoUrl,
-      ];
+    applicationId,
+    studentName,
+    fieldOfStudy,
+    educationLevel,
+    matchScore,
+    photoUrl,
+  ];
 }
 
 abstract class DashboardState extends Equatable {
@@ -79,7 +79,12 @@ class DashboardLoaded extends DashboardState {
   });
 
   @override
-  List<Object?> get props => [companyName, companyLogo, metrics, recentApplications];
+  List<Object?> get props => [
+    companyName,
+    companyLogo,
+    metrics,
+    recentApplications,
+  ];
 }
 
 class DashboardError extends DashboardState {

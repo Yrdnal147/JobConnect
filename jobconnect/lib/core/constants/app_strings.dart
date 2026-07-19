@@ -30,13 +30,17 @@ class AppStrings {
   static const String getStarted = 'Commencer';
   static const String skip = 'Passer';
   static const String slide1Title = 'Trouve ton stage idéal';
-  static const String slide1Subtitle = 'Des milliers d\'opportunités t\'attendent';
+  static const String slide1Subtitle =
+      'Des milliers d\'opportunités t\'attendent';
   static const String slide2Title = 'Matching par IA';
-  static const String slide2Subtitle = 'Notre IA analyse ton profil et trouve les meilleures offres';
+  static const String slide2Subtitle =
+      'Notre IA analyse ton profil et trouve les meilleures offres';
   static const String slide3Title = 'Les meilleures entreprises';
-  static const String slide3Subtitle = 'Connecte-toi avec les entreprises de Douala et d\'ailleurs';
+  static const String slide3Subtitle =
+      'Connecte-toi avec les entreprises de Douala et d\'ailleurs';
   static const String slide4Title = 'Profil vérifié';
-  static const String slide4Subtitle = 'Obtiens le badge certifié et augmente tes chances de 40%';
+  static const String slide4Subtitle =
+      'Obtiens le badge certifié et augmente tes chances de 40%';
 
   // Student
   static const String home = 'Accueil';
@@ -49,7 +53,8 @@ class AppStrings {
   static const String uploadCv = 'Uploader mon CV';
   static const String editProfile = 'Modifier le profil';
   static const String verifyProfile = 'Vérifier mon profil';
-  static const String completeProfile = 'Complétez votre profil pour voir des offres personnalisées';
+  static const String completeProfile =
+      'Complétez votre profil pour voir des offres personnalisées';
 
   // Applications status
   static const String pending = 'En attente';
@@ -73,14 +78,17 @@ class AppStrings {
 
   // Success page
   static const String successTitle = 'Mur de la Gloire ';
-  static const String successSubtitle = 'Vraies connexions faites sur JobConnect';
+  static const String successSubtitle =
+      'Vraies connexions faites sur JobConnect';
 
   // Errors
   static const String errorGeneric = 'Une erreur est survenue. Réessayez.';
   static const String errorNetwork = 'Pas de connexion internet.';
   static const String errorInvalidEmail = 'Email invalide.';
-  static const String errorPasswordTooShort = 'Mot de passe trop court (minimum 6 caractères).';
-  static const String errorPasswordMismatch = 'Les mots de passe ne correspondent pas.';
+  static const String errorPasswordTooShort =
+      'Mot de passe trop court (minimum 6 caractères).';
+  static const String errorPasswordMismatch =
+      'Les mots de passe ne correspondent pas.';
   static const String errorEmptyField = 'Ce champ est obligatoire.';
 
   // AI messages

@@ -65,20 +65,20 @@ class OfferItem extends Equatable {
 
   @override
   List<Object?> get props => [
-        offerId,
-        title,
-        offerType,
-        location,
-        applicationsCount,
-        isActive,
-        postedAt,
-        durationMonths,
-        salaryRange,
-        description,
-        requiredSkills,
-        minEducation,
-        yearsOfExperience,
-      ];
+    offerId,
+    title,
+    offerType,
+    location,
+    applicationsCount,
+    isActive,
+    postedAt,
+    durationMonths,
+    salaryRange,
+    description,
+    requiredSkills,
+    minEducation,
+    yearsOfExperience,
+  ];
 }
 
 abstract class OffersState extends Equatable {
@@ -101,8 +101,7 @@ class OffersLoaded extends OffersState {
 
   const OffersLoaded({required this.offers});
 
-  List<OfferItem> get activeOffers =>
-      offers.where((o) => o.isActive).toList();
+  List<OfferItem> get activeOffers => offers.where((o) => o.isActive).toList();
 
   int get activeCount => activeOffers.length;
 
@@ -129,10 +128,7 @@ class OfferToggling extends OffersState {
   final List<OfferItem> offers;
   final String togglingOfferId;
 
-  const OfferToggling({
-    required this.offers,
-    required this.togglingOfferId,
-  });
+  const OfferToggling({required this.offers, required this.togglingOfferId});
 
   @override
   List<Object?> get props => [offers, togglingOfferId];
